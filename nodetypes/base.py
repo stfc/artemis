@@ -23,6 +23,34 @@
 #  $LastChangedBy$
 #
 
+import commands, subprocess, urllib
+
+#Units
+UNIT_TEMPERATURE = chr(176) + "C"
+UNIT_CURRENT     = "A"
+UNIT_AIRFLOW     = "%"
+UNIT_HUMIDITY    = "%"
+
+#Translation tables for ID codes and units
+FAMILY_1WIRE = {
+  "28": ("TEMPERATURE", UNIT_TEMPERATURE),
+  "14": ("AIRFLOW",     UNIT_AIRFLOW)
+}
+
+#SNMP Settings
+SNMP_TIMEOUT = 5 #Timeout of snmp requests in seconds
+SNMP_RETRIES = 2 #Number of snmp request retries
+
+def getMIB(ip, mib, community = "public"):
+  """ Fetch contents of a mib by walking the tree from a defined point"""
+  (x, d) = commands.getstatusoutput("/usr/bin/snmpwalk -r " + str(SNMP_RETRIES) + " -t " + str(SNMP_TIMEOUT) + " -v 1 -c " + community + " -O v " + ip + " " + mib + " | grep -v 'End of MIB'")
+  if (x == 0):
+    d = d.splitlines()
+    d = [r.split(': ')[-1].replace('"', '').replace(' ', '_') for r in d]
+    return d
+  else:
+    return None
+
 class node(object):
   def __init__(self, ip):
     self.ip        = ip

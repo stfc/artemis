@@ -23,51 +23,41 @@
 #  $LastChangedBy$
 #
 
-from artemis_node_base import node
+from base import *
 
 ##
-# Jacarta network attached monitoring unit
+# 1-Wire network attached monitoring base
+#  Good example of a complex, multi probe node
 #
-class node_jacarta(node):
+class node_swiftCM1(node):
   def fetch(self):
     #temperature probes
-    i = getMIB(self.ip, ".1.3.6.1.4.1.3854.1.2.2.1.16.1.1")
+    i = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.4.1.2")
     if (i != None):
-      ids_temp = i
+      ids = i
     else:
-      ids_temp = []
+      ids = []
 
-    v = getMIB(self.ip, ".1.3.6.1.4.1.3854.1.2.2.1.16.1.3")
+    v = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.4.1.5")
     if (v != None):
-      values_temp = v
+      values = v
     else:
-      values_temp = []
+      values = []
 
-    #build list of units
-    units_temp = []
-    for i in ids_temp:
-      units_temp += [UNIT_TEMPERATURE]
-
-    #humidity sensors
-    i = getMIB(self.ip, ".1.3.6.1.4.1.3854.1.2.2.1.17.1.1")
+    #airflow sensors
+    i = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.2")
     if (i != None):
-      ids_humid = i
+      ids += i
 
-    v = getMIB(self.ip, ".1.3.6.1.4.1.3854.1.2.2.1.17.1.3")
+    v = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.5")
     if (v != None):
-      values_humid = v
+      values += v
+
+    units = [FAMILY_1WIRE[i[-2:]][1] for i in ids]
+
+    #This may look confusing, it's just splitting the ID up into parts
+    ids   = [FAMILY_1WIRE[i[-2:]][0] + "-1WIRE-" + i[2:-2] + i[:2] for i in ids]
     
-    #cast all values as integers
-    values_humid = [int(v) for v in values_humid]
-
-    #build list of units
-    units_humid = []
-    for i in ids_humid:
-      units_humid += [UNIT_HUMIDITY]
-
-    #Concatenate data sets    
-    ids    = ids_temp    + ids_humid
-    values = values_temp + values_humid
-    units  = units_temp  + units_humid
+    values = [int(v) for v in values]
 
     return zip(ids, values, units)

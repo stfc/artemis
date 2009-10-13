@@ -23,33 +23,7 @@
 #  $LastChangedBy$
 #
 
-import commands, subprocess, urllib
 from threading import Thread
-
-SNMP_TIMEOUT = 5 #Timeout of snmp requests in seconds
-SNMP_RETRIES = 2 #Number of snmp request retries
-
-#Units
-UNIT_TEMPERATURE = chr(176) + "C"
-UNIT_CURRENT     = "A"
-UNIT_AIRFLOW     = "%"
-UNIT_HUMIDITY    = "%"
-
-#Translation tables for ID codes and units
-FAMILY_1WIRE = {
-  "28": ("TEMPERATURE", UNIT_TEMPERATURE),
-  "14": ("AIRFLOW",     UNIT_AIRFLOW)
-}
-
-#Misc functions
-def getMIB(ip, mib, community = "public"):
-  (x, d) = commands.getstatusoutput("/usr/bin/snmpwalk -r " + str(SNMP_RETRIES) + " -t " + str(SNMP_TIMEOUT) + " -v 1 -c " + community + " -O v " + ip + " " + mib + " | grep -v 'End of MIB'")
-  if (x == 0):
-    d = d.splitlines()
-    d = [r.split(': ')[-1].replace('"', '').replace(' ', '_') for r in d]
-    return d
-  else:
-    return None
 
 #Data fetch loop
 def grabData(nodeset):
@@ -81,8 +55,5 @@ class data_grabber(Thread):
       self.data = data
 
 #Import all defined datasource nodes
-from artemis_node_snmp_jacarta import *
-from artemis_node_snmp_swift   import *
-from artemis_node_xml_swift    import *
-from artemis_node_snmp_pdu_apc import *
+from nodetypes import *
 
