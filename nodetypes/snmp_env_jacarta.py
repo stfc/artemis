@@ -23,47 +23,51 @@
 #  $LastChangedBy$
 #
 
-from artemis_node_base import node
+from base import *
 
 ##
-# 1-Wire Network attached monitoring base, using XML interface instead of SNMP
+# Jacarta network attached monitoring unit
 #
-class node_swiftCM1_xml(node):
+class node_jacarta(node):
   def fetch(self):
-    from xml.dom import minidom
-
-    #Fetch data
-    data = urllib.urlopen('http://' + self.ip + '/data.xml')
-    data = minidom.parse(data)
-
-    return data
-
     #temperature probes
+    i = getMIB(self.ip, ".1.3.6.1.4.1.3854.1.2.2.1.16.1.1")
     if (i != None):
-      ids = i
+      ids_temp = i
     else:
-      ids = []
+      ids_temp = []
 
-    v = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.4.1.5")
+    v = getMIB(self.ip, ".1.3.6.1.4.1.3854.1.2.2.1.16.1.3")
     if (v != None):
-      values = v
+      values_temp = v
     else:
-      values = []
+      values_temp = []
 
-    #airflow sensors
-    i = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.2")
+    #build list of units
+    units_temp = []
+    for i in ids_temp:
+      units_temp += [UNIT_TEMPERATURE]
+
+    #humidity sensors
+    i = getMIB(self.ip, ".1.3.6.1.4.1.3854.1.2.2.1.17.1.1")
     if (i != None):
-      ids += i
+      ids_humid = i
 
-    v = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.5")
+    v = getMIB(self.ip, ".1.3.6.1.4.1.3854.1.2.2.1.17.1.3")
     if (v != None):
-      values += v
-
-    units = [FAMILY_1WIRE[i[-2:]][1] for i in ids]
-
-    #This may look confusing, it's just splitting the ID up into parts
-    ids   = [FAMILY_1WIRE[i[-2:]][0] + "-1WIRE-" + i[2:-2] + i[:2] for i in ids]
+      values_humid = v
     
-    values = [int(v) for v in values]
+    #cast all values as integers
+    values_humid = [int(v) for v in values_humid]
+
+    #build list of units
+    units_humid = []
+    for i in ids_humid:
+      units_humid += [UNIT_HUMIDITY]
+
+    #Concatenate data sets    
+    ids    = ids_temp    + ids_humid
+    values = values_temp + values_humid
+    units  = units_temp  + units_humid
 
     return zip(ids, values, units)

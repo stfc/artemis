@@ -23,16 +23,22 @@
 #  $LastChangedBy$
 #
 
-from artemis_node_base import node
+from base import *
 
 ##
-# 1-Wire network attached monitoring base
-#  Good example of a complex, multi probe node
+# 1-Wire Network attached monitoring base, using XML interface instead of SNMP
 #
-class node_swiftCM1(node):
+class node_swiftCM1_xml(node):
   def fetch(self):
+    from xml.dom import minidom
+
+    #Fetch data
+    data = urllib.urlopen('http://' + self.ip + '/data.xml')
+    data = minidom.parse(data)
+
+    return data
+
     #temperature probes
-    i = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.4.1.2")
     if (i != None):
       ids = i
     else:

@@ -23,7 +23,7 @@
 #  $LastChangedBy$
 #
 
-from artemis_node_base import node
+from base import *
 
 ##
 # APC Switched Rack PDU, e.g. AP7953
