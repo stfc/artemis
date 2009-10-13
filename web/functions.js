@@ -184,15 +184,6 @@ function setupJSON()
 {
   pUpdate = document.getElementById("update_time");
   divRoom = document.getElementById("divRoom");
-/*
-  if( typeof XMLHttpRequest == "undefined" ) XMLHttpRequest = function() {
-    try { return new ActiveXObject("Msxml2.XMLHTTP.6.0") } catch(e) {}
-    try { return new ActiveXObject("Msxml2.XMLHTTP.3.0") } catch(e) {}
-    try { return new ActiveXObject("Msxml2.XMLHTTP") } catch(e) {}
-    try { return new ActiveXObject("Microsoft.XMLHTTP") } catch(e) {}
-    throw new Error( "This browser does not support XMLHttpRequest." )
-  }
-*/
   http_request = new XMLHttpRequest();
   http_request.onreadystatechange = stateJSON;
 }
