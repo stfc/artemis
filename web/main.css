@@ -1,0 +1,139 @@
+/*
+#
+#  Copyright Science and Technology Facilities Council, 2009.
+#  
+#  This file is part of ARTEMIS.
+#  
+#  ARTEMIS is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#  
+#  ARTEMIS is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License
+#  along with ARTEMIS. If not, see <http://www.gnu.org/licenses/>.
+#
+#  $Revision$
+#  $Date$
+#  $LastChangedBy$
+#
+*/
+html {
+  font-family: verdana, sans;
+  font-size: 10pt;
+}
+body {
+  color: #002740;
+}
+div.header {
+  padding-bottom: 8px;
+  border-bottom: 1px solid #9fa09e;
+  margin-bottom: 8px;
+}
+div.navbar > a {
+  margin-left: 32px;
+}
+div#divRoom {
+  position: relative;
+  border: 4px solid #555;
+  margin: 0;
+  padding: 0;
+  background-image: url("images/tiles.png");
+  background-repeat: repeat;
+}
+div#divGraph {
+  position: absolute;
+  left: 680px;
+  top: 96px;
+}
+p#update_time {
+  font-size: 7pt;
+  color: #9fa09e;
+}
+div.probe-temperature, div.probe-airflow, div.probe-current {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  width: 64px;
+  height: 64px;
+  text-align: center;
+  color: #fff;
+  opacity: 0.75;
+}
+div.probe-current {
+  color: #000;
+}
+div.probe-temperature:hover, div.probe-airflow:hover, div.probe-current:hover {
+  cursor: pointer;
+  outline: 1px dashed #000;
+  z-index: 1;
+}
+div.footer {
+  font-size: xx-small;
+  color: #888;
+  margin-top: 32px;
+  border-top: 1px solid #9fa09e;
+}
+div.footer > img {
+  margin-top: -11px;
+}
+span.category {
+  margin-left: 2em;
+}
+h1, h2, h3{
+  color: #003153;
+  font-family: lucida sans, sans;
+}
+h1 {
+  margin: 4px;
+  font-weight: normal;
+}
+p {
+  margin: 0;
+}
+p.info {
+  color: #666294;
+  font-style: italic;
+  margin: 4px;
+}
+p.info:before {
+  content: url("icons/status/dialog-information.png");
+  margin-right: 4px;
+}
+p.error {
+  color: #700e2b;
+  font-style: italic;
+  margin: 4px;
+  font-size: medium;
+}
+p.error:before {
+  content: url("icons/status/dialog-error.png");
+  margin-right: 4px;
+}
+a:link, a:visited, a:active {
+  color: #258998;
+}
+a.external:after {
+  content: url("icons/actions/go-jump.png");
+}
+a.mail:before {
+  content: url("icons/actions/mail-message-new.png");
+}
+a.light, a.dark {
+  padding: 0px 2px 0px 2px;
+  text-decoration: none;
+}
+a.light {
+  background: #fff;
+  color: #000;
+  border: 1px solid #000;
+}
+a.dark {
+  background: #000;
+  color: #fff;
+  border: 1px solid #fff;
+}
