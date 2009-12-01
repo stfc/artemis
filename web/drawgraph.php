@@ -22,7 +22,7 @@
 #  $LastChangedBy$
 #
 
-$RRD_DIR = "../rrds/";
+$RRD_DIR = "rrds/";
 
 $DATE_FORMAT = "Y-m-d H:i:s";
 
@@ -54,7 +54,7 @@ $DATE_FORMAT = "Y-m-d H:i:s";
     $range .= "-s $t_start ";
   }
   else {
-    readfile("icons/status/image-missing.png");
+    readfile("icons/status/dialog-error.png");
     exit();
   }
 
@@ -64,13 +64,13 @@ $DATE_FORMAT = "Y-m-d H:i:s";
     $range .= "-e $t_end ";
   }
   else {
-    readfile("icons/status/image-missing.png");
+    readfile("icons/status/dialog-warning.png");
     exit();
   }
 
   //Abort if start is before or the same as end
   if ($t_start >= $t_end) {
-    readfile("icons/status/image-missing.png");
+    readfile("icons/status/image-loading.png");
     exit();
   }
 
