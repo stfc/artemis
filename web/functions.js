@@ -113,10 +113,10 @@ function callbackJSON(responseText)
 
       //Put unknown probes along bottom
       if ((p_w == 0) && (p_h == 0)) {
-        p_w = 16;
+        p_w = 24;
         p_h = 16;
         p_y = -20;
-        p_x = 48 + unknown_count * 32;
+        p_x = 48 + unknown_count * 24;
         unknown_count++;
       }
       else {
@@ -184,7 +184,16 @@ function setupJSON()
 {
   pUpdate = document.getElementById("update_time");
   divRoom = document.getElementById("divRoom");
-  http_request = new XMLHttpRequest();
+/*
+  if( typeof XMLHttpRequest == "undefined" ) XMLHttpRequest = function() {
+    try { return new ActiveXObject("Msxml2.XMLHTTP.6.0") } catch(e) {}
+    try { return new ActiveXObject("Msxml2.XMLHTTP.3.0") } catch(e) {}
+    try { return new ActiveXObject("Msxml2.XMLHTTP") } catch(e) {}
+    try { return new ActiveXObject("Microsoft.XMLHTTP") } catch(e) {}
+    throw new Error( "This browser does not support XMLHttpRequest." )
+  }
+*/
+  http_request = XMLHttpRequest();
   http_request.onreadystatechange = stateJSON;
 }
 
