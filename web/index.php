@@ -52,7 +52,7 @@
     <div id="themes">
       <p><a class="light" href=".">L</a> <a class="dark" href="?dark">D</a></p>
     </div>
-    <div id="divRoom" style="width: 293px; height: 401px; background-image: url('rooms/r89-ups.png');"></div>
+    <div id="divRoom" style="width: 575px; height: 615px; background-image: url('rooms/room.png');"></div>
 <?php flush(); ?>
     <div id="divGraph">
       <form action="#" method="get">
