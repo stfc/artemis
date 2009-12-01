@@ -75,3 +75,6 @@ class node_apc_switched_pdu(node):
     value = float(value) / 10
 
     #Units of measurement
+    unit = UNIT_CURRENT
+    
+    return [(id, value, unit)]
