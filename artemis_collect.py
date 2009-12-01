@@ -45,6 +45,7 @@ except:
 
 #ARTEMIS Components
 from artemis_core import *
+from nodetypes import base
 
 #Try to load config module
 try:
