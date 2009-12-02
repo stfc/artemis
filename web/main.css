@@ -54,7 +54,7 @@ p#update_time {
   font-size: 7pt;
   color: #9fa09e;
 }
-div.probe-temperature, div.probe-airflow, div.probe-current {
+div.probe-temperature, div.probe-airflow, div.probe-current, div.probe-humidity {
   position: absolute;
   margin: 0;
   padding: 0;
@@ -67,7 +67,7 @@ div.probe-temperature, div.probe-airflow, div.probe-current {
 div.probe-current {
   color: #000;
 }
-div.probe-temperature:hover, div.probe-airflow:hover, div.probe-current:hover {
+div.probe-temperature:hover, div.probe-airflow:hover, div.probe-current:hover, div.probe-humidity:hover {
   cursor: pointer;
   outline: 1px dashed #000;
   z-index: 1;
