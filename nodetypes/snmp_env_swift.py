@@ -32,11 +32,13 @@ from base import *
 class node_swiftCM1(node):
   def fetch(self):
     #temperature probes
-    i = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.4.1.2")
-    if (i != None):
-      ids = i
+    id = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.4.1.2")
+    if (id != None):
+      ids   = [FAMILY_1WIRE[i[-2:]][0] + "-1WIRE-" + i[2:-2] + i[:2] for i in id]
+      units = [FAMILY_1WIRE[i[-2:]][1] for i in id]
     else:
       ids = []
+      units = []
 
     v = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.4.1.5")
     if (v != None):
@@ -45,18 +47,19 @@ class node_swiftCM1(node):
       values = []
 
     #airflow sensors
-    i = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.2")
-    if (i != None):
-      ids += i
+    id = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.2")
+    if (id != None):
+      n = [FAMILY_1WIRE[i[-2:]][0] + "-1WIRE-" + i[2:-2] + i[:2] for i in id]
+      ids += n
+      ids += ['HUMIDITY' + s[7:] for s in n]
 
-    v = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.5")
-    if (v != None):
-      values += v
+      u = [FAMILY_1WIRE[i[-2:]][1] for i in id]
+      units += u + u
 
-    units = [FAMILY_1WIRE[i[-2:]][1] for i in ids]
-
-    #This may look confusing, it's just splitting the ID up into parts
-    ids   = [FAMILY_1WIRE[i[-2:]][0] + "-1WIRE-" + i[2:-2] + i[:2] for i in ids]
+    va = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.5")
+    vh = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.7")
+    if (va != None) and (vh != None):
+      values += va + vh
     
     values = [int(v) for v in values]
 
