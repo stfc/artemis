@@ -148,6 +148,26 @@ $DATE_FORMAT = "Y-m-d H:i:s";
     $j--;
   }
 
+  $bms_colours = array(
+    'c4a000',
+    '5c3566',
+    'ce5c00',
+    '204a87',
+    '4e9a06',
+    'a40000'
+  );
+
+  //Insert BMS Alerts
+  $defs .= " COMMENT:\"---- Events ----\"";
+  $events = file_get_contents("/tmp/snmpee.json");
+  $events = json_decode($events);
+  foreach ($events as $i => $e) {
+    $t = $e[0];
+    $d = $e[1];
+    $n = $e[2];
+    $defs .= " VRULE:".(strtotime($t))."#".$bms_colours[$i].":\"".$n."\t".$d."\"";
+  }
+  
   //draw the graph to stdout, which is this page :P
   $cmd= ("rrdtool graph - "
         ." -a PNG"               //Output type
@@ -168,7 +188,7 @@ $DATE_FORMAT = "Y-m-d H:i:s";
         ." -u 60"                //Upper limit of graph
         ." -l 0"                 //Lower limit of graph
         ." $range"               //Time range
-        ." -v 'Temperature (C)  Airflow (%/10)  Current(A)'" //Vertical axis label
+        ." -v 'Temperature (C)  Airflow (%/10)  Humidity (%)  Current (A)'" //Vertical axis label
 #        ." --right-axis 1:0" //Vertical axis label
 #        ." --right-axis-label 'Airflow (%)'" //Vertical axis label
         ."$defs"); 
