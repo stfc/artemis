@@ -1,4 +1,4 @@
-const  style_highlight = "4px inset";
+const style_highlight = "4px inset";
 
 var ids = new Array();
 var style_colours = new Array( //This is where our arbitary limitation comes from
@@ -13,6 +13,11 @@ var arbitary_limit = style_colours.length;
 var http_request = null;
 var pUpdate = null;
 var divRoom = null;
+//var moving = null;
+var zoom_start  = null;
+var zoom_end    = null;
+var graph_start = null;
+var graph_end   = null;
 
 
 function viewGraph(id)
@@ -45,13 +50,23 @@ function viewGraph(id)
 
 function updateGraph()
 {
-  var start = document.getElementById('inputDateStart').value;
-  var end   = document.getElementById('inputDateEnd').value;
+  if ((zoom_start != null) && (zoom_end != null)) {
+    graph_start = zoom_start;
+    graph_end   = zoom_end;
+    zoom_start  = null;
+    zoom_end    = null;
+    document.getElementById('inputDateStart').value = graph_start;
+    document.getElementById('inputDateEnd').value   = graph_end;
+  }
+  else {
+    graph_start = parseFloat(document.getElementById('inputDateStart').value);
+    graph_end   = parseFloat(document.getElementById('inputDateEnd').value);
+  }
 
   var baseline = document.getElementById('inputBaseline').checked;
 
-  start = '&start='    + start;
-  end   = '&end='      + end;
+  var start = '&start=' + graph_start;
+  var end   = '&end='   + graph_end;
 
   mode = '';
 
@@ -79,6 +94,107 @@ function updateHighlights()
   }
 }
 
+/*
+function pickup(id)
+{
+  moving = id;
+  pUpdate.innerHTML = 'Picked Up ' + moving;
+}
+
+function drop()
+{
+  if (moving != null) {
+    pUpdate.innerHTML = 'Dropped ' + moving;
+    moving = null;
+  }
+}
+
+function move(event)
+{
+  if (moving != null) {
+    m = document.getElementById(moving);
+    m.style.left = event.clientX + "px";
+    m.style.top = event.clientY + "px";
+    pUpdate.innerHTML = 'Moved ' + moving;
+  }
+}
+*/
+
+function zoom(event)
+{
+  const min_x = 67;
+  const min_y = 42;
+  const max_x = 550;
+  const max_y = 522;
+  var range_x = max_x - min_x;
+  var range_y = max_y - min_y;
+  var graph_range = graph_end - graph_start;
+  var graph_pos = null;
+
+  x = event.layerX;
+  y = event.layerY;
+
+  img = document.getElementById('imgGraph');
+
+  if ((x >= min_x) && (y >= min_y) && (x <= max_x) && (y <= max_y)) {
+    x = x - min_x;
+    graph_pos = Math.round(((x / range_x) * graph_range) + graph_start);
+
+    if (event.type == "mousemove") {
+      if ((zoom_start == null) && (zoom_end == null)) {
+        img.style.cursor = "w-resize";
+      }
+      else if ((zoom_start != null) && (zoom_end == null)) {
+        img.style.cursor = "e-resize";
+      }
+      else {
+        img.style.cursor = "";
+      }
+    }
+    else if (event.type == "mouseup") {
+      if ((zoom_start == null) && (zoom_end == null)) {
+        zoom_start = graph_pos;
+      }
+      else if ((zoom_start != null) && (zoom_end == null)) {
+        zoom_end = graph_pos;
+        updateGraph();
+      }
+    }
+  }
+  else {
+    img.style.cursor = "";
+  }
+}
+
+function zoom_calc()
+{
+  var graph_range = graph_end - graph_start;
+  return Math.round(graph_range / 10);
+}
+
+function zoom_in()
+{
+  var zoom_step = zoom_calc();
+  zoom_start = graph_start + zoom_step;
+  zoom_end   = graph_end   - zoom_step;
+  updateGraph();
+}
+
+function zoom_out()
+{
+  var zoom_step = zoom_calc();
+  zoom_start = graph_start - zoom_step;
+  zoom_end   = graph_end   + zoom_step;
+  updateGraph();
+}
+
+function zoom_reset()
+{
+  var ut = Math.floor(new Date().getTime()/1000)
+  zoom_start = ut - 604800;
+  zoom_end   = ut;
+  updateGraph();
+}
 
 function callbackJSON(responseText)
 {
@@ -150,6 +266,8 @@ function callbackJSON(responseText)
                          + ' title="' + p_id + " - " + p_alias + '"'
                          + ' class="probe-' + type.toLowerCase() + '"'
                          + ' onclick="viewGraph(\'' + p_id + '\');"'
+//                         + ' onmousedown="pickup(\'' + p_id + '\');"'
+//                         + ' onmouseup="drop();"'
                          + ' style="'
                            + ' left: ' + p_x + 'px;'
                            + ' top: ' + p_y + 'px;'
@@ -236,7 +354,7 @@ function scaleColour(input, theme)
     t_min = 15;
     t_max = 40;
   }
-  else if (theme == "AIRFLOW") {
+  else if ((theme == "AIRFLOW") || (theme == "HUMIDITY")){
     t_min = 0;
     t_max = 100;
   }
@@ -269,6 +387,11 @@ function scaleColour(input, theme)
     r = 0;
     g = Math.round(result / 2);
     b = 0;
+  }
+  else if (theme == "HUMIDITY") {
+    r = 0;
+    g = 127 + Math.round(result / 2);
+    b = 127 + Math.round(result / 2);
   }
   else if (theme == "CURRENT") {
     r = 255;
