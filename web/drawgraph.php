@@ -165,6 +165,7 @@
 
     //Min & Max
     $defs .= " GPRINT:$id:LAST:'Now\: %.0lf\t'";
+    $defs .= " GPRINT:$id:AVERAGE:'Mean\: %.0lf\t'";
     $defs .= " GPRINT:$id:MIN:'Min\: %.0lf\t'";
     $defs .= " GPRINT:$id:MAX:'Max\: %.0lf\\n'";
 
