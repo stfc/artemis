@@ -22,17 +22,23 @@
 #  $LastChangedBy$
 #
 
-$RRD_DIR = "rrds/";
+  $RRD_DIR = "rrds/";
+  $DATE_FORMAT = "Y-m-d H:i:s";
 
-$DATE_FORMAT = "Y-m-d H:i:s";
+  $run_mode = "web";
+  if (isset($_SERVER["TERM"])) {
+    $run_mode = "cli";
+  }
 
   require('functions.php');
 
-  //We need to masquerade as an image of the png variety
-  ob_start();
-  header("Content-type: image/png");
-  ob_end_clean();
-  session_write_close();
+  if ($run_mode == "web") {
+    //We need to masquerade as an image of the png variety
+    ob_start();
+    header("Content-type: image/png");
+    ob_end_clean();
+    session_write_close();
+  }
 
   //Get list of probe ids to graph
   if (isset($_REQUEST['ids']) && strlen($_REQUEST['ids']) > 0) {
@@ -40,7 +46,12 @@ $DATE_FORMAT = "Y-m-d H:i:s";
     $ids = split(',', $ids); //arrays are better than comma seperated strings :-P
   }
   else {
-    readfile("icons/status/image-missing.png");
+    if ($run_mode == "web") {
+      readfile("icons/status/image-missing.png");
+    }
+    else {
+      echo "No probes specified";
+    }
     exit();
   }
 
@@ -54,7 +65,12 @@ $DATE_FORMAT = "Y-m-d H:i:s";
     $range .= "-s $t_start ";
   }
   else {
-    readfile("icons/status/dialog-error.png");
+    if ($run_mode == "web") {
+      readfile("icons/status/dialog-error.png");
+    }
+    else {
+      echo "Start time not specified";
+    }
     exit();
   }
 
@@ -64,13 +80,23 @@ $DATE_FORMAT = "Y-m-d H:i:s";
     $range .= "-e $t_end ";
   }
   else {
-    readfile("icons/status/dialog-warning.png");
+    if ($run_mode == "web") {
+      readfile("icons/status/dialog-warning.png");
+    }
+    else {
+      echo "Start time not specified";
+    }
     exit();
   }
 
   //Abort if start is before or the same as end
   if ($t_start >= $t_end) {
-    readfile("icons/status/image-loading.png");
+    if ($run_mode == "web") {
+      readfile("icons/status/image-loading.png");
+    }
+    else {
+      echo "Time range inverted";
+    }
     exit();
   }
 
@@ -125,7 +151,7 @@ $DATE_FORMAT = "Y-m-d H:i:s";
 
     //Calculate trend line
     if (strpos($id, 'AIRFLOW') !== false) {
-      $defs .= " CDEF:$id-holder=$id,10,/";
+      $defs .= " CDEF:$id-holder=$id,2,/";
       $defs .= " CDEF:$id-trend=$id-holder,$window,TREND";
     }
     else {
@@ -158,40 +184,46 @@ $DATE_FORMAT = "Y-m-d H:i:s";
   );
 
   //Insert BMS Alerts
-  $defs .= " COMMENT:\"---- Events ----\"";
-  $events = file_get_contents("/tmp/snmpee.json");
-  $events = json_decode($events);
-  foreach ($events as $i => $e) {
-    $t = $e[0];
-    $d = $e[1];
-    $n = $e[2];
-    $defs .= " VRULE:".(strtotime($t))."#".$bms_colours[$i].":\"".$n."\t".$d."\"";
-  }
+#  $defs .= " COMMENT:\"---- Events ----\"";
+#  $events = file_get_contents("/tmp/snmpee.json");
+#  $events = json_decode($events);
+#  foreach ($events as $i => $e) {
+#    $t = $e[0];
+#    $d = $e[1];
+#    $n = $e[2];
+#    $defs .= " VRULE:".(strtotime($t))."#".$bms_colours[$i].":\"".$n."\t".$d."\"";
+#  }
   
   //draw the graph to stdout, which is this page :P
   $cmd= ("rrdtool graph - "
-        ." -a PNG"               //Output type
-        ." -c BACK#ffffff00"       //Background colour
-        ." -c CANVAS#ffffff00"     //Graph Background colour
-        ." -c SHADEA#ffffff00"     //Top and left shade
-        ." -c SHADEB#ffffff00"     //Bottom and right shade
-        ." -c FONT#003153"       //Font colour
-        ." -c AXIS#2e3436"       //Axis colour
-        ." -c ARROW#2e3436"      //Axis arrow colour
-        ." -c MGRID#d3d7cf55"      //Major grid colour
-        ." -c GRID#eeeeec33"     //Minor grid colour
-        ." -c FRAME#2e3436"      //Frame colour
-#        ." -t '"/*.date($DATE_FORMAT, $start)*/."2008-08-08 23:23 to 34538945'"
-#       ." -E"                   //Sloping edges
-        ." -h 480"               //Height
-        ." -w 480"               //Width
-        ." -u 60"                //Upper limit of graph
-        ." -l 0"                 //Lower limit of graph
-        ." $range"               //Time range
-        ." -v 'Temperature (C)  Airflow (%/10)  Humidity (%)  Current (A)'" //Vertical axis label
-#        ." --right-axis 1:0" //Vertical axis label
-#        ." --right-axis-label 'Airflow (%)'" //Vertical axis label
-        ."$defs"); 
+    ." -a PNG"               //Output type
+    ." --pango-markup"       //Render text with Pango
+#    ." --border 1"           //Disable border
+    ." -R light"             //Slight hinting and anti-aliasing
+    ." -n AXIS:8:Helvetica"
+    ." -n UNIT:8:Helvetica"
+    ." -n LEGEND:7:Helvetica"
+    ." -c BACK#ffffffff"       //Background colour
+    ." -c CANVAS#ffffffff"     //Graph Background colour
+    ." -c SHADEA#ffffffff"     //Top and left shade
+    ." -c SHADEB#ffffffff"     //Bottom and right shade
+    ." -c FONT#003153ff"       //Font colour
+    ." -c AXIS#2e3436ff"       //Axis colour
+    ." -c ARROW#2e3436ff"      //Axis arrow colour
+    ." -c MGRID#d3d7cf"      //Major grid colour
+    ." -c GRID#eeeeec"     //Minor grid colour
+    ." -c FRAME#2e3436ff"      //Frame colour
+#    ." -t '"/*.date($DATE_FORMAT, $start)*/."2008-08-08 23:23 to 34538945'"
+#    ." -E"                   //Sloping edges
+    ." -h 480"               //Height
+    ." -w 480"               //Width
+    ." -u 50"                //Upper limit of graph
+    ." -l 0"                 //Lower limit of graph
+    ." $range"               //Time range
+    ." -v '<b>Temperature</b> °C        <b>Humidity</b> %        <b>Current</b> A'" //Vertical axis label
+    ." --right-axis 2:0" //Vertical axis label
+    ." --right-axis-label '<b>Airflow</b> %'" //Vertical axis label
+    ."$defs"); 
 
   if ($mode == null) {
     $cmd .= " -r"; //Rigid limits
