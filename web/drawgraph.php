@@ -130,7 +130,7 @@
     $base_rrd="$RRD_DIR$base_id.rrd";
     $defs .= " DEF:$base_id=$base_rrd:temp:AVERAGE";
     $colour = array_shift($colours);
-    $defs .= " HRULE:0#$colour$alpha:'$base_id\t (Baseline Probe)\\n'";
+    $defs .= " HRULE:0#$colour$alpha:'$base_id\t<b>(Baseline Probe)</b>\\n'";
   }
   else {
     $base_id = null;
@@ -164,10 +164,10 @@
     $defs .= " LINE:$id#$colour$alpha:'$label\t'";
 
     //Min & Max
-    $defs .= " GPRINT:$id:LAST:'Now\: %.0lf\t'";
-    $defs .= " GPRINT:$id:AVERAGE:'Mean\: %.0lf\t'";
-    $defs .= " GPRINT:$id:MIN:'Min\: %.0lf\t'";
-    $defs .= " GPRINT:$id:MAX:'Max\: %.0lf\\n'";
+    $defs .= " GPRINT:$id:LAST:'<b>Now</b>\: %.0lf\t'";
+    $defs .= " GPRINT:$id:AVERAGE:'<b>Mean</b>\: %.0lf\t'";
+    $defs .= " GPRINT:$id:MIN:'<b>Min</b>\: %.0lf\t'";
+    $defs .= " GPRINT:$id:MAX:'<b>Max</b>\: %.0lf\\n'";
 
     //Draw nodata markers
     $defs .= " CDEF:$id-nodata=$id,UN,$j,*,2,/";
@@ -198,30 +198,31 @@
   
   //draw the graph to stdout, which is this page :P
   $cmd= ("rrdtool graph - "
-    ." -a PNG"               //Output type
-    ." --pango-markup"       //Render text with Pango
-#    ." --border 1"           //Disable border
-    ." -R light"             //Slight hinting and anti-aliasing
+    ." -a PNG"                 //Output as an PNG Image
+    ." --pango-markup"         //Render text with Pango
+#    ." --border 1"            //Disable border
+    ." -R light"               //Slight hinting and anti-aliasing
+    ." -T 64"                  //Set tabstop width
     ." -n AXIS:8:Helvetica"
     ." -n UNIT:8:Helvetica"
     ." -n LEGEND:7:Helvetica"
-    ." -c BACK#ffffffff"       //Background colour
-    ." -c CANVAS#ffffffff"     //Graph Background colour
-    ." -c SHADEA#ffffffff"     //Top and left shade
-    ." -c SHADEB#ffffffff"     //Bottom and right shade
-    ." -c FONT#003153ff"       //Font colour
-    ." -c AXIS#2e3436ff"       //Axis colour
-    ." -c ARROW#2e3436ff"      //Axis arrow colour
-    ." -c MGRID#d3d7cf"      //Major grid colour
-    ." -c GRID#eeeeec"     //Minor grid colour
-    ." -c FRAME#2e3436ff"      //Frame colour
+    ." -c BACK#ffffff"       //Background colour
+    ." -c CANVAS#ffffff"     //Graph Background colour
+    ." -c SHADEA#ffffff"     //Top and left shade
+    ." -c SHADEB#ffffff"     //Bottom and right shade
+    ." -c FONT#2e3436"       //Font colour
+    ." -c AXIS#2e3436"       //Axis colour
+    ." -c ARROW#2e3436"      //Axis arrow colour
+    ." -c MGRID#babdb6"        //Major grid colour
+    ." -c GRID#babdb6"         //Minor grid colour
+    ." -c FRAME#2e3436"      //Frame colour
 #    ." -t '"/*.date($DATE_FORMAT, $start)*/."2008-08-08 23:23 to 34538945'"
-#    ." -E"                   //Sloping edges
-    ." -h 480"               //Height
-    ." -w 480"               //Width
-    ." -u 50"                //Upper limit of graph
-    ." -l 0"                 //Lower limit of graph
-    ." $range"               //Time range
+#    ." -E"                    //Sloping edges
+    ." -h 480"                 //Height
+    ." -w 480"                 //Width
+    ." -u 50"                  //Upper limit of graph
+    ." -l 0"                   //Lower limit of graph
+    ." $range"                 //Time range
     ." -v '<b>Temperature</b> °C        <b>Humidity</b> %        <b>Current</b> A'" //Vertical axis label
     ." --right-axis 2:0" //Vertical axis label
     ." --right-axis-label '<b>Airflow</b> %'" //Vertical axis label
