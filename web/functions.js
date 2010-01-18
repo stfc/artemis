@@ -11,7 +11,7 @@ var style_colours = new Array( //This is where our arbitary limitation comes fro
 );
 var arbitary_limit = style_colours.length;
 var http_request = null;
-var pUpdate = null;
+//var pUpdate = null;
 var divRoom = null;
 //var moving = null;
 var zoom_start  = null;
@@ -206,10 +206,10 @@ function callbackJSON(responseText)
 
   var a_probes = eval(responseText); //get probe data and eval into an array
 
-  pUpdate.innerHTML += 'HTTP state changed<br />';
+  //pUpdate.innerHTML += 'HTTP state changed<br />';
 
   if (a_probes != null) {
-    pUpdate.innerHTML += 'Got probe data<br />';
+    //pUpdate.innerHTML += 'Got probe data<br />';
     divRoom.innerHTML = null; //makes the display flash, less than optimal
 
     var unknown_count = 0;
@@ -282,10 +282,10 @@ function callbackJSON(responseText)
                          + '">'+p_value+'</p>'
                          + '</div>';
 
-      pUpdate.innerHTML += '.';
+      //pUpdate.innerHTML += '.';
     }
 
-    pUpdate.innerHTML += '<br />';
+    //pUpdate.innerHTML += '<br />';
 
     updateHighlights();
     updateGraph();
@@ -294,13 +294,13 @@ function callbackJSON(responseText)
 
     var time_took = (time_end - time_start) / 1000;
 
-    pUpdate.innerHTML += 'Update took ' + time_took + ' seconds<br />';
+    //pUpdate.innerHTML += 'Update took ' + time_took + ' seconds<br />';
   }
 }
 
 function setupJSON()
 {
-  pUpdate = document.getElementById("update_time");
+//  pUpdate = document.getElementById("update_time");
   divRoom = document.getElementById("divRoom");
 /*
   if( typeof XMLHttpRequest == "undefined" ) XMLHttpRequest = function() {
@@ -317,7 +317,7 @@ function setupJSON()
 
 function stateJSON()
 {
-  if (http_request.readyState == 0) {
+/*  if (http_request.readyState == 0) {
     pUpdate.innerHTML += 'HTTP request not initialized<br />';
   }
   else if (http_request.readyState == 1) {
@@ -329,8 +329,8 @@ function stateJSON()
   else if (http_request.readyState == 3) {
     pUpdate.innerHTML += 'HTTP request in process<br />';
   }
-  else if (http_request.readyState == 4) {
-    pUpdate.innerHTML += 'HTTP request complete<br />';
+  else*/ if (http_request.readyState == 4) {
+  //  pUpdate.innerHTML += 'HTTP request complete<br />';
     callbackJSON(http_request.responseText);
   }
 }
@@ -338,7 +338,7 @@ function stateJSON()
 function updateProbesJSON()
 {
   //Called periodically to refresh the sensor data
-  pUpdate.innerHTML = 'Making HTTP request<br />';
+//  pUpdate.innerHTML = 'Making HTTP request<br />';
 
   http_request.open('GET', './data/probe-data.json', true);
   http_request.send(null);
