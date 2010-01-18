@@ -57,12 +57,14 @@
     <div id="divGraph">
       <form action="#" method="get">
         <p>
-          <input name="date-start" id="inputDateStart" type="hidden"   value="<?php echo time()-604800; ?>" /><button type="button" id="btnCalendarStart">Start</button>
-          <input name="date-end"   id="inputDateEnd"   type="hidden"   value="<?php echo time(); ?>"        /><button type="button" id="btnCalendarEnd">End</button>
-          <button type="button" title="Shrink view" onclick="zoom_in();">&rarr; &larr;</button>
-          <button type="button" title="Expand view" onclick="zoom_out();">&larr; &rarr;</button>
-          <button type="button" title="Reset view"  onclick="zoom_reset();">Reset</button>
-          <input name="baseline"   id="inputBaseline"  type="checkbox" title="In this mode, the first probe becomes the baseline and the other probes are normalised against it." onchange="updateGraph()">Baseline Mode</input>
+          <button type="button"    title="Set Start Date" id="btnCalendarStart">Start</button>
+          <button type="button"    title="Set End Date"   id="btnCalendarEnd">End</button>
+          <button type="button"    title="Shrink view"    onclick="zoom_in();">&rarr; &larr;</button>
+          <button type="button"    title="Expand view"    onclick="zoom_out();">&larr; &rarr;</button>
+          <button type="button"    title="Reset view"     onclick="zoom_reset();">Reset</button>
+          <input  type="checkbox"  name="baseline"        id="inputBaseline"  type="checkbox" title="Use first probe as baseline and normalise other probes against it." onchange="updateGraph()">Baseline Mode</input>
+          <input  type="hidden"    name="date-start"      id="inputDateStart" type="hidden"   value="<?php echo time()-604800; ?>" />
+          <input  type="hidden"    name="date-end"        id="inputDateEnd"   type="hidden"   value="<?php echo time(); ?>"        />
         </p>
       </form>
       <script type="text/javascript">
@@ -72,7 +74,9 @@
           showsTime      :    true,                // will display a time selector
           button         :    "btnCalendarStart",  // trigger for the calendar (button ID)
           singleClick    :    false,               // double-click mode
-          onUpdate       :    updateGraph,         //update graph dates
+          onUpdate       :    updateGraph,         // update graph dates
+          showOthers     :    true,                // show days belonging to other months
+          cache          :    true,                // use one object for all calendars
           step           :    1                    // show all years in drop-down boxes (instead of every other year as default)
         });
         Calendar.setup({
@@ -81,7 +85,9 @@
           showsTime      :    true,                // will display a time selector
           button         :    "btnCalendarEnd",    // trigger for the calendar (button ID)
           singleClick    :    false,               // double-click mode
-          onUpdate       :    updateGraph,         //update graph dates
+          onUpdate       :    updateGraph,         // update graph dates
+          showOthers     :    true,                // show days belonging to other months
+          cache          :    true,                // use one object for all calendars
           step           :    1                    // show all years in drop-down boxes (instead of every other year as default)
         });
       </script>
