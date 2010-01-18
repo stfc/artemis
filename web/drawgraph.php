@@ -164,6 +164,7 @@
     $defs .= " LINE:$id#$colour$alpha:'$label\t'";
 
     //Min & Max
+    $defs .= " GPRINT:$id:LAST:'Now\: %.0lf\\n'";
     $defs .= " GPRINT:$id:MIN:'Min\: %.0lf\t'";
     $defs .= " GPRINT:$id:MAX:'Max\: %.0lf\\n'";
 
