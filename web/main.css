@@ -47,7 +47,7 @@ div#divRoom {
 }
 div#divGraph {
   position: absolute;
-  left: 680px;
+  right: 0px;
   top: 96px;
 }
 p#update_time {
