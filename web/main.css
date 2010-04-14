@@ -25,9 +25,12 @@
 html {
   font-family: verdana, sans;
   font-size: 10pt;
+  padding: 0;
 }
 body {
   color: #002740;
+  padding: 0;
+  margin: 0;
 }
 div.header {
   padding-bottom: 8px;
@@ -37,18 +40,20 @@ div.header {
 div.navbar > a {
   margin-left: 32px;
 }
+div#header, div#footer {
+  width: 100%;
+  clear: both;
+}
 div#divRoom {
   position: relative;
   border: 4px solid #555;
-  margin: 0;
   padding: 0;
   background-image: url("images/tiles.png");
   background-repeat: repeat;
+  float: left;
 }
 div#divGraph {
-  position: absolute;
-  right: 0px;
-  top: 96px;
+  float: right;
 }
 p#update_time {
   font-size: 7pt;
