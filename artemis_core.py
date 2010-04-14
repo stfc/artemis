@@ -51,8 +51,12 @@ class data_grabber(Thread):
   #Called by start(), does the actual data collection
   def run(self):
     data = self.node.fetch()
+#    print("INFO: Called fetch() on " + self.node.ip)
     if (data != None):
       self.data = data
+#      print("  OK: Got data from " + self.node.ip)
+    else:
+      print("  WARNING: Got no data from " + self.node.ip)
 
 #Import all defined datasource nodes
 from nodetypes import *
