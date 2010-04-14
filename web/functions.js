@@ -64,19 +64,32 @@ function updateGraph()
   }
 
   var baseline = document.getElementById('inputBaseline').checked;
+  var trend    = document.getElementById('inputTrend').checked;
 
   var start = '&start=' + graph_start;
   var end   = '&end='   + graph_end;
 
-  mode = '';
+  var width = window.innerWidth - parseInt(document.getElementById('divRoom').style.width);
+  if (width < 300) width = window.innerWidth; //No point trying to fit it in, so make it big.
+  document.getElementById('divGraph').style.width = width - 32 + "px";
+  width = '&width=' + (width - 32);
+
+  var mode = '';
 
   if (baseline) {
     mode  = '&mode=baseline';
   }
 
+  if (trend) {
+    trend  = '&trend=true';
+  }
+  else {
+    trend = '';
+  }
+
   //Update image, changing the date lets the browser know its a new image preloading prevents the annoying update flicker
   var imgNew = new Image();
-  imgNew.src = 'drawgraph.php?d='+(new Date()).getTime()+'&ids='+ids+start+end+mode;
+  imgNew.src = 'drawgraph.php?d='+(new Date()).getTime()+'&ids='+ids+start+end+mode+trend+width;
   document.getElementById('imgGraph').src = imgNew.src;
 }
 
@@ -227,7 +240,7 @@ function callbackJSON(responseText)
 
       var type = p_id.split('-', 1)[0];
 
-      //Put unknown probes along bottom
+      //Put unknown probes along top of room area
       if ((p_w == 0) && (p_h == 0)) {
         p_w = 24;
         p_h = 16;
