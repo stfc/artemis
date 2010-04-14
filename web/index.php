@@ -52,7 +52,13 @@
     <div id="themes">
       <p><a class="light" href=".">L</a> <a class="dark" href="?dark">D</a></p>
     </div>
-    <div id="divRoom" style="width: 575px; height: 615px; background-image: url('rooms/room.png');"<?php //onmousemove="move(event);" onmouseup="drop();"?>></div>
+<?php
+  //Get size of room from image
+  $s = getimagesize('rooms/room.png');
+  $w = $s[0];
+  $h = $s[1];
+  echo "    <div id=\"divRoom\" style=\"width: ${w}px; height: ${h}px; background-image: url('rooms/room.png');\"></div>";
+?>
 <?php flush(); ?>
     <div id="divGraph">
       <form action="#" method="get">
