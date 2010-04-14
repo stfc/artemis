@@ -45,8 +45,8 @@
     <script type="text/javascript" src="jscalendar/calendar-setup.js"></script>
   </head>
 <?php flush(); ?>
-  <body onload="setupJSON(); setInterval('updateProbesJSON()',30000); updateProbesJSON();"> 
-    <div>
+  <body onload="setupJSON(); setInterval('updateProbesJSON()',30000); updateProbesJSON();" onresize="updateGraph();"> 
+    <div id="header">
       <img src="images/logo-header.png" alt="ARTEMIS - Almost Real-Time Enviromental Monitoritoring &amp; Information System" />
     </div>
     <div id="themes">
@@ -62,7 +62,10 @@
           <button type="button"    title="Shrink view"    onclick="zoom_in();">&rarr; &larr;</button>
           <button type="button"    title="Expand view"    onclick="zoom_out();">&larr; &rarr;</button>
           <button type="button"    title="Reset view"     onclick="zoom_reset();">Reset</button>
+        </p>
+        <p>
           <input  type="checkbox"  name="baseline"        id="inputBaseline"  type="checkbox" title="Use first probe as baseline and normalise other probes against it." onchange="updateGraph()">Baseline Mode</input>
+          <input  type="checkbox"  name="trend"           id="inputTrend"     type="checkbox" title="Automatically smooth noisy data to a trendline." onchange="updateGraph()">Auto Trend</input>
           <input  type="hidden"    name="date-start"      id="inputDateStart" type="hidden"   value="<?php echo time()-604800; ?>" />
           <input  type="hidden"    name="date-end"        id="inputDateEnd"   type="hidden"   value="<?php echo time(); ?>"        />
         </p>
@@ -93,7 +96,9 @@
       </script>
       <img id="imgGraph" src="" alt="Select probes to view" onmouseedown="zoom(event);" onmouseup="zoom(event);" onmousemove="zoom(event);"/>
     </div>
-    <p>Click to compare up to six probe histories</p>
-    <p id="update_time"><!--Filled by JavaScript--></p>
+    <div id="footer">
+      <p>Click to compare up to six probe histories</p>
+      <p id="update_time"><!--Filled by JavaScript--></p>
+    </div>
   </body>
 </html>
