@@ -106,6 +106,18 @@
   else {
     $mode = null;
   }
+  
+  $trend = false;
+
+  if (isset($_GET['trend'])) {
+    $trend = true;
+  }
+
+  $width = 300;
+
+  if (isset($_GET['width'])) {
+    $width = $_GET['width'];
+  }
 
   //other usefuls
   $colours = array(
@@ -149,16 +161,20 @@
       $id = $id."-norm";
     }
 
-    //Calculate trend line
+    //Scale airflow sensors
     if (strpos($id, 'AIRFLOW') !== false) {
-      $defs .= " CDEF:$id-holder=$id,2,/";
-      $defs .= " CDEF:$id-trend=$id-holder,$window,TREND";
-    }
-    else {
-      $defs .= " CDEF:$id-trend=$id,$window,TREND";
+      $defs .= " CDEF:$id-scaled=$id,2,/";
+      $id .= "-scaled";
     }
 
-    $id = $id."-trend";
+    //Use trendline?
+    if ($trend) {
+      //Calculate trend line
+      $defs .= " CDEF:$id-trend=$id,$window,TREND";
+
+      //Switch to trendline
+      $id .= "-trend";
+    }
 
     //Plot line
     $defs .= " LINE:$id#$colour$alpha:'$label\t'";
@@ -219,7 +235,8 @@
 #    ." -t '"/*.date($DATE_FORMAT, $start)*/."2008-08-08 23:23 to 34538945'"
 #    ." -E"                    //Sloping edges
     ." -h 480"                 //Height
-    ." -w 480"                 //Width
+    ." -w $width"              //Width
+    ." --full-size-mode"       //Specify image size
     ." -u 50"                  //Upper limit of graph
     ." -l 0"                   //Lower limit of graph
     ." $range"                 //Time range
