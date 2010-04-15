@@ -233,7 +233,6 @@
     ." -c GRID#babdb6"         //Minor grid colour
     ." -c FRAME#2e3436"      //Frame colour
 #    ." -t '"/*.date($DATE_FORMAT, $start)*/."2008-08-08 23:23 to 34538945'"
-#    ." -E"                    //Sloping edges
     ." -h 480"                 //Height
     ." -w $width"              //Width
     ." --full-size-mode"       //Specify image size
@@ -247,6 +246,9 @@
 
   if ($mode == null) {
     $cmd .= " -r"; //Rigid limits
+  }
+  if ($trend) {
+    $cmd .= " -E"; //Sloping edges
   }
 
   //execute
