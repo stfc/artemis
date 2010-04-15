@@ -211,9 +211,9 @@ function zoom_reset()
 
 function callbackJSON(responseText)
 {
-  const tileSize = 16;
-  const offset_x = 8;
-  const offset_y = 4;
+  const tileSize = 28;
+  const offset_x = 0;
+  const offset_y = 0;
 
   var time_start = new Date();
 
@@ -224,6 +224,7 @@ function callbackJSON(responseText)
   if (a_probes != null) {
     //pUpdate.innerHTML += 'Got probe data<br />';
     divRoom.innerHTML = null; //makes the display flash, less than optimal
+    room_height = parseInt(document.getElementById('divRoom').style.height);
 
     var unknown_count = 0;
 
@@ -258,11 +259,11 @@ function callbackJSON(responseText)
         p_w = p_w * tileSize;  //probe width in pixels
         p_h = p_h * tileSize;  //probe height in pixels
 
-        p_x = p_x * tileSize;  //x-position in pixels
-        p_y = p_y * tileSize;  //y_position in pixels
+        p_x = (p_x + 1) * tileSize;  //x-position in pixels
+        p_y = (p_y + 1) * tileSize;  //y_position in pixels
 
-        p_x =        p_x  - (p_w / 2) - tileSize;  //x position in pixels
-        p_y = (544 - p_y) - (p_h / 2) + tileSize;  //y position in pixels
+        p_x =                p_x  - (p_w / 2) - tileSize;  //x position in pixels
+        p_y = (room_height - p_y) - (p_h / 2) + tileSize;  //y position in pixels
 
         //Apply offsets (top-left corner of floor)
         p_x = p_x + offset_x;
