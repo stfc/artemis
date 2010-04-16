@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# coding=utf8
 
 #
 #  Copyright Science and Technology Facilities Council, 2009.
@@ -26,7 +27,7 @@
 import commands, subprocess, urllib
 
 #Units
-UNIT_TEMPERATURE = chr(176) + "C"
+UNIT_TEMPERATURE = "C"
 UNIT_CURRENT     = "A"
 UNIT_AIRFLOW     = "%"
 UNIT_HUMIDITY    = "%"
@@ -43,10 +44,8 @@ SNMP_RETRIES = 2 #Number of snmp request retries
 
 def getMIB(ip, mib, community = "public"):
   """ Fetch contents of a mib by walking the tree from a defined point"""
-#  print("INFO: Called getMIB on " + ip)
   (x, d) = commands.getstatusoutput("/usr/bin/snmpwalk -r " + str(SNMP_RETRIES) + " -t " + str(SNMP_TIMEOUT) + " -v 1 -c " + community + " -O v " + ip + " " + mib + " | grep -v 'End of MIB'")
   if (x == 0):
-#    print("  OK: getMIB on " + ip + " sucessfull")
     d = d.splitlines()
     d = [r.split(': ')[-1].replace('"', '').replace(' ', '_') for r in d]
     return d

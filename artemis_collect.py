@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# coding=utf8
 
 #
 #  Copyright Science and Technology Facilities Council, 2009.
@@ -68,7 +69,7 @@ print("---- Data grab complete ----")
 
 for serial, value, units in g:
   print(str(datetime.today()) + ": Found sensor " + serial + " with value " + str(value) + units)
-  rrd = (rrd_dir + serial + rrd_ext)
+  rrd = str(rrd_dir + serial + rrd_ext)
 
   if not os.path.isfile(rrd):
     #create rrd if none exists

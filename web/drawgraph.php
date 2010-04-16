@@ -119,6 +119,12 @@
     $width = $_GET['width'];
   }
 
+  $height = 480;
+
+  if (isset($_GET['height'])) {
+    $height = $_GET['height'];
+  }
+
   //other usefuls
   $colours = array(
     'cc0000',
@@ -180,10 +186,10 @@
     $defs .= " LINE:$id#$colour$alpha:'$label\t'";
 
     //Min & Max
-    $defs .= " GPRINT:$id:LAST:'<b>Now</b>\: %.0lf\t'";
-    $defs .= " GPRINT:$id:AVERAGE:'<b>Mean</b>\: %.0lf\t'";
-    $defs .= " GPRINT:$id:MIN:'<b>Min</b>\: %.0lf\t'";
-    $defs .= " GPRINT:$id:MAX:'<b>Max</b>\: %.0lf\\n'";
+    $defs .= " GPRINT:$id:LAST:'<b>Now</b>\: %.2lf\t'";
+    $defs .= " GPRINT:$id:AVERAGE:'<b>Mean</b>\: %.2lf\t'";
+    $defs .= " GPRINT:$id:MIN:'<b>Min</b>\: %.2lf\t'";
+    $defs .= " GPRINT:$id:MAX:'<b>Max</b>\: %.2lf\\n'";
 
     //Draw nodata markers
     $defs .= " CDEF:$id-nodata=$id,UN,$j,*,2,/";
@@ -229,27 +235,27 @@
     ." -c FONT#2e3436"       //Font colour
     ." -c AXIS#2e3436"       //Axis colour
     ." -c ARROW#2e3436"      //Axis arrow colour
-    ." -c MGRID#babdb6"        //Major grid colour
-    ." -c GRID#babdb6"         //Minor grid colour
+    ." -c MGRID#babdb6"      //Major grid colour
+    ." -c GRID#babdb6"       //Minor grid colour
     ." -c FRAME#2e3436"      //Frame colour
 #    ." -t '"/*.date($DATE_FORMAT, $start)*/."2008-08-08 23:23 to 34538945'"
-    ." -h 480"                 //Height
-    ." -w $width"              //Width
-    ." --full-size-mode"       //Specify image size
-    ." -u 50"                  //Upper limit of graph
-    ." -l 0"                   //Lower limit of graph
-    ." $range"                 //Time range
-    ." -v '<b>Temperature</b> °C        <b>Humidity</b> %        <b>Current</b> A'" //Vertical axis label
-    ." --right-axis 2:0" //Vertical axis label
-    ." --right-axis-label '<b>Airflow</b> %'" //Vertical axis label
+    ." -w $width"            //Width
+    ." -h $height"           //Height
+    ." --full-size-mode"     //Specify image size
+    ." -u 50"                //Upper limit of graph
+    ." -l 0"                 //Lower limit of graph
+    ." $range"               //Time range
+    ." -v '<b>Temperature</b> °C        <b>Humidity</b> %        <b>Current</b> A'" //Left Vertical axis label
+    ." --right-axis 2:0"     //Right Vertical axis
+    ." --right-axis-label '<b>Airflow</b> %'" //Right Vertical axis label
     ."$defs"); 
 
   if ($mode == null) {
     $cmd .= " -r"; //Rigid limits
   }
-  if ($trend) {
+  #if ($trend) {
     $cmd .= " -E"; //Sloping edges
-  }
+  #}
 
   //execute
   system($cmd);

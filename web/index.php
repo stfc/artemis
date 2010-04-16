@@ -102,9 +102,5 @@
       </script>
       <img id="imgGraph" src="" alt="Select probes to view" onmouseedown="zoom(event);" onmouseup="zoom(event);" onmousemove="zoom(event);"/>
     </div>
-    <div id="footer">
-      <p>Click to compare up to six probe histories</p>
-      <p id="update_time"><!--Filled by JavaScript--></p>
-    </div>
   </body>
 </html>

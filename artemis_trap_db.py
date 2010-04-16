@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# coding=utf8
 
 from sqlalchemy import Table, Column, Integer, String, DateTime, MetaData, ForeignKey
 

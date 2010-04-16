@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# coding=utf8
 
 #
 #  Copyright Science and Technology Facilities Council, 2009.
@@ -30,40 +31,45 @@ from base import *
 #
 class node_swiftCM1_xml(node):
   def fetch(self):
-    from xml.dom import minidom
+    import xml.dom.minidom
+    from urllib2 import urlopen, URLError
+  
+    SENSOR_TYPES = {
+      "TempC"    : "TEMPERATURE",
+      "Airflow"  : "AIRFLOW",
+      "Humidity" : "HUMIDITY",
+    }
+  
+    SENSOR_UNITS = {
+      "TEMPERATURE" : UNIT_TEMPERATURE,
+      "AIRFLOW"     : UNIT_AIRFLOW,
+      "HUMIDITY"    : UNIT_HUMIDITY,  
+    }
+  
+    url = "http://" + self.ip + "/data.xml"
+    url = urlopen(url)
+  
+    base = xml.dom.minidom.parse(url)
+  
+    devices = base.documentElement.getElementsByTagName('device')
+  
+    results = [] #Empty list to take tuples of (id, value, units)
 
-    #Fetch data
-    data = urllib.urlopen('http://' + self.ip + '/data.xml')
-    data = minidom.parse(data)
-
-    return data
-
-    #temperature probes
-    if (i != None):
-      ids = i
-    else:
-      ids = []
-
-    v = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.4.1.5")
-    if (v != None):
-      values = v
-    else:
-      values = []
-
-    #airflow sensors
-    i = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.2")
-    if (i != None):
-      ids += i
-
-    v = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.5")
-    if (v != None):
-      values += v
-
-    units = [FAMILY_1WIRE[i[-2:]][1] for i in ids]
-
-    #This may look confusing, it's just splitting the ID up into parts
-    ids   = [FAMILY_1WIRE[i[-2:]][0] + "-1WIRE-" + i[2:-2] + i[:2] for i in ids]
+    for device in devices:
+      device_type = device.attributes["type"].nodeValue
+      device_name = device.attributes["name"].nodeValue
+      device_id   = device.attributes["id"].nodeValue
     
-    values = [int(v) for v in values]
+      if (device_type <> "MiniRSE"):
+        device_id   = device_id[2:-2] + device_id[:2]
+    
+        for tag in device.childNodes:
+          if tag.nodeName == "field":
+            sensor_type = tag.attributes["key"].nodeValue
+    
+            if sensor_type in SENSOR_TYPES:
+              sensor_type  = SENSOR_TYPES[tag.attributes["key"].nodeValue]
+              sensor_value = tag.attributes["value"].nodeValue
+              results += [(("%s-1WIRE-%s" % (sensor_type, device_id)), sensor_value, SENSOR_UNITS[sensor_type])]
 
-    return zip(ids, values, units)
+    return(results)
