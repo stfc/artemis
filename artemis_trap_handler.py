@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# coding=utf8
 
 #Write event to debug log
 f = open("artemis-debug-log.txt", "a")

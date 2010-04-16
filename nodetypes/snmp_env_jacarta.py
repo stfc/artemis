@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# coding=utf8
 
 #
 #  Copyright Science and Technology Facilities Council, 2009.

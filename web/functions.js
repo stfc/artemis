@@ -74,6 +74,9 @@ function updateGraph()
   document.getElementById('divGraph').style.width = width - 32 + "px";
   width = '&width=' + (width - 32);
 
+  var height = window.innerHeight - 128;
+  height = '&height=' + height;
+
   var mode = '';
 
   if (baseline) {
@@ -89,7 +92,7 @@ function updateGraph()
 
   //Update image, changing the date lets the browser know its a new image preloading prevents the annoying update flicker
   var imgNew = new Image();
-  imgNew.src = 'drawgraph.php?d='+(new Date()).getTime()+'&ids='+ids+start+end+mode+trend+width;
+  imgNew.src = 'drawgraph.php?d='+(new Date()).getTime()+'&ids='+ids+start+end+mode+trend+width+height
   document.getElementById('imgGraph').src = imgNew.src;
 }
 
@@ -211,9 +214,9 @@ function zoom_reset()
 
 function callbackJSON(responseText)
 {
-  const tileSize = 36;
-  const offset_x = 0;
-  const offset_y = 0;
+  const tileSize = 16;
+  const offset_x = 5;
+  const offset_y = 4;
 
   var time_start = new Date();
 
@@ -267,7 +270,7 @@ function callbackJSON(responseText)
       }
 
       //Scale text with probe
-      p_f = Math.min(p_w, p_h) / 4 + 4;  //font size
+      p_f = Math.min(p_w, p_h) / 6 + 4;  //font size
       p_m = (p_h / 2) - (p_f / 2) - 1;    //margin is (half probe height, minus half font size, minus one)
 
 
