@@ -89,9 +89,15 @@ for serial, value, units in g:
 
   snapshot_list.append(row)
 
-try:
-  file_json = open(this_dir + "data/probe-data.json", "w")
-  json.dump(snapshot_list, file_json)
-except:
-  print("Unable to open probe data file for writing")
 
+#Dump data
+dump_prep = {
+  "config" : config,
+  "probes" : snapshot_list,
+}
+
+try:
+  file_json_dump = open(this_dir + "data/data-dump.json", "w")
+  json.dump(dump_prep, file_json_dump)
+except:
+  print("Unable to open data dump file for writing")
