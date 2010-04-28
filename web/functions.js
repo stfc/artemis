@@ -214,13 +214,16 @@ function zoom_reset()
 
 function callbackJSON(responseText)
 {
-  const tileSize = 16;
-  const offset_x = 5;
-  const offset_y = 4;
+  var tileSize = 16;
+  var offset_x = 0;
+  var offset_y = 0;
 
   var time_start = new Date();
 
-  var a_probes = eval(responseText); //get probe data and eval into an array
+  var a_data   = eval('(' + responseText + ')'); //get probe data and eval into an array
+  var a_probes = a_data["probes"];
+
+  var tileSize = a_data["config"]["tile_size"];
 
   //pUpdate.innerHTML += 'HTTP state changed<br />';
 
@@ -253,9 +256,9 @@ function callbackJSON(responseText)
       }
       else {
         //Improve readability of small probes
-        if (p_w < 2) {
+        //if (p_w < 2) {
           p_value = Math.round(p_value);
-        }
+        //}
 
         //Convert units from tiles to pixels
         p_w = p_w * tileSize;  //probe width in pixels
@@ -271,7 +274,7 @@ function callbackJSON(responseText)
 
       //Scale text with probe
       p_f = Math.min(p_w, p_h) / 6 + 4;  //font size
-      p_m = (p_h / 2) - (p_f / 2) - 1;    //margin is (half probe height, minus half font size, minus one)
+      p_m = (p_h / 2) - (p_f / 2) - 1;   //margin is (half probe height, minus half font size, minus one)
 
 
       divRoom.innerHTML += '<div'
@@ -353,7 +356,7 @@ function updateProbesJSON()
   //Called periodically to refresh the sensor data
 //  pUpdate.innerHTML = 'Making HTTP request<br />';
 
-  http_request.open('GET', './data/probe-data.json', true);
+  http_request.open('GET', './data/data-dump.json', true);
   http_request.send(null);
 }
 
