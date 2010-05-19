@@ -128,17 +128,3 @@ a.external:after {
 a.mail:before {
   content: url("icons/actions/mail-message-new.png");
 }
-a.light, a.dark {
-  padding: 0px 2px 0px 2px;
-  text-decoration: none;
-}
-a.light {
-  background: #fff;
-  color: #000;
-  border: 1px solid #000;
-}
-a.dark {
-  background: #000;
-  color: #fff;
-  border: 1px solid #fff;
-}
