@@ -49,8 +49,13 @@
     <div id="header">
       <img src="images/logo-header.png" alt="ARTEMIS - Almost Real-Time Enviromental Monitoritoring &amp; Information System" />
     </div>
-    <div id="themes">
-      <p><a class="light" href=".">L</a> <a class="dark" href="?dark">D</a></p>
+    <div id="controls">
+      <form action="#" method="get" onchange="updateProbesJSON();">
+        <input type="checkbox" name="temperature" id="inputTemperature" checked="checked">Temperature</input>
+        <input type="checkbox" name="humidity"    id="inputHumidity"    checked="checked">Humidity</input>
+        <input type="checkbox" name="airflow"     id="inputAirflow"     checked="checked">Airflow</input>
+        <input type="checkbox" name="current"     id="inputCurrent"     checked="checked">Current</input>
+      </form>
     </div>
 <?php
   //Get size of room from image
@@ -70,10 +75,10 @@
           <button type="button"    title="Reset view"     onclick="zoom_reset();">Reset</button>
         </p>
         <p>
-          <input  type="checkbox"  name="baseline"        id="inputBaseline"  type="checkbox" title="Use first probe as baseline and normalise other probes against it." onchange="updateGraph()">Baseline Mode</input>
-          <input  type="checkbox"  name="trend"           id="inputTrend"     type="checkbox" title="Automatically smooth noisy data to a trendline." onchange="updateGraph()">Auto Trend</input>
-          <input  type="hidden"    name="date-start"      id="inputDateStart" type="hidden"   value="<?php echo time()-604800; ?>" />
-          <input  type="hidden"    name="date-end"        id="inputDateEnd"   type="hidden"   value="<?php echo time(); ?>"        />
+          <input  type="checkbox"  name="baseline"        id="inputBaseline"  title="Use first probe as baseline and normalise other probes against it." onchange="updateGraph()">Baseline Mode</input>
+          <input  type="checkbox"  name="trend"           id="inputTrend"     title="Automatically smooth noisy data to a trendline." onchange="updateGraph()">Auto Trend</input>
+          <input  type="hidden"    name="date-start"      id="inputDateStart" value="<?php echo time()-604800; ?>" />
+          <input  type="hidden"    name="date-end"        id="inputDateEnd"   value="<?php echo time(); ?>"        />
         </p>
       </form>
       <script type="text/javascript">
