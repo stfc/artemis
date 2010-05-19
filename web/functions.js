@@ -233,6 +233,13 @@ function callbackJSON(responseText)
 
     var unknown_count = 0;
 
+    var show_temperature = document.getElementById('inputTemperature').checked;
+    var show_airflow     = document.getElementById('inputAirflow').checked;
+    var show_humidity    = document.getElementById('inputHumidity').checked;
+    var show_current     = document.getElementById('inputCurrent').checked;
+
+    var room_width = parseInt(document.getElementById('divRoom').style.width);
+
     for (var i = 0; i < a_probes.length; i++) {
       var p_id    = a_probes[i][0]; //id
       var p_value = a_probes[i][1]; //value
@@ -246,59 +253,59 @@ function callbackJSON(responseText)
 
       var type = p_id.split('-', 1)[0];
 
-      //Put unknown probes along top of room area
-      if ((p_w == 0) && (p_h == 0)) {
-        p_w = 24;
-        p_h = 16;
-        p_y = -20;
-        p_x = 48 + unknown_count * 24;
-        unknown_count++;
-      }
-      else {
-        //Improve readability of small probes
-        //if (p_w < 2) {
-          p_value = Math.round(p_value);
+      if (((type == 'TEMPERATURE') && show_temperature) || ((type == 'AIRFLOW') && show_airflow) || ((type == 'HUMIDITY') && show_humidity) || ((type == 'CURRENT') && show_current)) {
+        //Put unknown probes along top of room area
+        if ((p_w == 0) && (p_h == 0)) {
+          p_w =  24;
+          p_h =  16;
+          p_y = -20;
+          p_x =  room_width - (unknown_count + 1)  * 24;
+          unknown_count++;
         //}
-
-        //Convert units from tiles to pixels
-        p_w = p_w * tileSize;  //probe width in pixels
-        p_h = p_h * tileSize;  //probe height in pixels
-
-        p_x = (p_x * tileSize) - (p_w / 2) - (tileSize / 2);  //x-position in pixels
-        p_y = (p_y * tileSize) - (p_h / 2) - (tileSize / 2);  //y_position in pixels
-
-        //Apply offsets (top-left corner of floor)
-        p_x = p_x + offset_x;
-        p_y = p_y + offset_y;
+        else {
+          //Convert units from tiles to pixels
+          p_w = p_w * tileSize;  //probe width in pixels
+          p_h = p_h * tileSize;  //probe height in pixels
+  
+          p_x = (p_x * tileSize) - (p_w / 2) - (tileSize / 2);  //x-position in pixels
+          p_y = (p_y * tileSize) - (p_h / 2) - (tileSize / 2);  //y_position in pixels
+  
+          //Apply offsets (top-left corner of floor)
+          p_x = p_x + offset_x;
+          p_y = p_y + offset_y;
+        }
+  
+        //Improve readability of probes
+        p_value = String(Math.round(p_value));
+  
+        //Scale text with probe
+        p_f = Math.max(6, Math.min(12, p_w / p_value.length));  //font size
+        p_m = (p_h / 2) - (p_f / 2) - 1;    //margin is (half probe height, minus half font size, minus one)
+  
+  
+        divRoom.innerHTML += '<div'
+                           + ' id="' + p_id + '"'
+                           + ' title="' + p_id + " - " + p_alias + '"'
+                           + ' class="probe-' + type.toLowerCase() + '"'
+                           + ' onclick="viewGraph(\'' + p_id + '\');"'
+  //                         + ' onmousedown="pickup(\'' + p_id + '\');"'
+  //                         + ' onmouseup="drop();"'
+                           + ' style="'
+                             + ' left: ' + p_x + 'px;'
+                             + ' top: ' + p_y + 'px;'
+                             + ' width: ' + p_w + 'px;'
+                             + ' height: ' + p_h + 'px;'
+                             + ' background-color: '+scaleColour(p_value, type)+';'
+                           + ' ">'
+                           + '<p'
+                           + ' style="'
+                             + ' font-size: ' + p_f + 'px;'
+                             + ' margin-top: ' + p_m + 'px;'
+                           + '">'+p_value+'</p>'
+                           + '</div>';
+  
+        //pUpdate.innerHTML += '.';
       }
-
-      //Scale text with probe
-      p_f = Math.min(p_w, p_h) / 6 + 4;  //font size
-      p_m = (p_h / 2) - (p_f / 2) - 1;   //margin is (half probe height, minus half font size, minus one)
-
-
-      divRoom.innerHTML += '<div'
-                         + ' id="' + p_id + '"'
-                         + ' title="' + p_id + " - " + p_alias + '"'
-                         + ' class="probe-' + type.toLowerCase() + '"'
-                         + ' onclick="viewGraph(\'' + p_id + '\');"'
-//                         + ' onmousedown="pickup(\'' + p_id + '\');"'
-//                         + ' onmouseup="drop();"'
-                         + ' style="'
-                           + ' left: ' + p_x + 'px;'
-                           + ' top: ' + p_y + 'px;'
-                           + ' width: ' + p_w + 'px;'
-                           + ' height: ' + p_h + 'px;'
-                           + ' background-color: '+scaleColour(p_value, type)+';'
-                         + ' ">'
-                         + '<p'
-                         + ' style="'
-                           + ' font-size: ' + p_f + 'px;'
-                           + ' margin-top: ' + p_m + 'px;'
-                         + '">'+p_value+'</p>'
-                         + '</div>';
-
-      //pUpdate.innerHTML += '.';
     }
 
     //pUpdate.innerHTML += '<br />';
