@@ -261,7 +261,7 @@ function callbackJSON(responseText)
           p_y = -20;
           p_x =  room_width - (unknown_count + 1)  * 24;
           unknown_count++;
-        //}
+        }
         else {
           //Convert units from tiles to pixels
           p_w = p_w * tileSize;  //probe width in pixels
