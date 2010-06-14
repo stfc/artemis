@@ -224,8 +224,8 @@ function callbackJSON(responseText)
   var a_probes = a_data["probes"];
 
   var tileSize = a_data["config"]["tile_size"];
-
-  //pUpdate.innerHTML += 'HTTP state changed<br />';
+  var offset_x = a_data["config"]["offset_x"];
+  var offset_y = a_data["config"]["offset_y"];
 
   if (a_probes != null) {
     //pUpdate.innerHTML += 'Got probe data<br />';
@@ -288,8 +288,6 @@ function callbackJSON(responseText)
                            + ' title="' + p_id + " - " + p_alias + '"'
                            + ' class="probe-' + type.toLowerCase() + '"'
                            + ' onclick="viewGraph(\'' + p_id + '\');"'
-  //                         + ' onmousedown="pickup(\'' + p_id + '\');"'
-  //                         + ' onmouseup="drop();"'
                            + ' style="'
                              + ' left: ' + p_x + 'px;'
                              + ' top: ' + p_y + 'px;'
@@ -303,12 +301,8 @@ function callbackJSON(responseText)
                              + ' margin-top: ' + p_m + 'px;'
                            + '">'+p_value+'</p>'
                            + '</div>';
-  
-        //pUpdate.innerHTML += '.';
       }
     }
-
-    //pUpdate.innerHTML += '<br />';
 
     updateHighlights();
     updateGraph();
@@ -316,44 +310,19 @@ function callbackJSON(responseText)
     var time_end = new Date();
 
     var time_took = (time_end - time_start) / 1000;
-
-    //pUpdate.innerHTML += 'Update took ' + time_took + ' seconds<br />';
   }
 }
 
 function setupJSON()
 {
-//  pUpdate = document.getElementById("update_time");
   divRoom = document.getElementById("divRoom");
-/*
-  if( typeof XMLHttpRequest == "undefined" ) XMLHttpRequest = function() {
-    try { return new ActiveXObject("Msxml2.XMLHTTP.6.0") } catch(e) {}
-    try { return new ActiveXObject("Msxml2.XMLHTTP.3.0") } catch(e) {}
-    try { return new ActiveXObject("Msxml2.XMLHTTP") } catch(e) {}
-    try { return new ActiveXObject("Microsoft.XMLHTTP") } catch(e) {}
-    throw new Error( "This browser does not support XMLHttpRequest." )
-  }
-*/
   http_request = XMLHttpRequest();
   http_request.onreadystatechange = stateJSON;
 }
 
 function stateJSON()
 {
-/*  if (http_request.readyState == 0) {
-    pUpdate.innerHTML += 'HTTP request not initialized<br />';
-  }
-  else if (http_request.readyState == 1) {
-    pUpdate.innerHTML += 'HTTP request set up<br />';
-  }
-  else if (http_request.readyState == 2) {
-    pUpdate.innerHTML += 'HTTP request sent<br />';
-  }
-  else if (http_request.readyState == 3) {
-    pUpdate.innerHTML += 'HTTP request in process<br />';
-  }
-  else*/ if (http_request.readyState == 4) {
-  //  pUpdate.innerHTML += 'HTTP request complete<br />';
+  if (http_request.readyState == 4) {
     callbackJSON(http_request.responseText);
   }
 }
@@ -361,8 +330,6 @@ function stateJSON()
 function updateProbesJSON()
 {
   //Called periodically to refresh the sensor data
-//  pUpdate.innerHTML = 'Making HTTP request<br />';
-
   http_request.open('GET', './data/data-dump.json', true);
   http_request.send(null);
 }

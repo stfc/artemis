@@ -156,6 +156,8 @@
 
   foreach ($ids as $i => $id) {
     $label = $id;
+    $id_origin = $id;
+
     $rrd="$RRD_DIR$id.rrd";  //datasource
     $colour=$colours[$i]; //grab colour
     //describe each probe's graph drawing here
@@ -167,8 +169,8 @@
       $id = $id."-norm";
     }
 
-    //Scale airflow sensors
-    if (strpos($id, 'AIRFLOW') !== false) {
+    //Scale airflow and humidity sensors
+    if ((strpos($id, 'AIRFLOW') !== false) or (strpos($id, 'HUMIDITY') !== false)) {
       $defs .= " CDEF:$id-scaled=$id,2,/";
       $id .= "-scaled";
     }
@@ -186,10 +188,10 @@
     $defs .= " LINE:$id#$colour$alpha:'$label\t'";
 
     //Min & Max
-    $defs .= " GPRINT:$id:LAST:'<b>Now</b>\: %.2lf\t'";
-    $defs .= " GPRINT:$id:AVERAGE:'<b>Mean</b>\: %.2lf\t'";
-    $defs .= " GPRINT:$id:MIN:'<b>Min</b>\: %.2lf\t'";
-    $defs .= " GPRINT:$id:MAX:'<b>Max</b>\: %.2lf\\n'";
+    $defs .= " GPRINT:$id_origin:LAST:'<b>Now</b>\: %.2lf\t'";
+    $defs .= " GPRINT:$id_origin:AVERAGE:'<b>Mean</b>\: %.2lf\t'";
+    $defs .= " GPRINT:$id_origin:MIN:'<b>Min</b>\: %.2lf\t'";
+    $defs .= " GPRINT:$id_origin:MAX:'<b>Max</b>\: %.2lf\\n'";
 
     //Draw nodata markers
     $defs .= " CDEF:$id-nodata=$id,UN,$j,*,2,/";
@@ -245,9 +247,9 @@
     ." -u 50"                //Upper limit of graph
     ." -l 0"                 //Lower limit of graph
     ." $range"               //Time range
-    ." -v '<b>Temperature</b> °C        <b>Humidity</b> %        <b>Current</b> A'" //Left Vertical axis label
+    ." -v '<b>Temperature</b> °C        <b>Current</b> A'" //Left Vertical axis label
     ." --right-axis 2:0"     //Right Vertical axis
-    ." --right-axis-label '<b>Airflow</b> %'" //Right Vertical axis label
+    ." --right-axis-label '<b>Airflow</b> %        <b>Humidity</b> %'" //Right Vertical axis label
     ."$defs"); 
 
   if ($mode == null) {
