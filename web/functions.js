@@ -384,8 +384,8 @@ function scaleColour(input, theme)
     b = 127 + Math.round(result / 2);
   }
   else if (theme == "CURRENT") {
-    r = 255;
-    g = 127 + Math.round(result / 2);
+    r = result;
+    g = result;
     b = 0;
   }
   else {
