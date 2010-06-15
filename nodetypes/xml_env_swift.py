@@ -24,6 +24,8 @@
 #  $LastChangedBy$
 #
 
+SOCKET_TIMEOUT = 10
+
 from base import *
 
 ##
@@ -32,7 +34,8 @@ from base import *
 class node_swiftCM1_xml(node):
   def fetch(self):
     import xml.dom.minidom
-    from urllib2 import urlopen, URLError
+    import socket
+    from urllib2 import urlopen, URLError    
   
     SENSOR_TYPES = {
       "TempC"    : "TEMPERATURE",
@@ -45,31 +48,43 @@ class node_swiftCM1_xml(node):
       "AIRFLOW"     : UNIT_AIRFLOW,
       "HUMIDITY"    : UNIT_HUMIDITY,  
     }
-  
+ 
+    socket.setdefaulttimeout(SOCKET_TIMEOUT)
     url = "http://" + self.ip + "/data.xml"
-    url = urlopen(url)
-  
-    base = xml.dom.minidom.parse(url)
-  
-    devices = base.documentElement.getElementsByTagName('device')
-  
-    results = [] #Empty list to take tuples of (id, value, units)
+    try:
+      url = urlopen(url)
+    except URLError:
+      print(self.ip + " timed out")
 
-    for device in devices:
-      device_type = device.attributes["type"].nodeValue
-      device_name = device.attributes["name"].nodeValue
-      device_id   = device.attributes["id"].nodeValue
-    
-      if (device_type <> "MiniRSE"):
-        device_id   = device_id[2:-2] + device_id[:2]
-    
-        for tag in device.childNodes:
-          if tag.nodeName == "field":
-            sensor_type = tag.attributes["key"].nodeValue
-    
-            if sensor_type in SENSOR_TYPES:
-              sensor_type  = SENSOR_TYPES[tag.attributes["key"].nodeValue]
-              sensor_value = tag.attributes["value"].nodeValue
-              results += [(("%s-1WIRE-%s" % (sensor_type, device_id)), sensor_value, SENSOR_UNITS[sensor_type])]
+    if url:
+      try:
+        base = xml.dom.minidom.parse(url)
+      except IOError:
+        print("Could not grab data from " + self.ip + " - timed out")
+        return([])
+  
+      devices = base.documentElement.getElementsByTagName('device')
+  
+      results = [] #Empty list to take tuples of (id, value, units)
 
-    return(results)
+      if len(devices) > 0:
+        for device in devices:
+          device_type = device.attributes["type"].nodeValue
+          device_name = device.attributes["name"].nodeValue
+          device_id   = device.attributes["id"].nodeValue
+    
+          if (device_type <> "MiniRSE"):
+            device_id   = device_id[2:-2] + device_id[:2]
+    
+            for tag in device.childNodes:
+              if tag.nodeName == "field":
+                sensor_type = tag.attributes["key"].nodeValue
+    
+                if sensor_type in SENSOR_TYPES:
+                  sensor_type  = SENSOR_TYPES[tag.attributes["key"].nodeValue]
+                  sensor_value = tag.attributes["value"].nodeValue
+                  results += [(("%s-1WIRE-%s" % (sensor_type, device_id)), sensor_value, SENSOR_UNITS[sensor_type])]
+
+      return(results)
+    else:
+      return([])
