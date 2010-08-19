@@ -59,6 +59,7 @@ except:
 this_dir = os.path.dirname(os.path.realpath( __file__ )) + "/"
 rrd_dir  = this_dir + rrd_dir
 
+print("Starting run...")
 
 #Start collection
 g = grabData(base_nodes)
