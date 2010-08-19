@@ -67,8 +67,9 @@ class node_swiftCM1_xml(node):
           device_type = device.attributes["type"].nodeValue
           device_name = device.attributes["name"].nodeValue
           device_id   = device.attributes["id"].nodeValue
+          device_up   = device.attributes["available"].nodeValue
     
-          if (device_type <> "MiniRSE"):
+          if (device_up and (device_type <> "MiniRSE")):
             device_id   = device_id[2:-2] + device_id[:2]
     
             for tag in device.childNodes:
