@@ -47,7 +47,7 @@
   }
   else {
     if ($run_mode == "web") {
-      readfile("icons/status/image-missing.png");
+      readfile("images/select.png");
     }
     else {
       echo "No probes specified";
