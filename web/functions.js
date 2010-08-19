@@ -204,6 +204,23 @@ function zoom_out()
   updateGraph();
 }
 
+
+function zoom_back()
+{
+  var zoom_step = zoom_calc();
+  zoom_start = graph_start - zoom_step;
+  zoom_end   = graph_end   - zoom_step;
+  updateGraph();
+}
+
+function zoom_forward()
+{
+  var zoom_step = zoom_calc();
+  zoom_start = graph_start + zoom_step;
+  zoom_end   = graph_end   + zoom_step;
+  updateGraph();
+}
+
 function zoom_reset()
 {
   var ut = Math.floor(new Date().getTime()/1000)
