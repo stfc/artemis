@@ -1,13 +1,86 @@
 const style_highlight = "4px inset";
 
+function map(x, in_min, in_max, out_min, out_max)
+{
+  return Math.round((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
+}
+
+function RGBColour(r, g ,b)
+{
+  this.r = r;
+  this.g = g;
+  this.b = b;
+
+  this.hex = RGBColourToHex;
+}
+
+function RGBColourToHex()
+{
+  var result = "";
+  var rgb = [this.r, this.g, this.b];
+
+  for (i in rgb) {
+    s = rgb[i].toString(16);
+
+    while (s.length < 2) {
+      s = "0" + s;
+    }
+
+    result = result + s;
+  }
+  return result;
+}
+
+
+function mapRGB(x, in_min, in_max, rgb_min, rgb_max)
+{
+  r = map(x, in_min, in_max, rgb_min.r, rgb_max.r);
+  g = map(x, in_min, in_max, rgb_min.g, rgb_max.g);
+  b = map(x, in_min, in_max, rgb_min.b, rgb_max.b);
+  return new RGBColour(r,g,b);
+}
+
+
+//Tango Palette definition as RGBColours for later use
+var Blue          = new RGBColour(  0,   0, 255);
+var Red           = new RGBColour(255,   0,   0);
+
+var Butter_1      = new RGBColour(252, 233,  79);
+var Butter_2      = new RGBColour(237, 212,   0);
+var Butter_3      = new RGBColour(196, 160,   0);
+var Chameleon_1   = new RGBColour(138, 226,  52);
+var Chameleon_2   = new RGBColour(115, 210,  22);
+var Chameleon_3   = new RGBColour( 78, 154,   6);
+var Orange_1      = new RGBColour(252, 175,  62);
+var Orange_2      = new RGBColour(245, 121,   0);
+var Orange_3      = new RGBColour(206,  92,   0);
+var Sky_Blue_1    = new RGBColour(114, 159, 207);
+var Sky_Blue_2    = new RGBColour( 52, 101, 164);
+var Sky_Blue_3    = new RGBColour( 32,  74, 135);
+var Plum_1        = new RGBColour(173, 127, 168);
+var Plum_2        = new RGBColour(117,  80, 123);
+var Plum_3        = new RGBColour( 92,  53, 102);
+var Chocolate_1   = new RGBColour(233, 185, 110);
+var Chocolate_2   = new RGBColour(193, 125,  17);
+var Chocolate_3   = new RGBColour(143,  89,   2);
+var Scarlet_Red_1 = new RGBColour(239,  41,  41);
+var Scarlet_Red_2 = new RGBColour(204,   0,   0);
+var Scarlet_Red_3 = new RGBColour(164,   0,   0);
+var Aluminium_1   = new RGBColour(238, 238, 236);
+var Aluminium_2   = new RGBColour(211, 215, 207);
+var Aluminium_3   = new RGBColour(186, 189, 182);
+var Aluminium_4   = new RGBColour(136, 138, 133);
+var Aluminium_5   = new RGBColour( 85,  87,  83);
+var Aluminium_6   = new RGBColour( 46,  52,  54);
+
 var ids = new Array();
 var style_colours = new Array( //This is where our arbitary limitation comes from
-  'cc0000',
-  '73d216',
-  '3465a4',
-  'f57900',
-  '75507b',
-  'edd400'
+  Scarlet_Red_2.hex(),
+  Chameleon_2.hex(),
+  Sky_Blue_2.hex(),
+  Plum_2.hex(),
+  Orange_2.hex(),
+  Butter_2.hex()
 );
 var arbitary_limit = style_colours.length;
 var http_request = null;
@@ -135,7 +208,7 @@ function move(event)
   }
 }
 */
-
+/*
 function zoom(event)
 {
   const min_x = 67;
@@ -228,7 +301,7 @@ function zoom_reset()
   zoom_end   = ut;
   updateGraph();
 }
-
+*/
 function callbackJSON(responseText)
 {
   var tileSize = 16;
@@ -360,18 +433,26 @@ function scaleColour(input, theme)
   if (theme == "TEMPERATURE") {
     t_min = 15;
     t_max = 40;
+    rgb_min = Blue;
+    rgb_max = Red;
   }
   else if ((theme == "AIRFLOW") || (theme == "HUMIDITY")){
     t_min = 0;
     t_max = 100;
+    rgb_min = Sky_Blue_3;
+    rgb_max = Chameleon_1;
   }
   else if (theme == "CURRENT") {
     t_min = 0;
     t_max = 16;
+    rgb_min = Chocolate_3;
+    rgb_max = Butter_1;
   }
   else {
     t_min = 0;
     t_max = 50;
+    rgb_min = Aluminium_6;
+    rgb_max = Aluminium_1;
   }
 
   //range of colour scale
@@ -383,35 +464,8 @@ function scaleColour(input, theme)
   t = Math.min(t_max, t);
 
   //Apply transformation
-  var result = Math.round((((t - t_min) / (t_max - t_min)) * (c_max - c_min)) + c_min);
-
-  if (theme == "TEMPERATURE") {
-    r = result;
-    g = 0;
-    b = 255 - result;
-  }
-  else if (theme == "AIRFLOW") {
-    r = 0;
-    g = Math.round(result / 2);
-    b = 0;
-  }
-  else if (theme == "HUMIDITY") {
-    r = 0;
-    g = 127 + Math.round(result / 2);
-    b = 127 + Math.round(result / 2);
-  }
-  else if (theme == "CURRENT") {
-    r = result;
-    g = result;
-    b = 0;
-  }
-  else {
-    r = result;
-    g = result;
-    b = result;
-  }
-
-  var colour = 'rgb('+r+', '+g+', '+b+')';
+  var result = mapRGB(t, t_min, t_max, rgb_min, rgb_max);
+  var colour = 'rgb('+result.r+', '+result.g+', '+result.b+')';
 
   return colour;
 }
