@@ -72,6 +72,8 @@
           <button type="button"    title="Set End Date"   id="btnCalendarEnd">End</button>
           <button type="button"    title="Shrink view"    onclick="zoom_in();">&rarr; &larr;</button>
           <button type="button"    title="Expand view"    onclick="zoom_out();">&larr; &rarr;</button>
+          <button type="button"    title="Move Backwards" onclick="zoom_back();">&larr;</button>
+          <button type="button"    title="Move Forwards"  onclick="zoom_forward();">&rarr;</button>
           <button type="button"    title="Reset view"     onclick="zoom_reset();">Reset</button>
         </p>
         <p>
