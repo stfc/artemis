@@ -67,7 +67,7 @@ div.probe-temperature, div.probe-airflow, div.probe-current, div.probe-humidity 
   height: 64px;
   text-align: center;
   color: #fff;
-  opacity: 0.75;
+  opacity: 0.8;
 }
 div.probe-current {
   color: #000;
