@@ -25,6 +25,7 @@
 #
 
 from threading import Thread
+from time import time
 
 #Data fetch loop
 def grabData(nodeset):
@@ -51,14 +52,13 @@ class data_grabber(Thread):
     self.data = None
   #Called by start(), does the actual data collection
   def run(self):
+    start_time = time()
     data = self.node.fetch()
-#    print("INFO: Called fetch() on " + self.node.ip)
+    end_time = time()
+    print("Fetch on %s %s (%s) ran for %f seconds" % (self.node.ip, self.node.__class__, self._Thread__name, end_time-start_time))
     if (data != None):
       self.data = data
-#      print("  OK: Got data from " + self.node.ip)
-    else:
-      print("  WARNING: Got no data from " + self.node.ip)
 
 #Import all defined datasource nodes
-from nodetypes import *
+#from nodetypes import *
 
