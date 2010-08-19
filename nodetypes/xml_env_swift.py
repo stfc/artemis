@@ -24,7 +24,7 @@
 #  $LastChangedBy$
 #
 
-SOCKET_TIMEOUT = 10
+SOCKET_TIMEOUT = 20
 
 from base import *
 
@@ -51,23 +51,18 @@ class node_swiftCM1_xml(node):
  
     socket.setdefaulttimeout(SOCKET_TIMEOUT)
     url = "http://" + self.ip + "/data.xml"
-    try:
-      url = urlopen(url)
-    except URLError:
-      print(self.ip + " timed out")
 
-    if url:
-      try:
-        base = xml.dom.minidom.parse(url)
-      except IOError:
-        print("Could not grab data from " + self.ip + " - timed out")
-        return([])
-  
+    try:
+      res = urlopen(url)
+      print(url + " " + str(res))
+      base = xml.dom.minidom.parse(res)
+
       devices = base.documentElement.getElementsByTagName('device')
+      device_count = len(devices)
   
       results = [] #Empty list to take tuples of (id, value, units)
 
-      if len(devices) > 0:
+      if device_count > 0:
         for device in devices:
           device_type = device.attributes["type"].nodeValue
           device_name = device.attributes["name"].nodeValue
@@ -84,7 +79,22 @@ class node_swiftCM1_xml(node):
                   sensor_type  = SENSOR_TYPES[tag.attributes["key"].nodeValue]
                   sensor_value = tag.attributes["value"].nodeValue
                   results += [(("%s-1WIRE-%s" % (sensor_type, device_id)), sensor_value, SENSOR_UNITS[sensor_type])]
-
-      return(results)
-    else:
+                else:
+                  print(url + " Ignoring sensor with type: " + sensor_type)
+          else:
+            print(url + " Found base unit")
+        print("%s found %d attached devices" % (url, device_count))
+        return(results)
+      else:
+        print(url + " No attached devices found")
+        return([])
+    except URLError:
+      print("Could not grab data from " + url + " - URLError")
       return([])
+    except IOError:
+      print("Could not grab data from " + url + " - IOError")
+      return([])
+    except:
+      print("Could not grab data from " + url + " - Unknown Exception")
+      return([])
+    return([]) #Backstop
