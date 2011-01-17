@@ -208,7 +208,7 @@ function move(event)
   }
 }
 */
-/*
+
 function zoom(event)
 {
   const min_x = 67;
@@ -301,7 +301,7 @@ function zoom_reset()
   zoom_end   = ut;
   updateGraph();
 }
-*/
+
 function callbackJSON(responseText)
 {
   var tileSize = 16;
