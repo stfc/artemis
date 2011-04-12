@@ -25,6 +25,8 @@
 
 import artemis_config
 
+RRD_DIR = "/home/apache/html/r89-hpd/rrds/"
+
 #Fall back to simplejson for versions of python < 2.5 (simplejson requires seperate install)
 try:
   import json
@@ -57,7 +59,7 @@ for sensor in sensors:
     sensorcount = sensorcount + 1
     sensormap[sensorcount] = 0
     (x, y) = artemis_config.sensors[sensor][1:3]
-    rrd = "/home/apache/html/r89-hpd/rrds/" + sensor + ".rrd"
+    rrd = RRD_DIR + sensor + ".rrd"
     data = rrdtool.fetch(rrd, "AVERAGE", "-s", "-2d", "-e" "-1d")
     ((time_start, time_end, period), (name), (data)) = data
 
