@@ -25,7 +25,7 @@
 import json, urllib2, datetime
 
 
-def process(d, f):
+def process(d, f, mode):
   x = []
   y = []
   z = []
@@ -41,11 +41,11 @@ def process(d, f):
         y.append(c)
         z.append(v)
 
-  plot(x, y, z, "R89 HPD Room", f)
+  plot(x, y, z, "R89 HPD Room", f, mode)
 
   
 
-def plot(x, y, z, title, filename):
+def plot(x, y, z, title, filename, mode):
   import numpy as np
   from matplotlib.mlab import griddata
   
@@ -78,54 +78,73 @@ def plot(x, y, z, title, filename):
   
   plt.colorbar()
   
-  f = "hm/hm_%s.png" % filename
-  if MODE == 1:
+  if mode == "range":
+    f = "hm/hm_%s.png" % filename
+  else:
+    f = "heatmap.png"
+
+  if mode == "gui":
+    plt.show()
+  else:
     plt.savefig(f)
     print("Wrote " + f)
-  else:
-    plt.show()
 
   plt.clf()
 
 
 
+if __name__ == "__main__":
+  from optparse import OptionParser
+  
+  VERSION = "1.0"
+  
+  p = OptionParser(version=VERSION)
+  
+  p.usage = "    %prog URL [options]"
+  
+  p.description = "A utility to plot heatmaps from artemis probe data."
+  
+  p.add_option("--mode", metavar="STR", dest="mode", default="single", help="Run mode")
+  
+  (o, a) = p.parse_args()
 
-MODE = 1
+  if len(a) == 1:
+    url = a[0]
 
-if MODE == 0:
-  p = urllib2.urlopen("http://thor.gridpp.rl.ac.uk/r89-hpd/data/data-dump.json")
-  p = json.load(p)
-  p = p["probes"]
-  process(p, "dump")
+    p = urllib2.urlopen(url)
+    p = json.load(p)
 
-elif MODE == 1:
-  p = urllib2.urlopen("http://thor.gridpp.rl.ac.uk/r89-hpd/artemis_dump.php")
-  p = json.load(p)
-
-  (time_start, period, time_end, p) = p
-  time_start = int(time_start)
-  period     = int(period)
-  time_end   = int(time_end)
-
-  for t in p.items():
-    (t,rv) = t
-
-    x = []
-    y = []
-    z = []
-
-    for r in rv:
-      (r,c,v) = r
-
-      if v <> None:
-        x.append(float(r))
-        y.append(float(c))
-        z.append(float(v))
-
-    if (len(x) == len(y)) and (len(x) == len(z)) and (len(x) > 0):
-      plot(x, y, z, "R89 HPD Room at %s" % datetime.datetime.fromtimestamp(time_start + period * int(t)).strftime("%Y-%m-%d %H:%M:%S"), "%05d" % int(t))
-
-else:
-  import sys
-  sys.exit("ERROR: Unknown run mode")
-
+    if o.mode == "gui" or o.mode == "single":
+      p = p["probes"]
+      process(p, "dump", o.mode)
+    
+    elif o.mode == "range":
+      (time_start, period, time_end, p) = p
+      time_start = int(time_start)
+      period     = int(period)
+      time_end   = int(time_end)
+    
+      for t in p.items():
+        (t,rv) = t
+    
+        x = []
+        y = []
+        z = []
+    
+        for r in rv:
+          (r,c,v) = r
+    
+          if v <> None:
+            x.append(float(r))
+            y.append(float(c))
+            z.append(float(v))
+    
+        if (len(x) == len(y)) and (len(x) == len(z)) and (len(x) > 0):
+          plot(x, y, z, "R89 HPD Room at %s" % datetime.datetime.fromtimestamp(time_start + period * int(t)).strftime("%Y-%m-%d %H:%M:%S"), "%05d" % int(t), o.mode)
+    
+    else:
+      import sys
+      sys.exit("ERROR: Unknown run mode")
+  else:
+    import sys
+    sys.exit("ERROR: URL not specified")
