@@ -22,7 +22,21 @@
 #  $LastChangedBy$
 #
 
-import json, urllib2, datetime
+import urllib2, datetime
+
+#Fall back to simplejson for versions of python < 2.5 (simplejson requires seperate install)
+try:
+  import json
+except:
+  try:
+    import simplejson as json
+  except:
+    sys.exit("ERROR: Unable to find a usable json module, is simplejson installed?")
+
+
+TEMP_MIN = 15
+TEMP_MAX = 38
+DPI = 106
 
 
 def process(d, f, mode):
@@ -42,7 +56,6 @@ def process(d, f, mode):
         z.append(v)
 
   plot(x, y, z, "R89 HPD Room", f, mode)
-
   
 
 def plot(x, y, z, title, filename, mode):
@@ -67,30 +80,33 @@ def plot(x, y, z, title, filename, mode):
   plt.scatter(x,y,marker='o',c='b',s=5,zorder=10)
   #CS = plt.contour(xi,yi,zi,15,linewidths=0.5,colors='k')
   #CS = plt.contourf(xi,yi,zi,15,cmap=plt.cm.jet)
-  plt.pcolor(xi,yi,zi)
-  plt.clim(15,38)
+  plt.pcolor(xi,yi,zi,cmap=plt.cm.jet)
+  plt.clim(TEMP_MIN, TEMP_MAX)
   ax = plt.axes()
   ax.set_aspect('equal')
   plt.xlim(min(x), max(x))
   plt.ylim(max(y), min(y))
 
-  plt.suptitle(title)
-  
-  plt.colorbar()
   
   if mode == "range":
     f = "hm/hm_%s.png" % filename
   else:
-    f = "heatmap.png"
+    f = filename
 
   if mode == "gui":
     plt.show()
+    plt.suptitle(title)
+    plt.colorbar()
   else:
-    plt.savefig(f)
+    for a in ax.get_xticklabels():
+      a.set_visible(False) 
+    for a in ax.get_yticklabels():
+      a.set_visible(False) 
+
+    plt.savefig(f, dpi=DPI)
     print("Wrote " + f)
 
   plt.clf()
-
 
 
 if __name__ == "__main__":
@@ -105,6 +121,7 @@ if __name__ == "__main__":
   p.description = "A utility to plot heatmaps from artemis probe data."
   
   p.add_option("--mode", metavar="STR", dest="mode", default="single", help="Run mode")
+  p.add_option("--filename", metavar="STR", dest="filename", default="heatmap.png", help="Output filename (ignored in gui mode)")
   
   (o, a) = p.parse_args()
 
@@ -116,7 +133,7 @@ if __name__ == "__main__":
 
     if o.mode == "gui" or o.mode == "single":
       p = p["probes"]
-      process(p, "dump", o.mode)
+      process(p, o.filename, o.mode)
     
     elif o.mode == "range":
       (time_start, period, time_end, p) = p
