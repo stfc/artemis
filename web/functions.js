@@ -432,7 +432,7 @@ function scaleColour(input, theme)
   //range of input scale
   if (theme == "TEMPERATURE") {
     t_min = 15;
-    t_max = 40;
+    t_max = 35;
     rgb_min = Blue;
     rgb_max = Red;
   }
