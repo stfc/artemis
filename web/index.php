@@ -52,9 +52,9 @@
     <div id="controls">
       <form action="#" method="get" onchange="updateProbesJSON();">
         <input type="checkbox" name="temperature" id="inputTemperature" checked="checked">Temperature</input>
-        <input type="checkbox" name="humidity"    id="inputHumidity"    checked="checked">Humidity</input>
-        <input type="checkbox" name="airflow"     id="inputAirflow"     checked="checked">Airflow</input>
-        <input type="checkbox" name="current"     id="inputCurrent"     checked="checked">Current</input>
+        <input type="checkbox" name="humidity"    id="inputHumidity">Humidity</input>
+        <input type="checkbox" name="airflow"     id="inputAirflow">Airflow</input>
+        <input type="checkbox" name="current"     id="inputCurrent">Current</input>
       </form>
     </div>
 <?php
