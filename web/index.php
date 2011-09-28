@@ -79,6 +79,7 @@
         <p>
           <input  type="checkbox"  name="baseline"        id="inputBaseline"  title="Use first probe as baseline and normalise other probes against it." onchange="updateGraph()">Baseline Mode</input>
           <input  type="checkbox"  name="trend"           id="inputTrend"     title="Automatically smooth noisy data to a trendline." onchange="updateGraph()">Auto Trend</input>
+          <input  type="checkbox"  name="bms"             id="inputBms"       title="Show BMS events on graph." onchange="updateGraph()">BMS Events</input>
           <input  type="hidden"    name="date-start"      id="inputDateStart" value="<?php echo time()-604800; ?>" />
           <input  type="hidden"    name="date-end"        id="inputDateEnd"   value="<?php echo time(); ?>"        />
         </p>

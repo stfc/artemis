@@ -26,7 +26,7 @@
   $DATE_FORMAT = "Y-m-d H:i:s";
 
   $run_mode = "web";
-  if (isset($_SERVER["TERM"])) {
+  if (isset($_SERVER["TERM"]) or isset($_REQUEST["debug"])) {
     $run_mode = "cli";
   }
 
@@ -126,6 +126,11 @@
     $height = $_GET['height'];
   }
 
+  $show_bms = False;
+
+  if (isset($_GET['bms'])) {
+    $show_bms = True;
+  }
   //other usefuls
   $colours = array(
     'cc0000',
@@ -221,15 +226,18 @@
   );
 
   //Insert BMS Alerts
-#  $defs .= " COMMENT:\"---- Events ----\"";
-#  $events = file_get_contents("/tmp/snmpee.json");
-#  $events = json_decode($events);
-#  foreach ($events as $i => $e) {
-#    $t = $e[0];
-#    $d = $e[1];
-#    $n = $e[2];
-#    $defs .= " VRULE:".(strtotime($t))."#".$bms_colours[$i].":\"".$n."\t".$d."\"";
-#  }
+  if ($show_bms) {
+    $dbh = new PDO('sqlite://root/artemis_traps.sqlite');
+    $defs .= ' COMMENT:"---- BMS Events ----\n"';
+    $i = 0;
+    foreach ($dbh->query("select cast(strftime(\"%s\", timestamp) as INTEGER) as ts, value, label from bms_events where ts between $t_start and $t_end and label not like '%AHU%' and label not like 'Atrium%';") as $row) {
+      $defs .= sprintf(' VRULE:%s#%s:"%s\n":dashes', $row["ts"], $bms_colours[$i], $row["label"]);
+      $i++;
+      if ($i >= sizeof($bms_colours)) {
+        $i = 0;
+      }
+    }
+  }
   
   //draw the graph to stdout, which is this page :P
   $cmd= ("rrdtool graph - "
