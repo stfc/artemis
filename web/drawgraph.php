@@ -36,6 +36,7 @@
     //We need to masquerade as an image of the png variety
     ob_start();
     header("Content-type: image/png");
+    #header("Content-type: text/plain");
     ob_end_clean();
     session_write_close();
   }
@@ -187,6 +188,16 @@
     //Plot line
     $defs .= " LINE:$id#$colour$alpha:'$label\t'";
 
+    //Experimental rate of change line
+    $defs .= " CDEF:$id-prev=$id,PREV\($id\),-";
+#    $defs .= " CDEF:$id-prev=$id,PREV\($id\),-";
+    $defs .= " CDEF:$id-prevh=$id-prev,1,GT";
+    $defs .= " CDEF:$id-prevu=$id-prev,-1,LT";
+    $defs .= " CDEF:$id-preva=$id-prev,ABS";
+    $defs .= " AREA:$id-preva#00000055";
+    $defs .= " TICK:$id-prevh#ff000033:1";
+    $defs .= " TICK:$id-prevu#0000ff33:1";
+
     //Min & Max
     $defs .= " GPRINT:$id_origin:LAST:'<b>Now</b>\: %.2lf\t'";
     $defs .= " GPRINT:$id_origin:AVERAGE:'<b>Mean</b>\: %.2lf\t'";
@@ -260,5 +271,10 @@
   #}
 
   //execute
-  system($cmd);
+  $xc = 0;
+  system($cmd, $xc);
+  if ($xc > 0) {
+    echo "Graph Drawing Failed\n\n";
+    echo $cmd;
+  }
 ?>
