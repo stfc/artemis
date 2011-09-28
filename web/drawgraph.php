@@ -228,9 +228,8 @@
   //Insert BMS Alerts
   if ($show_bms) {
     $dbh = new PDO('sqlite://root/artemis_traps.sqlite');
-    $defs .= ' COMMENT:"---- BMS Events ----\n"';
     $i = 0;
-    foreach ($dbh->query("select cast(strftime(\"%s\", timestamp) as INTEGER) as ts, value, label from bms_events where ts between $t_start and $t_end and label not like '%AHU%' and label not like 'Atrium%';") as $row) {
+    foreach ($dbh->query("select (cast(strftime(\"%s\", timestamp) as INTEGER) / $window * $window) as ts, value, label from bms_events where ts between $t_start and $t_end and label not like '%AHU%' and label not like 'Atrium%' group by ts, label;") as $row) {
       $defs .= sprintf(' VRULE:%s#%s:"%s\n":dashes', $row["ts"], $bms_colours[$i], $row["label"]);
       $i++;
       if ($i >= sizeof($bms_colours)) {
