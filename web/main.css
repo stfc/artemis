@@ -17,9 +17,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with ARTEMIS. If not, see <http://www.gnu.org/licenses/>.
 #
-#  $Revision$
-#  $Date$
-#  $LastChangedBy$
+#  $Revision: 6976 $
+#  $Date: 2010-08-19 10:10:34 +0100 (Thu, 19 Aug 2010) $
+#  $LastChangedBy: tkk76468@FED.CCLRC.AC.UK $
 #
 */
 html {
@@ -39,6 +39,12 @@ div.header {
 }
 div.navbar > a {
   margin-left: 32px;
+}
+div#floater {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding-right: 0.5em;
 }
 div#header, div#footer {
   width: 100%;
@@ -97,6 +103,12 @@ h1 {
   margin: 4px;
   font-weight: normal;
 }
+h3 {
+  margin: 0;
+  margin-left: 0.5em;
+  border-bottom: 1px solid rgb(211, 215, 207);
+  width: 40em;
+}
 p {
   margin: 0;
 }
@@ -127,4 +139,35 @@ a.external:after {
 }
 a.mail:before {
   content: url("icons/actions/mail-message-new.png");
+}
+table {
+  border-collapse: collapse;
+  margin-left: 16pt;
+}
+td, th {
+  border: solid thin rgb(211, 215, 207);
+  padding: 2pt;
+}
+label {
+  display: block;
+}
+button {
+  margin-top: 1em;
+}
+dl {
+  overflow: auto;
+}
+dt {
+  width: 8em;
+  text-align: right;
+  margin: 0;
+  float: left;
+  clear: left;
+}
+dd {
+  color: #000000;
+  margin: 0;
+  margin-left: 1em;
+  float: left;
+  clear: right;
 }

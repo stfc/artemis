@@ -1,4 +1,6 @@
-<?php
+#!/usr/bin/python
+# coding=utf8
+
 #
 #  Copyright Science and Technology Facilities Council, 2009.
 #  
@@ -17,36 +19,30 @@
 #  You should have received a copy of the GNU General Public License
 #  along with ARTEMIS. If not, see <http://www.gnu.org/licenses/>.
 #
-#  $Revision: 5194 $
-#  $Date: 2009-10-13 13:34:55 +0100 (Tue, 13 Oct 2009) $
-#  $LastChangedBy: tkk76468@FED.CCLRC.AC.UK $
-#
 
-  function scaleColour($temp)
-  {
-    $t = $temp;
-    #range of temperature scale
-    $t_min = 10;
-    $t_max = 50;
+from artemis_store import session, Node, Probe
 
-    #range of colour scale
-    $c_min = 0;
-    $c_max = 255;
+"""Minimal test suite and utilies for ARTEMIS data store"""
 
-    #Clip the temperature to the above range
-    $t = max($t_min, $t);
-    $t = min($t_max, $t);
+#testnode = Node("172.16.181.102", "xml_env_swift")
+#session.merge(testnode)
 
-    #Apply transformation
-    $result = ((($t - $t_min) / ($t_max - $t_min)) * ($c_max - $c_min)) + $c_min;
+#print(s.Probe("TEMPERATURE-1WIRE-000000FE0BEBDB", "25DD", 25, 31, 4, 2))
 
-    $r = $result;
-    $g = 0;
-    $b = 255 - $result;
+#print(session.dirty)
 
-    $colour = sprintf('%02X%02X%02X', $r, $g, $b);
+#print(session.query(Node).all())
+#print(session.dirty)
+#session.add(Probe("TEMPERATURE-1WIRE-000000FE0BEBDB", "25DD", 25, 31, 4, 2))
 
-    return $colour;
-  }
+def convert():
+  from artemis_config import base_nodes, sensors
 
-?>
+  for b in base_nodes:
+    c = str(b.__class__).split("'")[1].split(".")
+    session.add(Node(b.ip, c[1], c[2]))
+
+  for id, (n, x, y, w, h) in sensors.iteritems():
+    session.add(Probe(id, n, x, y, w, h))
+
+  session.commit()

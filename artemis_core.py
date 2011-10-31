@@ -19,10 +19,6 @@
 #  You should have received a copy of the GNU General Public License
 #  along with ARTEMIS. If not, see <http://www.gnu.org/licenses/>.
 #
-#  $Revision$
-#  $Date$
-#  $LastChangedBy$
-#
 
 from threading import Thread
 from time import time
@@ -62,3 +58,7 @@ class data_grabber(Thread):
 #Import all defined datasource nodes
 #from nodetypes import *
 
+def load_class(module, object):
+  m = __import__("nodetypes.%s" % (module))
+  c = getattr(getattr(m, module), object)
+  return(c)

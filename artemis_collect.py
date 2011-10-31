@@ -19,9 +19,6 @@
 #  You should have received a copy of the GNU General Public License
 #  along with ARTEMIS. If not, see <http://www.gnu.org/licenses/>.
 #
-#  $Revision$
-#  $Date$
-#  $LastChangedBy$
 
 #Required modules from Python Standard Library
 import commands, os, sys
@@ -55,6 +52,18 @@ except:
   print("ERROR: Unable to import the artemis configuration module, have you created artemis_config.py?")
   sys.exit(1)
 
+# Setup base nodes from store
+base_nodes = []
+
+for n in session.query(Node).all():
+  base_nodes.append(load_class(n.module, n.object)(n.ip))
+
+# Setup sensors from store
+sensors = {}
+
+for p in session.query(Probe).all():
+  sensors[p.id] = [p.name, float(p.x), float(p.y), float(p.w), float(p.h)]
+
 #Configuration
 this_dir = os.path.dirname(os.path.realpath( __file__ )) + "/"
 rrd_dir  = this_dir + rrd_dir
@@ -84,8 +93,11 @@ for serial, value, units in g:
   try:
     (n, x, y, h, w) = sensors[serial]
   except:
-    (n, x, y, h, w) = ("N/A", 0, 0, 0, 0)
-  
+    (n, x, y, h, w) = ("Auto-detected", 0, 0, 0, 0)
+    session.add(Probe(serial, n, x, y, h, w))
+
+  session.commit()
+
   row = [serial, value, n, x, y, h, w]
 
   snapshot_list.append(row)
@@ -101,4 +113,4 @@ try:
   file_json_dump = open(this_dir + "data/data-dump.json", "w")
   json.dump(dump_prep, file_json_dump)
 except:
-  print("Unable to open data dump file for writing")
+  print("Error while writing data dump file - %s" % sys.exc_info()[0])

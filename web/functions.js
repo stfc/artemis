@@ -464,10 +464,6 @@ function scaleColour(input, theme)
     rgb_max = Aluminium_1;
   }
 
-  //range of colour scale
-  const c_min = 0;
-  const c_max = 255;
-
   //Clip the temperature to the above range
   t = Math.max(t_min, t);
   t = Math.min(t_max, t);

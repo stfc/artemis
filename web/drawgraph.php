@@ -17,9 +17,9 @@
 #  You should have received a copy of the GNU General Public License
 #  along with ARTEMIS. If not, see <http://www.gnu.org/licenses/>.
 #
-#  $Revision$
-#  $Date$
-#  $LastChangedBy$
+#  $Revision: 9149 $
+#  $Date: 2011-09-28 14:31:59 +0100 (Wed, 28 Sep 2011) $
+#  $LastChangedBy: tkk76468@FED.CCLRC.AC.UK $
 #
 
   $RRD_DIR = "rrds/";

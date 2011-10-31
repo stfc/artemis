@@ -18,10 +18,6 @@
 #  You should have received a copy of the GNU General Public License
 #  along with ARTEMIS. If not, see <http://www.gnu.org/licenses/>.
 #
-#  $Revision$
-#  $Date$
-#  $LastChangedBy$
-#
 
 import artemis_config
 

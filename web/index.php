@@ -17,10 +17,6 @@
 #  You should have received a copy of the GNU General Public License
 #  along with ARTEMIS. If not, see <http://www.gnu.org/licenses/>.
 #
-#  $Revision$
-#  $Date$
-#  $LastChangedBy$
-#
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
@@ -48,6 +44,9 @@
   <body onload="setupJSON(); setInterval('updateProbesJSON()',30000); updateProbesJSON();" onresize="updateGraph();"> 
     <div id="header">
       <img src="images/logo-header.png" alt="ARTEMIS - Almost Real-Time Enviromental Monitoritoring &amp; Information System" />
+    </div>
+    <div id="floater">
+      <p><a href="setup.php">Setup</a></p>
     </div>
     <div id="controls">
       <form action="#" method="get" onchange="updateProbesJSON();">
