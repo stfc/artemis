@@ -26,7 +26,7 @@
   $DATE_FORMAT = "Y-m-d H:i:s";
 
   $run_mode = "web";
-  if (isset($_SERVER["TERM"])) {
+  if (isset($_SERVER["TERM"]) or isset($_REQUEST["debug"])) {
     $run_mode = "cli";
   }
 
@@ -36,6 +36,7 @@
     //We need to masquerade as an image of the png variety
     ob_start();
     header("Content-type: image/png");
+    #header("Content-type: text/plain");
     ob_end_clean();
     session_write_close();
   }
@@ -125,6 +126,11 @@
     $height = $_GET['height'];
   }
 
+  $show_bms = False;
+
+  if (isset($_GET['bms'])) {
+    $show_bms = True;
+  }
   //other usefuls
   $colours = array(
     'cc0000',
@@ -187,6 +193,16 @@
     //Plot line
     $defs .= " LINE:$id#$colour$alpha:'$label\t'";
 
+    //Experimental rate of change line
+    $defs .= " CDEF:$id-prev=$id,PREV\($id\),-";
+#    $defs .= " CDEF:$id-prev=$id,PREV\($id\),-";
+    $defs .= " CDEF:$id-prevh=$id-prev,1,GT";
+    $defs .= " CDEF:$id-prevu=$id-prev,-1,LT";
+    $defs .= " CDEF:$id-preva=$id-prev,ABS";
+    $defs .= " AREA:$id-preva#00000055";
+    $defs .= " TICK:$id-prevh#ff000033:1";
+    $defs .= " TICK:$id-prevu#0000ff33:1";
+
     //Min & Max
     $defs .= " GPRINT:$id_origin:LAST:'<b>Now</b>\: %.2lf\t'";
     $defs .= " GPRINT:$id_origin:AVERAGE:'<b>Mean</b>\: %.2lf\t'";
@@ -210,15 +226,17 @@
   );
 
   //Insert BMS Alerts
-#  $defs .= " COMMENT:\"---- Events ----\"";
-#  $events = file_get_contents("/tmp/snmpee.json");
-#  $events = json_decode($events);
-#  foreach ($events as $i => $e) {
-#    $t = $e[0];
-#    $d = $e[1];
-#    $n = $e[2];
-#    $defs .= " VRULE:".(strtotime($t))."#".$bms_colours[$i].":\"".$n."\t".$d."\"";
-#  }
+  if ($show_bms) {
+    $dbh = new PDO('sqlite://root/artemis_traps.sqlite');
+    $i = 0;
+    foreach ($dbh->query("select (cast(strftime(\"%s\", timestamp) as INTEGER) / $window * $window) as ts, value, label from bms_events where ts between $t_start and $t_end and label not like '%AHU%' and label not like 'Atrium%' group by ts, label;") as $row) {
+      $defs .= sprintf(' VRULE:%s#%s:"%s\n":dashes', $row["ts"], $bms_colours[$i], $row["label"]);
+      $i++;
+      if ($i >= sizeof($bms_colours)) {
+        $i = 0;
+      }
+    }
+  }
   
   //draw the graph to stdout, which is this page :P
   $cmd= ("rrdtool graph - "
@@ -260,5 +278,10 @@
   #}
 
   //execute
-  system($cmd);
+  $xc = 0;
+  system($cmd, $xc);
+  if ($xc > 0) {
+    echo "Graph Drawing Failed\n\n";
+    echo $cmd;
+  }
 ?>

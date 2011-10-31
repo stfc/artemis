@@ -138,6 +138,7 @@ function updateGraph()
 
   var baseline = document.getElementById('inputBaseline').checked;
   var trend    = document.getElementById('inputTrend').checked;
+  var bms      = document.getElementById('inputBms').checked;
 
   var start = '&start=' + graph_start;
   var end   = '&end='   + graph_end;
@@ -158,14 +159,21 @@ function updateGraph()
 
   if (trend) {
     trend  = '&trend=true';
-  }
-  else {
+  } else {
     trend = '';
+  }
+
+  if (bms) {
+    bms  = '&bms=true';
+  } else {
+    bms = '';
   }
 
   //Update image, changing the date lets the browser know its a new image preloading prevents the annoying update flicker
   var imgNew = new Image();
-  imgNew.src = 'drawgraph.php?d='+(new Date()).getTime()+'&ids='+ids+start+end+mode+trend+width+height
+  //Update image, changing the date lets the browser know its a new image preloading prevents the annoying update flicker
+  var imgNew = new Image();
+  imgNew.src = 'drawgraph.php?d='+(new Date()).getTime()+'&ids='+ids+start+end+mode+trend+bms+width+height
   document.getElementById('imgGraph').src = imgNew.src;
 }
 
@@ -319,6 +327,7 @@ function callbackJSON(responseText)
 
   if (a_probes != null) {
     //pUpdate.innerHTML += 'Got probe data<br />';
+    //divRoom.background = 'rooms/room.png?' + Math.Random();
     divRoom.innerHTML = null; //makes the display flash, less than optimal
 
     var unknown_count = 0;
