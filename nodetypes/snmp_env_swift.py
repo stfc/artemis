@@ -64,4 +64,6 @@ class node_swiftCM1(node):
     
     values = [int(v) for v in values]
 
+    names  = ["" for v in values]
+
     return zip(ids, values, units)

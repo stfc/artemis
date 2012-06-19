@@ -24,8 +24,8 @@
 
 DATA_DIR=data
 RRD_DIR=rrds
-CONFIG_FILE=artemis_config.py
-CONFIG_FILE_TEMPLATE=artemis_config.py.template
+CONFIG_FILE=artemis.conf
+CONFIG_FILE_TEMPLATE=artemis.conf.defaults
 LOCK_FILE=setup.lock
 
 if [ ! -f $LOCK_FILE ]; then

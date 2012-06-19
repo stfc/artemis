@@ -71,4 +71,6 @@ class node_jacarta(node):
     values = values_temp + values_humid
     units  = units_temp  + units_humid
 
+    names = ["" for v in values]
+
     return zip(ids, values, units)

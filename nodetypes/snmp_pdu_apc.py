@@ -78,4 +78,4 @@ class node_apc_switched_pdu(node):
     #Units of measurement
     unit = UNIT_CURRENT
     
-    return [(id, value, unit)]
+    return [(id, value, unit, "")]

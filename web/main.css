@@ -26,19 +26,34 @@ html {
   font-family: verdana, sans;
   font-size: 10pt;
   padding: 0;
+  background-color: #F7F7F7;
+  background-image: url('earthlingtwo/images/img02.jpg'), url('earthlingtwo/images/img01.jpg');
+  background-position: left -164px, left top;
+  background-repeat: repeat-x, repeat;
 }
 body {
-  color: #002740;
+  color: #222;
   padding: 0;
   margin: 0;
 }
-div.header {
-  padding-bottom: 8px;
-  border-bottom: 1px solid #9fa09e;
-  margin-bottom: 8px;
+/*div {
+  border: 1px dotted darkorange;
+}*/
+div#header {
+  background-image: url('earthlingtwo/images/img03.jpg');
+  background-position: left bottom;
+  background-repeat: no-repeat;
+  margin: 0;
 }
-div.navbar > a {
-  margin-left: 32px;
+div#controls {
+  background-image: url('earthlingtwo/images/img04.jpg');
+  background-position: left top;
+  background-repeat: no-repeat;
+  margin: 0;
+  border-bottom: 1px solid #000;
+  height: 32px;
+  clear: both;
+  overflow: hidden;
 }
 div#floater {
   position: absolute;
@@ -49,24 +64,27 @@ div#floater {
 div#header, div#footer {
   width: 100%;
   clear: both;
+  padding-left: 8px;
+  padding-top: 8px;
 }
 div#divRoom {
-  position: relative;
   border: 4px solid #000;
   padding: 0;
   background-image: url("images/tiles.png");
   background-repeat: repeat;
   float: left;
+  clear: left;
+  position: relative;
 }
 div#divGraph {
   float: right;
+  clear: right;
 }
 p#update_time {
   font-size: 7pt;
   color: #9fa09e;
 }
 div.probe-temperature, div.probe-airflow, div.probe-current, div.probe-humidity {
-  position: absolute;
   margin: 0;
   padding: 0;
   width: 64px;
@@ -74,6 +92,7 @@ div.probe-temperature, div.probe-airflow, div.probe-current, div.probe-humidity 
   text-align: center;
   color: #fff;
   opacity: 0.8;
+  position: absolute;
 }
 div.probe-current {
   color: #000;
@@ -96,10 +115,11 @@ span.category {
   margin-left: 2em;
 }
 h1, h2, h3{
-  color: #003153;
+  color: #000;
   font-family: lucida sans, sans;
 }
 h1 {
+  color: #fff;
   margin: 4px;
   font-weight: normal;
 }
@@ -118,7 +138,7 @@ p.info {
   margin: 4px;
 }
 p.info:before {
-  content: url("icons/status/dialog-information.png");
+  content: url("/icons/status/dialog-information.png");
   margin-right: 4px;
 }
 p.error {
@@ -128,17 +148,17 @@ p.error {
   font-size: medium;
 }
 p.error:before {
-  content: url("icons/status/dialog-error.png");
+  content: url("/icons/status/dialog-error.png");
   margin-right: 4px;
 }
 a:link, a:visited, a:active {
-  color: #258998;
+  color: #ffffff;
 }
 a.external:after {
-  content: url("icons/actions/go-jump.png");
+  content: url("/icons/actions/go-jump.png");
 }
 a.mail:before {
-  content: url("icons/actions/mail-message-new.png");
+  content: url("/icons/actions/mail-message-new.png");
 }
 table {
   border-collapse: collapse;
@@ -170,4 +190,16 @@ dd {
   margin-left: 1em;
   float: left;
   clear: right;
+}
+div#controls li {
+  float: left;
+  list-style-type: none;
+  color: #222;
+  padding: 0;
+  padding-right: 1em;
+}
+span#rollup, span#rolldown {
+  color: #fff;
+  position: absolute;
+  right: 0;
 }
