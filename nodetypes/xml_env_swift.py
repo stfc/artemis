@@ -26,6 +26,7 @@
 
 SOCKET_TIMEOUT = 20
 
+from time import clock
 from base import *
 
 ##
@@ -54,13 +55,13 @@ class node_swiftCM1_xml(node):
 
     try:
       res = urlopen(url)
-      print(url + " " + str(res))
+      #print("%2.3f %s %s" % (clock(), url, str(res))) #debug
       base = xml.dom.minidom.parse(res)
 
       devices = base.documentElement.getElementsByTagName('device')
       device_count = len(devices)
   
-      results = [] #Empty list to take tuples of (id, value, units)
+      results = [] #Empty list to take tuples of (id, value, units, name)
 
       if device_count > 0:
         for device in devices:
@@ -79,23 +80,23 @@ class node_swiftCM1_xml(node):
                 if sensor_type in SENSOR_TYPES:
                   sensor_type  = SENSOR_TYPES[tag.attributes["key"].nodeValue]
                   sensor_value = tag.attributes["value"].nodeValue
-                  results += [(("%s-1WIRE-%s" % (sensor_type, device_id)), sensor_value, SENSOR_UNITS[sensor_type])]
+                  results += [(("%s-1WIRE-%s" % (sensor_type, device_id)), sensor_value, SENSOR_UNITS[sensor_type], device_name)]
                 else:
-                  print(url + " Ignoring sensor with type: " + sensor_type)
+                  print("%2.3f\t%s Ignoring sensor with type: %s" % (clock(), url, sensor_type))
           else:
             print(url + " Found base unit")
-        print("%s found %d attached devices" % (url, device_count))
+        print("%2.3f\t%s found %d attached devices" % (clock(), url, device_count))
         return(results)
       else:
-        print(url + " No attached devices found")
+        print("%2.3f\t%s No attached devices found" % (clock(), url))
         return([])
     except URLError:
-      print("Could not grab data from " + url + " - URLError")
+      print("%2.3f\tCould not grab data from %s - URLError" % (clock(), url))
       return([])
     except IOError:
-      print("Could not grab data from " + url + " - IOError")
+      print("%2.3f\tCould not grab data from %s - IOError" % (clock(), url))
       return([])
     except:
-      print("Could not grab data from " + url + " - Unknown Exception")
+      print("%2.3f\tCould not grab data from %s - Unknown Exception" % (clock(), url))
       return([])
     return([]) #Backstop

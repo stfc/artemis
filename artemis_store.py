@@ -31,7 +31,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Numeric, String
+from sqlalchemy import Column, Numeric, String, DateTime
+from datetime import datetime
 
 Base = declarative_base()
 
@@ -42,11 +43,13 @@ class Node(Base):
   ip = Column(String(16), primary_key=True)
   module = Column(String(16))
   object = Column(String(16))
+  lastcontact = Column(DateTime())
 
   def __init__(self, ip, module, object):
       self.ip = ip
       self.module = module
       self.object = object
+      self.lastcontact = datetime.now()
   
   def __repr__(self):
       return "<Unit (%s, %s, %s)>" % (self.ip, self.module, self.object)
@@ -65,6 +68,7 @@ class Probe(Base):
   y = Column(Numeric(2))
   w = Column(Numeric(2))
   h = Column(Numeric(2))
+  lastcontact = Column(DateTime())
 
   def __init__(self, id, name, x, y, w, h):
       self.id = id
@@ -73,12 +77,13 @@ class Probe(Base):
       self.y = y
       self.w = w
       self.h = h
+      self.lastcontact = datetime.now()
 
   def __repr__(self):
       return "<Probe %s : (%s, %d.2, %d.2, %d.2, %d.2)>" % (self.id, self.name, self.x, self.y, self.w, self.h)
 
 
-engine = create_engine('sqlite:///artemis_store.db', echo=True)
+engine = create_engine('sqlite:///artemis_store.db', echo=False)
 
 Base.metadata.create_all(engine)
 

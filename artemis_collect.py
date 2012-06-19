@@ -21,8 +21,10 @@
 #
 
 #Required modules from Python Standard Library
-import commands, os, sys
+from time import clock
+time_start = clock()
 from datetime import datetime
+import commands, os, sys
 
 #Try to import rrdtool module
 try:
@@ -45,12 +47,8 @@ except:
 from artemis_core import *
 from nodetypes import base
 
-#Try to load config module
-try:
-  from artemis_config import *
-except:
-  print("ERROR: Unable to import the artemis configuration module, have you created artemis_config.py?")
-  sys.exit(1)
+#Load config module
+from artemis_config import *
 
 # Setup base nodes from store
 base_nodes = []
@@ -66,7 +64,7 @@ for p in session.query(Probe).all():
 
 #Configuration
 this_dir = os.path.dirname(os.path.realpath( __file__ )) + "/"
-rrd_dir  = this_dir + rrd_dir
+rrd_dir  = this_dir + config.get("rrd","dir")
 
 print("Starting run...")
 
@@ -77,14 +75,22 @@ snapshot_list = [];
 
 print("---- Data grab complete ----")
 
-for serial, value, units in g:
-  print(str(datetime.today()) + ": Found sensor " + serial + " with value " + str(value) + units)
-  rrd = str(rrd_dir + serial + rrd_ext)
+for serial, value, units, name in g:
+  print(r"%2.3f : Found sensor %s with value %s %s and name %s" % (clock(), serial, value, units, name))
+  rrd = str(rrd_dir + serial + config.get("rrd","ext"))
 
   if not os.path.isfile(rrd):
     #create rrd if none exists
     print("Creating new RRD " + rrd)
-    rrdtool.create(rrd, "--step", "60", "DS:temp:GAUGE:120:0:100", "RRA:AVERAGE:0.5:1:10080", "RRA:AVERAGE:0.5:60:720")
+    rrdtool.create(
+      rrd,
+      "--step", "60",
+      "DS:val:GAUGE:120:-100:100", # Accept data between -100 and +100 as valid
+      "RRA:AVERAGE:0.5:1:525600", # A year of minutes
+      "RRA:AVERAGE:0.5:60:8760", # A year of hours
+      "RRA:MAX:0.5:60:8760", # A year of hours
+      "RRA:MIN:0.5:60:8760", # A year of hours
+    )
 
   #update data
   rrdtool.update(rrd, "N:" + str(value))
@@ -93,24 +99,65 @@ for serial, value, units in g:
   try:
     (n, x, y, h, w) = sensors[serial]
   except:
-    (n, x, y, h, w) = ("Auto-detected", 0, 0, 0, 0)
+    (n, x, y, h, w) = ("Auto-detected " + name, 0, 0, 0, 0)
     session.add(Probe(serial, n, x, y, h, w))
 
-  session.commit()
+  # Update timestamp
+  probe = session.query(Probe).filter(Probe.id == serial).first()
+  if (probe.name <> n):
+    print("Mismatch of name against node %s vs %s" % (probe.name, n))
+  probe.lastcontact = datetime.now()
 
   row = [serial, value, n, x, y, h, w]
 
   snapshot_list.append(row)
 
+# Commit outside loop
+session.commit()
+
+# Prep config
+c = dict(config.items("room"))
+c["tile_size"] = int(c["tile_size"])
+c["offset_x"] = int(c["offset_x"])
+c["offset_y"] = int(c["offset_y"])
 
 #Dump data
 dump_prep = {
-  "config" : config,
+  "config" : c,
   "probes" : snapshot_list,
 }
 
+
+# Write out data dump for gui
 try:
   file_json_dump = open(this_dir + "data/data-dump.json", "w")
   json.dump(dump_prep, file_json_dump)
+  file_json_dump.close()
+  print("Wrote output to %s" % file_json_dump.name) 
 except:
-  print("Error while writing data dump file - %s" % sys.exc_info()[0])
+  print("Error while writing data dump file - %s %s %s" % sys.exc_info())
+
+
+# Update performance rrd
+rrd = str(rrd_dir + "ARTEMIS-STATS-" + c["name"].replace(" ","_") + config.get("rrd","ext"))
+
+if not os.path.isfile(rrd):
+  #create rrd if none exists
+  print("Creating new RRD " + rrd)
+  rrdtool.create(
+    rrd,
+    "--step", "60",
+    "DS:collect:GAUGE:120:0:3600", # Accept data between 0 and 3600 as valid
+    "DS:nodes:GAUGE:120:0:U", # Number of known nodes
+    "DS:probes:GAUGE:120:0:U", # Number of known probes
+    "RRA:AVERAGE:0.5:1:525600", # A year of minutes
+    "RRA:AVERAGE:0.5:60:8760", # A year of hours
+    "RRA:MAX:0.5:60:8760", # A year of hours
+    "RRA:MIN:0.5:60:8760", # A year of hours
+  )
+
+time_run = clock() - time_start
+
+rrdtool.update(rrd, "N:%f:%d:%d" % (time_run, len(base_nodes), len(g)))
+print("Collect finished in %0.3f seconds" % (time_run))
+

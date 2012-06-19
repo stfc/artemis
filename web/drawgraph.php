@@ -152,7 +152,7 @@
   if ($mode == "baseline") {
     $base_id = array_shift($ids);
     $base_rrd="$RRD_DIR$base_id.rrd";
-    $defs .= " DEF:$base_id=$base_rrd:temp:AVERAGE";
+    $defs .= " DEF:$base_id=$base_rrd:val:AVERAGE";
     $colour = array_shift($colours);
     $defs .= " HRULE:0#$colour$alpha:'$base_id\t<b>(Baseline Probe)</b>\\n'";
   }
@@ -167,7 +167,7 @@
     $rrd="$RRD_DIR$id.rrd";  //datasource
     $colour=$colours[$i]; //grab colour
     //describe each probe's graph drawing here
-    $defs .= " DEF:$id=$rrd:temp:AVERAGE";
+    $defs .= " DEF:$id=$rrd:val:AVERAGE";
 
     //Apply baseline if present
     if ($base_id != null) {
@@ -248,10 +248,10 @@
     ." -n AXIS:8:Helvetica"
     ." -n UNIT:8:Helvetica"
     ." -n LEGEND:7:Helvetica"
-    ." -c BACK#ffffff"       //Background colour
+    ." -c BACK#ffffff00"     //Background colour
     ." -c CANVAS#ffffff"     //Graph Background colour
-    ." -c SHADEA#ffffff"     //Top and left shade
-    ." -c SHADEB#ffffff"     //Bottom and right shade
+    ." -c SHADEA#ffffff00"   //Top and left shade
+    ." -c SHADEB#ffffff00"   //Bottom and right shade
     ." -c FONT#2e3436"       //Font colour
     ." -c AXIS#2e3436"       //Axis colour
     ." -c ARROW#2e3436"      //Axis arrow colour

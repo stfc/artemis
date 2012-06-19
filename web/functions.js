@@ -43,6 +43,7 @@ function mapRGB(x, in_min, in_max, rgb_min, rgb_max)
 
 //Tango Palette definition as RGBColours for later use
 var Blue          = new RGBColour(  0,   0, 255);
+var Green         = new RGBColour(  0, 255,   0);
 var Red           = new RGBColour(255,   0,   0);
 
 var Butter_1      = new RGBColour(252, 233,  79);
@@ -148,7 +149,7 @@ function updateGraph()
   document.getElementById('divGraph').style.width = width - 32 + "px";
   width = '&width=' + (width - 32);
 
-  var height = window.innerHeight - 128;
+  var height = window.innerHeight - 180;
   height = '&height=' + height;
 
   var mode = '';
@@ -171,9 +172,8 @@ function updateGraph()
 
   //Update image, changing the date lets the browser know its a new image preloading prevents the annoying update flicker
   var imgNew = new Image();
-  //Update image, changing the date lets the browser know its a new image preloading prevents the annoying update flicker
-  var imgNew = new Image();
-  imgNew.src = 'drawgraph.php?d='+(new Date()).getTime()+'&ids='+ids+start+end+mode+trend+bms+width+height
+  src = 'drawgraph.php?d='+(new Date()).getTime()+'&ids='+ids+start+end+mode+trend+bms;
+  imgNew.src = src+width+height;
   document.getElementById('imgGraph').src = imgNew.src;
 }
 
@@ -357,7 +357,7 @@ function callbackJSON(responseText)
         if ((p_w == 0) && (p_h == 0)) {
           p_w =  24;
           p_h =  16;
-          p_y = -20;
+          p_y = -40;
           p_x =  room_width - (unknown_count + 1)  * 24;
           unknown_count++;
         }
@@ -441,26 +441,16 @@ function scaleColour(input, theme)
   //range of input scale
   if (theme == "TEMPERATURE") {
     t_min = 15;
-    t_max = 35;
-    rgb_min = Blue;
-    rgb_max = Red;
-  }
-  else if ((theme == "AIRFLOW") || (theme == "HUMIDITY")){
-    t_min = 0;
-    t_max = 100;
-    rgb_min = Sky_Blue_3;
-    rgb_max = Chameleon_1;
-  }
-  else if (theme == "CURRENT") {
-    t_min = 0;
-    t_max = 16;
-    rgb_min = Chocolate_3;
-    rgb_max = Butter_1;
+    t_max = 45;
+    rgb_min = new RGBColour(  0,   0, 255);
+    rgb_mid = new RGBColour(255,   0,   0);
+    rgb_max = new RGBColour(255, 255,   0);
   }
   else {
     t_min = 0;
     t_max = 50;
     rgb_min = Aluminium_6;
+    rgb_mid = Aluminium_3;
     rgb_max = Aluminium_1;
   }
 
@@ -468,9 +458,22 @@ function scaleColour(input, theme)
   t = Math.max(t_min, t);
   t = Math.min(t_max, t);
 
+  var t_mid = (t_max + t_min) / 2;
+
   //Apply transformation
-  var result = mapRGB(t, t_min, t_max, rgb_min, rgb_max);
+  var result = mapRGB(t, t_min, t_mid, rgb_min, rgb_mid);
+  if (t >= t_mid) {
+    result = mapRGB(t, t_mid, t_max, rgb_mid, rgb_max);
+  }
   var colour = 'rgb('+result.r+', '+result.g+', '+result.b+')';
 
   return colour;
+}
+
+
+function popupGraph(i) {
+  u = i.src;
+//u = u+"width=1024";
+  w = window.open(u, "ARTEMIS", "width=1024,height=768,left=64,top=64,resizable=no,scrollbars=no,directories=no,titlebar=no,toolbar=no,status=no");
+  w.window.focus();
 }
