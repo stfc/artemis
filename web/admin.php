@@ -149,15 +149,17 @@ if ($db) {
   $probes = $db->query('SELECT * FROM probes order by lastcontact desc');
   if ($probes) {
     echo "<table>\n";
-    echo "<tr><th>ID</th><th>Name</th><th>x</th><th>y</th><th>w</th><th>h</th><th>Last Contact</th><th>&nbsp;</th></tr>\n";
+    echo "<tr><th>ID</th><th>Name</th><th>x</th><th>y</th><th>z</th><th>w</th><th>h</th><th>d</th><th>Last Contact</th><th>Remote Name</th><th>&nbsp;</th></tr>\n";
     foreach($probes as $p) {
       echo "<tr>";
       echo "<td>{$p["id"]}</td>";
       echo "<td>{$p["name"]}</td>";
       echo "<td>".sprintf("%2.2f", $p["x"])."</td>";
       echo "<td>".sprintf("%2.2f", $p["y"])."</td>";
+      echo "<td>".sprintf("%2.2f", $p["z"])."</td>";
       echo "<td>".sprintf("%2.2f", $p["w"])."</td>";
       echo "<td>".sprintf("%2.2f", $p["h"])."</td>";
+      echo "<td>".sprintf("%2.2f", $p["d"])."</td>";
       $lastcontact = (time() - strtotime($p["lastcontact"]));
       echo "<td>";
       if ($p["lastcontact"]) {
@@ -170,6 +172,7 @@ if ($db) {
         echo "Never";
       }
       echo "</td>";
+      echo "<td>".($p["remote_name"])."</td>";
       echo "<td>";
       echo "<img src=\"/icons/actions/document-properties.png\" onclick=\"editProbe('{$p["id"]}')\"/>";
       if ($lastcontact > 60) {

@@ -60,7 +60,7 @@ for n in session.query(Node).all():
 sensors = {}
 
 for p in session.query(Probe).all():
-  sensors[p.id] = [p.name, float(p.x), float(p.y), float(p.w), float(p.h)]
+  sensors[p.id] = [p.name, float(p.x), float(p.y), float(p.z), float(p.w), float(p.h), float(p.d)]
 
 #Configuration
 this_dir = os.path.dirname(os.path.realpath( __file__ )) + "/"
@@ -97,16 +97,18 @@ for serial, value, units, name in g:
 
   #store latest values
   try:
-    (n, x, y, h, w) = sensors[serial]
+    (n, x, y, z, h, w, d) = sensors[serial]
   except:
-    (n, x, y, h, w) = ("Auto-detected " + name, 0, 0, 0, 0)
-    session.add(Probe(serial, n, x, y, h, w))
+    (n, x, y, z, h, w, d) = ("Auto-detected " + name, 0, 0, 0, 0, 0, 0)
+    session.add(Probe(serial, n, x, y, z, h, w, d))
 
   # Update timestamp
   probe = session.query(Probe).filter(Probe.id == serial).first()
   if (probe.name <> n):
     print("Mismatch of name against node %s vs %s" % (probe.name, n))
+
   probe.lastcontact = datetime.now()
+  probe.remote_name = name
 
   row = [serial, value, n, x, y, h, w]
 

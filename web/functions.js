@@ -320,6 +320,7 @@ function callbackJSON(responseText)
 
   var a_data   = eval('(' + responseText + ')'); //get probe data and eval into an array
   var a_probes = a_data["probes"];
+  return;
 
   var tileSize = a_data["config"]["tile_size"];
   var offset_x = a_data["config"]["offset_x"];

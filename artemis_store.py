@@ -61,22 +61,38 @@ class Probe(Base):
   __tablename__ = 'probes'
   id = Column(String(64), primary_key=True)
   name = Column(String(64)) # Locally defined name
-  #remote_name = Column(String(64)) # Name on remote device
-  #node = Column(String(16)) # Node this probe was last seen on
-  #state = Column(Byte()) # Discovery state
+
+  # Position
   x = Column(Numeric(2))
   y = Column(Numeric(2))
-  w = Column(Numeric(2))
-  h = Column(Numeric(2))
-  lastcontact = Column(DateTime())
+  z = Column(Numeric(2))
 
-  def __init__(self, id, name, x, y, w, h):
+  # Dimensions
+  w = Column(Numeric(2))
+  d = Column(Numeric(2))
+  h = Column(Numeric(2))
+
+  # Guidance
+  remote_name = Column(String(64)) # Name on remote device
+  node = Column(String(16)) # Node this probe was last seen on
+  state = Column(Numeric(1)) # Discovery state
+  lastcontact = Column(DateTime()) # Timestamp of last reading
+
+  def __init__(self, id, name, x, y, z, w, h, d):
       self.id = id
       self.name = name
+
       self.x = x
       self.y = y
+      self.z = z
+
       self.w = w
       self.h = h
+      self.d = d
+
+      self.remote_name = ""
+      self.node = ""
+      self.state = 0
       self.lastcontact = datetime.now()
 
   def __repr__(self):
