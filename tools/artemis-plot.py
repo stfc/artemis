@@ -38,6 +38,14 @@ TEMP_MIN = 15
 TEMP_MAX = 38
 DPI = 106
 
+from pylab import *
+cdict = {
+  'red'   : ((0.0, 0.1, 0.1), (0.25, 0.0, 0.0), (0.5, 1.0, 1.0), (0.75, 1.0, 1.0), (1.0, 1.0, 1.0)),
+  'green' : ((0.0, 0.1, 0.1), (0.25, 0.0, 0.0), (0.5, 0.0, 0.0), (0.75, 1.0, 1.0), (1.0, 1.0, 1.0)),
+  'blue'  : ((0.0, 0.1, 0.1), (0.25, 0.5, 0.5), (0.5, 0.0, 0.0), (0.75, 0.0, 0.0), (1.0, 1.0, 1.0)),
+}
+my_cmap = matplotlib.colors.LinearSegmentedColormap('my_colormap',cdict,256)
+#pcolor(rand(10,10),cmap=plt.cm.jet)
 
 def process(d, f, mode):
   x = []
@@ -80,7 +88,9 @@ def plot(x, y, z, title, filename, mode):
   plt.scatter(x,y,marker='o',c='b',s=5,zorder=10)
   #CS = plt.contour(xi,yi,zi,15,linewidths=0.5,colors='k')
   #CS = plt.contourf(xi,yi,zi,15,cmap=plt.cm.jet)
+  CS = plt.contourf(xi,yi,zi,15,cmap=plt.cm.jet)
   plt.pcolor(xi,yi,zi,cmap=plt.cm.jet)
+  plt.colorbar()
   plt.clim(TEMP_MIN, TEMP_MAX)
   ax = plt.axes()
   ax.set_aspect('equal')
@@ -120,8 +130,8 @@ if __name__ == "__main__":
   
   p.description = "A utility to plot heatmaps from artemis probe data."
   
-  p.add_option("--mode", metavar="STR", dest="mode", default="single", help="Run mode")
-  p.add_option("--filename", metavar="STR", dest="filename", default="heatmap.png", help="Output filename (ignored in gui mode)")
+  p.add_option("--mode", metavar="STR", dest="mode", default="single", help="Run mode (single, gui or range)")
+  p.add_option("--filename", metavar="STR", dest="filename", default="heatmap.png", help="Output filename (ignored in gui and range modes)")
   
   (o, a) = p.parse_args()
 
