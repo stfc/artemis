@@ -1,5 +1,6 @@
 ARTEMIS
 =======
+
 Almost Real-Time Environmental Monitoring &amp; Information System
 
 
@@ -44,33 +45,33 @@ Some devices may be supported but not yet listed, check the git repository.
 Plugin Development
 ==================
 
-Plugins for different sensors are implemented as individual modules in <code>nodetypes/</code>.
+Plugins for different sensors are implemented as individual modules in `nodetypes/`.
 
-Each module is expected to define a class of the same name that subclasses <code>node</code> from <code>base.py</code> and as such must define at least one method (<code>fetch()</code>).
+Each module is expected to define a class of the same name that subclasses `node` from `base.py` and as such must define at least one method (`fetch()`).
 
 ```python
-    class node(object):
-        def __init__(self, ip):
-            self.ip        = ip
-        def fetch(self):
-            pass
+class node(object):
+    def __init__(self, ip):
+        self.ip        = ip
+    def fetch(self):
+        pass
 ```
 
-For plugins implementing access to SNMP devices, <code>base.py</code> also provides the convienience function <code>getMIB</code> for fetching the contents of MIB trees by walking the tree from a defined point.
+For plugins implementing access to SNMP devices, `base.py` also provides the convienience function `getMIB` for fetching the contents of MIB trees by walking the tree from a defined point.
 
 ```python
-    getMIB(ip, mib, community = "public")
+getMIB(ip, mib, community = "public")
 ```
 
-In addition <code>base.py</code> provides the definitions for unit symbols and a lookup table for 1-Wire device families.
+In addition `base.py` provides the definitions for unit symbols and a lookup table for 1-Wire device families.
 
 ```python
-    UNIT_TEMPERATURE
-    UNIT_CURRENT
-    UNIT_AIRFLOW
-    UNIT_HUMIDITY
+UNIT_TEMPERATURE
+UNIT_CURRENT
+UNIT_AIRFLOW
+UNIT_HUMIDITY
 
-    FAMILY_1WIRE[]
+FAMILY_1WIRE[]
 ```
 
 Additional unit definitions and 1-wire families should be added as needed.
