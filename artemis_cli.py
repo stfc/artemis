@@ -28,10 +28,10 @@ from artemis_config import *
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("action", choices=["add_node", "remove_node", "update_probe"])
+    parser.add_argument("action", choices=["add_node", "remove_node", "list_probes", "update_probe"])
     parser.add_argument("--debug", action="store_true")
     opts, args = parser.parse_known_args()
-    
+
     logger = logging.Logger("artemis_cli")
     logger.setLevel(logging.INFO)
     log_handler = logging.StreamHandler()
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     if opts.debug:
         logger.setLevel(logging.DEBUG)
 
-    
+
     logger.debug("global opts: %s" % opts)
     logger.debug("global args: %s" % args)
 
@@ -53,10 +53,10 @@ if __name__ == "__main__":
         p.add_argument("module")
         p.add_argument("object")
         o, a = p.parse_known_args(args)
-        
+
         logger.debug("action opts: %s" % o)
         logger.debug("action args: %s" % a)
-        
+
         if o.ip and o.module and o.object:
             node = Node(o.ip, o.module, o.object)
             session.add(node)
@@ -69,10 +69,10 @@ if __name__ == "__main__":
         p = argparse.ArgumentParser(usage="%(prog)s remove_node IP")
         p.add_argument("ip")
         o, a = p.parse_known_args(args)
-        
+
         logger.debug("action opts: %s" % o)
         logger.debug("action args: %s" % a)
-        
+
         if o.ip:
             node = session.query(Node).filter(Node.ip == o.ip).first()
             if node:
@@ -87,6 +87,7 @@ if __name__ == "__main__":
         logger.debug("action: update_probe")
         p = argparse.ArgumentParser(usage="%(prog)s update_probe [options]")
         p.add_argument("id", help="probe id")
+        p.add_argument("-n", help="name")
         p.add_argument("-x", help="x position")
         p.add_argument("-y", help="y position")
         p.add_argument("-z", help="z position")
@@ -94,21 +95,43 @@ if __name__ == "__main__":
         p.add_argument("-d", help="depth")
         p.add_argument("-t", help="height")
         o, a = p.parse_known_args(args)
-        
+
         logger.debug("action opts: %s" % o)
         logger.debug("action args: %s" % a)
-        
-        if o.id == o.x == o.y == o.z == o.w == o.d == o.t == None:
+
+        if o.n == o.x == o.y == o.z == o.w == o.d == o.t == None:
             p.print_help()
-        
-        if o.id:
+
+        else:
             probe = session.query(Probe).filter(Probe.id == o.id).first()
-            
+
             if probe:
+                if o.n:
+                    probe.name = o.n
                 if o.x:
-                    pass
+                    probe.x = o.x
+                if o.y:
+                    probe.y = o.y
+                if o.z:
+                    probe.z = o.z
+                if o.w:
+                    probe.w = o.w
+                if o.t:
+                    probe.h = o.t
+                if o.d:
+                    probe.d = o.d
+
+                session.commit()
+                logger.info("Probe updated")
             else:
                 logger.error("No probe found with id %s" % o.id)
+
+
+    elif opts.action == "list_probes":
+        logger.debug("action: update_probe")
+        probes = session.query(Probe).all()
+        for p in probes:
+            print(p)
 
 
     else:
