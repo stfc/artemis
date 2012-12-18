@@ -1,6 +1,6 @@
 <?php
 #
-#  Copyright Science and Technology Facilities Council, 2009.
+#  Copyright Science and Technology Facilities Council, 2009-2012.
 #  
 #  This file is part of ARTEMIS.
 #  

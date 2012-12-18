@@ -2,26 +2,22 @@
 # coding=utf8
 
 #
-#  Copyright Science and Technology Facilities Council, 2009.
-#  
+#  Copyright Science and Technology Facilities Council, 2009-2012.
+#
 #  This file is part of ARTEMIS.
-#  
+#
 #  ARTEMIS is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
-#  
+#
 #  ARTEMIS is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
-#  
+#
 #  You should have received a copy of the GNU General Public License
 #  along with ARTEMIS. If not, see <http://www.gnu.org/licenses/>.
-#
-#  $Revision$
-#  $Date$
-#  $LastChangedBy$
 #
 
 from base import *
@@ -57,7 +53,7 @@ class node_jacarta(node):
     v = getMIB(self.ip, ".1.3.6.1.4.1.3854.1.2.2.1.17.1.3")
     if (v != None):
       values_humid = v
-    
+
     #cast all values as integers
     values_humid = [int(v) for v in values_humid]
 
@@ -66,7 +62,7 @@ class node_jacarta(node):
     for i in ids_humid:
       units_humid += [UNIT_HUMIDITY]
 
-    #Concatenate data sets    
+    #Concatenate data sets
     ids    = ids_temp    + ids_humid
     values = values_temp + values_humid
     units  = units_temp  + units_humid
