@@ -52,8 +52,8 @@ class data_grabber(Thread):
     data = self.node.fetch()
     end_time = time()
     print("Fetch on %s %s (%s) ran for %f seconds" % (self.node.ip, self.node.__class__, self._Thread__name, end_time-start_time))
-    if (data != None):
-      self.data = data
+    if data:
+      self.data = [d + (self.node.ip,) for d in data] # Concatenate source node back onto each record
 
 #Import all defined datasource nodes
 #from nodetypes import *

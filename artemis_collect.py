@@ -75,7 +75,7 @@ snapshot_list = [];
 
 print("---- Data grab complete ----")
 
-for serial, value, units, name in g:
+for serial, value, units, name, source_node in g:
   print(r"%2.3f : Found sensor %s with value %s %s and name %s" % (clock(), serial, value, units, name))
   rrd = str(rrd_dir + serial + config.get("rrd","ext"))
 
@@ -109,6 +109,7 @@ for serial, value, units, name in g:
 
   probe.lastcontact = datetime.now()
   probe.remote_name = name
+  probe.node = source_node
 
   row = [serial, value, n, x, y, h, w]
 
