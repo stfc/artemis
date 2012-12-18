@@ -15,6 +15,20 @@ If not, for most devices a plugin should not be difficult to write, see Plugin D
 
 If you are starting from scratch either buy some Supported Devices or take a look at Building Sensors.
 
+Prerequisites
+-------------
+
+* python 2.6+
+* python-rrdtool
+* rrdtool
+
+Installation
+------------
+
+1. Run `setup.sh` to initialise config files and storage directories.
+2. Edit `artemis.conf` to your liking.
+3. Run `./artemis_collect.py` to initialise the data store.
+
 
 Architecture
 ============
