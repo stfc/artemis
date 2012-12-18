@@ -1,56 +1,56 @@
 [rrd]
-dir = "rrds/"
-ext = ".rrd"
+dir = rrds/
+ext = .rrd
 
 [store]
-driver = "sqlite"
-path = "artemis_store.db"
+driver = sqlite
+path = artemis_store.db
 
 [room]
-name = "Room 101"
+name = Room 101
 tile_size = 16
 offset_x = 0
 offset_y = 0
 
 [graph]
-date_format = "Y-m-d H:i:s"
-colours[] = 'cc0000'
-colours[] = '73d216'
-colours[] = '3465a4'
-colours[] = 'f57900'
-colours[] = '75507b'
-colours[] = 'edd400'
-alpha = "dd"
+date_format = Y-m-d H:i:s
+colours[] = cc0000
+colours[] = 73d216
+colours[] = 3465a4
+colours[] = f57900
+colours[] = 75507b
+colours[] = edd400
+alpha = dd
 upper = 50
 lower = 0
 
 [trapdb]
-driver = "sqlite"
-path = "//root/artemis_traps.sqlite"
+driver = sqlite
+path = //root/artemis_traps.sqlite
 
 [TEMPERATURE]
 t_min = 15
 t_max = 35
-rgb_min = "Blue"
-rgb_max = "Red"
+rgb_min = Blue
+rgb_max = Red
 
 [AIRFLOW]
 t_min = 0
 t_max = 100
-rgb_min = "Sky_Blue_3"
-rgb_max = "Chameleon_1"
+rgb_min = Sky_Blue_3
+rgb_max = Chameleon_1
 
 [HUMIDITY]
 t_min = 0
 t_max = 100
-rgb_min = "Sky_Blue_3"
-rgb_max = "Chameleon_1"
+rgb_min = Sky_Blue_3
+rgb_max = Chameleon_1
 
 [CURRENT]
 t_min = 0
 t_max = 16
-rgb_min = "Chocolate_3"
-rgb_max = "Butter_1"
+rgb_min = Chocolate_3
+rgb_max = Butter_1
 
 [DEFAULT]
 t_min = 0
