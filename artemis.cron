@@ -1,0 +1,1 @@
+* * * * * root cd /opt/artemis/; /bin/nice -n 19 /usr/bin/python2.6 artemis_collect.py > /opt/artemis/data/update-log 2>&1
