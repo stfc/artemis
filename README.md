@@ -19,11 +19,11 @@ If you are starting from scratch either buy some Supported Devices or take a loo
 Architecture
 ============
 
-    { sensors }->[ thread ]-.  [ crond ]
-    { sensors }->[ thread ]-|       \
+    { sensors }->[ thread ]-.    [ crond ]
+    { sensors }->[ thread ]-|        :
     { sensors }->[ thread ]-|->[ collector ]->/ json /->[ javascript ]->( display )
-    { sensors }->[ thread ]-|        \
-    { sensors }->[ thread ]-'   ( rrd files )
+    { sensors }->[ thread ]-|        |
+    { sensors }->[ thread ]-'  ( rrd files )
 
 
 Supported Devices
@@ -52,7 +52,7 @@ Each module is expected to define a class of the same name that subclasses `node
 ```python
 class node(object):
     def __init__(self, ip):
-        self.ip        = ip
+        self.ip = ip
     def fetch(self):
         pass
 ```
