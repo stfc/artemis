@@ -27,11 +27,15 @@
 #import cdecimal
 #sys.modules["decimal"] = cdecimal
 
+import ConfigParser
+config = ConfigParser.ConfigParser()
+config.read(['artemis.conf'])
+
 # Load core dependencies
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Numeric, String, DateTime
+from sqlalchemy import Column, Float, Integer, String, DateTime
 from datetime import datetime
 
 Base = declarative_base()
@@ -63,19 +67,19 @@ class Probe(Base):
   name = Column(String(64)) # Locally defined name
 
   # Position
-  x = Column(Numeric(2))
-  y = Column(Numeric(2))
-  z = Column(Numeric(2))
+  x = Column(Float(2))
+  y = Column(Float(2))
+  z = Column(Float(2))
 
   # Dimensions
-  w = Column(Numeric(2))
-  d = Column(Numeric(2))
-  h = Column(Numeric(2))
+  w = Column(Float(2))
+  d = Column(Float(2))
+  h = Column(Float(2))
 
   # Guidance
   remote_name = Column(String(64)) # Name on remote device
   node = Column(String(16)) # Node this probe was last seen on
-  state = Column(Numeric(1)) # Discovery state
+  state = Column(Integer()) # Discovery state
   lastcontact = Column(DateTime()) # Timestamp of last reading
 
   def __init__(self, id, name, x, y, z, w, h, d):
@@ -99,7 +103,7 @@ class Probe(Base):
       return "<Probe %s : (%s, %d.2, %d.2, %d.2, %d.2)>" % (self.id, self.name, self.x, self.y, self.w, self.h)
 
 
-engine = create_engine('sqlite:///artemis_store.db', echo=False)
+engine = create_engine(config.get("store","connection_string"), echo=False)
 
 Base.metadata.create_all(engine)
 
