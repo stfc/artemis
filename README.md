@@ -28,6 +28,10 @@ Installation
 1. Run `setup.sh` to initialise config files and storage directories.
 2. Edit `artemis.conf` to your liking.
 3. Run `./artemis_collect.py` to initialise the data store.
+4. Add at least one node using `artemis_cli.py add_node`.
+5. Run `./artemis_collect.py` to detect and collect data from probes.
+6. Update positions of probes using `artemis_cli.py update_probe`.
+7. If necessary, modify `artemis.cron`and copy to `/etc/cron.d/`.
 
 
 Architecture
@@ -71,7 +75,7 @@ class node(object):
         pass
 ```
 
-For plugins implementing access to SNMP devices, `base.py` also provides the convienience function `getMIB` for fetching the contents of MIB trees by walking the tree from a defined point.
+For plugins implementing access to SNMP devices, `base.py` also provides the convenience function `getMIB` for fetching the contents of MIB trees by walking the tree from a defined point.
 
 ```python
 getMIB(ip, mib, community = "public")
