@@ -100,7 +100,7 @@ class Probe(Base):
       self.lastcontact = datetime.now()
 
   def __repr__(self):
-      return "<Probe %s : (%s, %d.2, %d.2, %d.2, %d.2)>" % (self.id, self.name, self.x, self.y, self.w, self.h)
+      return "<Probe %s : (%s, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f)>" % (self.id, self.name, self.x, self.y, self.z, self.w, self.d, self.h)
 
 
 engine = create_engine(config.get("store","connection_string"), echo=False)
