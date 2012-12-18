@@ -14,21 +14,19 @@ If not, for most devices a plugin should not be difficult to write, see Plugin D
 
 If you are starting from scratch either buy some Supported Devices or take a look at Building Sensors.
 
+
 Architecture
 ============
 
-<pre>
     { sensors }->[ thread ]-.  [ crond ]
     { sensors }->[ thread ]-|       \
     { sensors }->[ thread ]-|->[ collector ]->/ json /->[ javascript ]->( display )
     { sensors }->[ thread ]-|        \
     { sensors }->[ thread ]-'   ( rrd files )
-</pre>
 
 
 Supported Devices
 =================
-
 
 This is not an exhaustive list, but devices listed have at least been tested once.
 
@@ -42,36 +40,38 @@ Some devices may be supported but not yet listed, check the git repository.
     <tr><td>Jacarta</td><td>Unknown</td><td>Unknown</td><td>SNMP</td><td>snmp_env_jacarta</td></tr>
 </table>
 
+
 Plugin Development
 ==================
 
 Plugins for different sensors are implemented as individual modules in <code>nodetypes/</code>.
 
 Each module is expected to define a class of the same name that subclasses <code>node</code> from <code>base.py</code> and as such must define at least one method (<code>fetch()</code>).
-<pre>
-  class node(object):
-    def __init__(self, ip):
-      self.ip        = ip
-    def fetch(self):
-      pass
-</pre>
+
+```python
+    class node(object):
+        def __init__(self, ip):
+            self.ip        = ip
+        def fetch(self):
+            pass
+```
 
 For plugins implementing access to SNMP devices, <code>base.py</code> also provides the convienience function <code>getMIB</code> for fetching the contents of MIB trees by walking the tree from a defined point.
 
-<pre>
-	getMIB(ip, mib, community = "public")
-</pre>
+```python
+    getMIB(ip, mib, community = "public")
+```
 
 In addition <code>base.py</code> provides the definitions for unit symbols and a lookup table for 1-Wire device families.
 
-<pre>
-	UNIT_TEMPERATURE
-	UNIT_CURRENT
-	UNIT_AIRFLOW
-	UNIT_HUMIDITY
+```python
+    UNIT_TEMPERATURE
+    UNIT_CURRENT
+    UNIT_AIRFLOW
+    UNIT_HUMIDITY
 
-	FAMILY_1WIRE[]
-</pre>
+    FAMILY_1WIRE[]
+```
 
 Additional unit definitions and 1-wire families should be added as needed.
 
@@ -84,17 +84,17 @@ Reference Platform
 Maxim 1-Wire sensors are low-cost, readily available and accurate devices which can easily be interfaced to a computer with USB or other interfaces.
 
 * DS1822
-	* Temperature
-	* &plusmn;2C
-	* 9-12 bit
+    * Temperature
+    * &plusmn;2C
+    * 9-12 bit
 * DS18B20
-	* Temperature
-	* &plusmn;0.5C
-	* 9-12 bit
+    * Temperature
+    * &plusmn;0.5C
+    * 9-12 bit
 * DS18S20
-	* Temperature
-	* &plusmn;0.5C
-	* 9 bit
+    * Temperature
+    * &plusmn;0.5C
+    * 9 bit
 
 Base Units
 ----------
