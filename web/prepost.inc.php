@@ -20,8 +20,8 @@
 
 function pre() {
   echo <<<EOT
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!DOCTYPE html>
+<html>
   <head>
     <link href="dropdown.css" rel="stylesheet" type="text/css" />
     <link href="main.css" rel="stylesheet" type="text/css" />
@@ -30,6 +30,8 @@ function pre() {
     <meta http-equiv="Expires" content="-1" />
     <!-- ARTEMIS Specifics -->
     <link rel="icon" href="images/utilities-system-monitor.png" type="image/png" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
     <script type="text/javascript" src="sprintf.js"></script>
     <script type="text/javascript" src="functions.js"></script>
   </head>

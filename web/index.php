@@ -22,10 +22,6 @@
 #  $LastChangedBy: tkk76468@FED.CCLRC.AC.UK $
 #
 ?>
-<!DOCTYPE html>
-<html>
-  <head>
-    <link href="main.css" rel="stylesheet" type="text/css" />
 <?php
 
   require("prepost.inc.php");
@@ -41,10 +37,10 @@
   </div>
   <div id="controls">
     <form action="#" method="get" onchange="updateProbesJSON();">
-      <input type="checkbox" name="temperature" id="inputTemperature" checked="checked">Temperature</input>
-      <input type="checkbox" name="humidity"    id="inputHumidity">Humidity</input>
-      <input type="checkbox" name="airflow"     id="inputAirflow">Airflow</input>
-      <input type="checkbox" name="current"     id="inputCurrent">Current</input>
+      <input type="checkbox" name="temperature" id="inputTemperature" checked="checked" />Temperature
+      <input type="checkbox" name="humidity"    id="inputHumidity" />Humidity
+      <input type="checkbox" name="airflow"     id="inputAirflow" />Airflow
+      <input type="checkbox" name="current"     id="inputCurrent" />Current
     </form>
   </div>
 <?php
