@@ -41,7 +41,7 @@ EOT;
   flush();
 
   echo <<<EOT
-  <body onload="setupJSON(); setInterval('updateProbesJSON()',30000); updateProbesJSON();" onresize="updateGraph();">
+  <body onresize="updateGraph();">
   <script type="text/javascript">
 
   function rollup(id) {
