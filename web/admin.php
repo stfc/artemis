@@ -131,7 +131,7 @@ echo "</ul>\n";
 
 echo "<h2>Nodes</h2>\n";
 $nodes = Array();
-$a = exec("cd ..; ./artemis_cli.py list_nodes", $nodes);
+$a = exec("cd ..; ./artemis_cli.py list_nodes --format json", $nodes);
 unset($a);
 if ($nodes) {
   echo "<table>\n";
