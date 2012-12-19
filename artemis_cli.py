@@ -30,6 +30,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("action", choices=["add_node", "remove_node", "list_nodes", "list_probes", "update_probe"])
     parser.add_argument("--debug", action="store_true")
+    parser.add_argument("--format", choices=["json"])
     opts, args = parser.parse_known_args()
 
     logger = logging.Logger("artemis_cli")
@@ -86,8 +87,15 @@ if __name__ == "__main__":
     elif opts.action == "list_nodes":
         logger.debug("action: list_nodes")
         nodes = session.query(Node).all()
-        for n in nodes:
-            print(n)
+        if opts.format == "json":
+            o = []
+            for n in nodes:
+                o.append(n.repr_json())
+            o = "[" + ",".join(o) + "]"
+            print(o)
+        else:
+            for n in nodes:
+                print(n)
 
 
     elif opts.action == "update_probe":

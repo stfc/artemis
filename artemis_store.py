@@ -27,6 +27,8 @@
 #import cdecimal
 #sys.modules["decimal"] = cdecimal
 
+import json
+
 import ConfigParser
 config = ConfigParser.ConfigParser()
 config.read(['artemis.conf'])
@@ -57,6 +59,12 @@ class Node(Base):
 
   def __repr__(self):
       return "<Node (%s, %s, %s)>" % (self.ip, self.module, self.object)
+
+  def repr_json(self):
+      d = self.__dict__
+      del d["_sa_instance_state"]
+      d["lastcontact"] = d["lastcontact"].isoformat(" ")
+      return(json.dumps(d))
 
 
 class Probe(Base):
