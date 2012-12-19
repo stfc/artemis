@@ -75,6 +75,8 @@ var Aluminium_5   = new RGBColour( 85,  87,  83);
 var Aluminium_6   = new RGBColour( 46,  52,  54);
 
 var ids = new Array();
+var meta = null;
+
 var style_colours = new Array( //This is where our arbitary limitation comes from
   Scarlet_Red_2.hex(),
   Chameleon_2.hex(),
@@ -133,8 +135,8 @@ function updateGraph()
     document.getElementById('inputDateEnd').value   = graph_end;
   }
   else {
-    graph_start = parseFloat(document.getElementById('inputDateStart').value);
-    graph_end   = parseFloat(document.getElementById('inputDateEnd').value);
+    graph_start = document.getElementById('inputDateStart').value;
+    graph_end   = document.getElementById('inputDateEnd').value;
   }
 
   var baseline = document.getElementById('inputBaseline').checked;
@@ -149,7 +151,7 @@ function updateGraph()
   document.getElementById('divGraph').style.width = width - 32 + "px";
   width = '&width=' + (width - 32);
 
-  var height = window.innerHeight - 180;
+  var height = window.innerHeight - 128;
   height = '&height=' + height;
 
   var mode = '';
@@ -171,10 +173,14 @@ function updateGraph()
   }
 
   //Update image, changing the date lets the browser know its a new image preloading prevents the annoying update flicker
-  var imgNew = new Image();
-  src = 'drawgraph.php?d='+(new Date()).getTime()+'&ids='+ids+start+end+mode+trend+bms;
-  imgNew.src = src+width+height;
-  document.getElementById('imgGraph').src = imgNew.src;
+  var src = 'drawgraph.php?d='+(new Date()).getTime()+'&ids='+ids+start+end+mode+trend+bms+width+height;
+  var metasrc = src + "&meta";
+  $("#imgGraph").attr("src", src);
+  $.getJSON(metasrc, function(stuff) {
+    if (stuff != "No probes specified") {
+      meta = stuff;
+    }
+  });
 }
 
 
@@ -188,78 +194,6 @@ function updateHighlights()
       probe.style.outline = style_highlight + ' #' + style_colours[i];
       probe.style.z_index  = 1;
     }
-  }
-}
-
-/*
-function pickup(id)
-{
-  moving = id;
-  pUpdate.innerHTML = 'Picked Up ' + moving;
-}
-
-function drop()
-{
-  if (moving != null) {
-    pUpdate.innerHTML = 'Dropped ' + moving;
-    moving = null;
-  }
-}
-
-function move(event)
-{
-  if (moving != null) {
-    m = document.getElementById(moving);
-    m.style.left = event.clientX + "px";
-    m.style.top = event.clientY + "px";
-    pUpdate.innerHTML = 'Moved ' + moving;
-  }
-}
-*/
-
-function zoom(event)
-{
-  const min_x = 67;
-  const min_y = 42;
-  const max_x = 550;
-  const max_y = 522;
-  var range_x = max_x - min_x;
-  var range_y = max_y - min_y;
-  var graph_range = graph_end - graph_start;
-  var graph_pos = null;
-
-  x = event.layerX;
-  y = event.layerY;
-
-  img = document.getElementById('imgGraph');
-
-  if ((x >= min_x) && (y >= min_y) && (x <= max_x) && (y <= max_y)) {
-    x = x - min_x;
-    graph_pos = Math.round(((x / range_x) * graph_range) + graph_start);
-
-    if (event.type == "mousemove") {
-      if ((zoom_start == null) && (zoom_end == null)) {
-        img.style.cursor = "w-resize";
-      }
-      else if ((zoom_start != null) && (zoom_end == null)) {
-        img.style.cursor = "e-resize";
-      }
-      else {
-        img.style.cursor = "";
-      }
-    }
-    else if (event.type == "mouseup") {
-      if ((zoom_start == null) && (zoom_end == null)) {
-        zoom_start = graph_pos;
-      }
-      else if ((zoom_start != null) && (zoom_end == null)) {
-        zoom_end = graph_pos;
-        updateGraph();
-      }
-    }
-  }
-  else {
-    img.style.cursor = "";
   }
 }
 
@@ -310,17 +244,17 @@ function zoom_reset()
   updateGraph();
 }
 
-function callbackJSON(responseText)
+function callbackJSON(a_data)
 {
+
   var tileSize = 16;
   var offset_x = 0;
   var offset_y = 0;
 
   var time_start = new Date();
 
-  var a_data   = eval('(' + responseText + ')'); //get probe data and eval into an array
+  //var a_data   = eval('(' + responseText + ')'); //get probe data and eval into an array
   var a_probes = a_data["probes"];
-  return;
 
   var tileSize = a_data["config"]["tile_size"];
   var offset_x = a_data["config"]["offset_x"];
@@ -329,7 +263,7 @@ function callbackJSON(responseText)
   if (a_probes != null) {
     //pUpdate.innerHTML += 'Got probe data<br />';
     //divRoom.background = 'rooms/room.png?' + Math.Random();
-    divRoom.innerHTML = null; //makes the display flash, less than optimal
+    $("#divRoom").html(""); //makes the display flash, less than optimal
 
     var unknown_count = 0;
 
@@ -339,6 +273,8 @@ function callbackJSON(responseText)
     var show_current     = document.getElementById('inputCurrent').checked;
 
     var room_width = parseInt(document.getElementById('divRoom').style.width);
+
+    var h = "";
 
     for (var i = 0; i < a_probes.length; i++) {
       var p_id    = a_probes[i][0]; //id
@@ -381,9 +317,14 @@ function callbackJSON(responseText)
         //Scale text with probe
         p_f = Math.max(6, Math.min(12, p_w / p_value.length));  //font size
         p_m = (p_h / 2) - (p_f / 2) - 1;    //margin is (half probe height, minus half font size, minus one)
+
+        textColour = '#000';
+
+        if (p_value > 35) {
+          textColour = '#000';
+        }
   
-  
-        divRoom.innerHTML += '<div'
+        h += '<div'
                            + ' id="' + p_id + '"'
                            + ' title="' + p_id + " - " + p_alias + '"'
                            + ' class="probe-' + type.toLowerCase() + '"'
@@ -394,6 +335,7 @@ function callbackJSON(responseText)
                              + ' width: ' + p_w + 'px;'
                              + ' height: ' + p_h + 'px;'
                              + ' background-color: '+scaleColour(p_value, type)+';'
+                             + ' color: '+textColour+';'
                            + ' ">'
                            + '<p'
                            + ' style="'
@@ -403,6 +345,7 @@ function callbackJSON(responseText)
                            + '</div>';
       }
     }
+    $("#divRoom").html(h)
 
     updateHighlights();
     updateGraph();
@@ -413,27 +356,6 @@ function callbackJSON(responseText)
   }
 }
 
-function setupJSON()
-{
-  divRoom = document.getElementById("divRoom");
-  http_request = XMLHttpRequest();
-  http_request.onreadystatechange = stateJSON;
-}
-
-function stateJSON()
-{
-  if (http_request.readyState == 4) {
-    callbackJSON(http_request.responseText);
-  }
-}
-
-function updateProbesJSON()
-{
-  //Called periodically to refresh the sensor data
-  http_request.open('GET', './data/data-dump.json', true);
-  http_request.send(null);
-}
-
 
 function scaleColour(input, theme)
 {
@@ -442,7 +364,7 @@ function scaleColour(input, theme)
   //range of input scale
   if (theme == "TEMPERATURE") {
     t_min = 15;
-    t_max = 45;
+    t_max = 40;
     rgb_min = new RGBColour(  0,   0, 255);
     rgb_mid = new RGBColour(255,   0,   0);
     rgb_max = new RGBColour(255, 255,   0);
@@ -474,7 +396,6 @@ function scaleColour(input, theme)
 
 function popupGraph(i) {
   u = i.src;
-//u = u+"width=1024";
   w = window.open(u, "ARTEMIS", "width=1024,height=768,left=64,top=64,resizable=no,scrollbars=no,directories=no,titlebar=no,toolbar=no,status=no");
   w.window.focus();
 }

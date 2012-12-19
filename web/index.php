@@ -22,6 +22,10 @@
 #  $LastChangedBy: tkk76468@FED.CCLRC.AC.UK $
 #
 ?>
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="main.css" rel="stylesheet" type="text/css" />
 <?php
 
   require("prepost.inc.php");
@@ -48,57 +52,91 @@
   $s = getimagesize('rooms/room.png');
   $w = $s[0];
   $h = $s[1];
-  echo "    <div id=\"divRoom\" style=\"width: ${w}px; height: ${h}px; background-image: url('rooms/room.png');\"></div>";
+  $s = " background-image: url('rooms/room.png');";
+  if (isset($_REQUEST['nobg'])) {
+    $s = "";
+  }
+
+  echo "    <div id=\"divRoom\" style=\"width: ${w}px; height: ${h}px; $s\"></div>";
 ?>
 <?php flush(); ?>
-      <div id="divGraph">
-        <form action="#" method="get">
-          <p>
-            <button type="button"    title="Set Start Date" id="btnCalendarStart">Start</button>
-            <button type="button"    title="Set End Date"   id="btnCalendarEnd">End</button>
-            <button type="button"    title="Shrink view"    onclick="zoom_in();">&rarr; &larr;</button>
-            <button type="button"    title="Expand view"    onclick="zoom_out();">&larr; &rarr;</button>
-            <button type="button"    title="Move Backwards" onclick="zoom_back();">&larr;</button>
-            <button type="button"    title="Move Forwards"  onclick="zoom_forward();">&rarr;</button>
-            <button type="button"    title="Reset view"     onclick="zoom_reset();">Reset</button>
-          </p>
-          <p>
-            <input  type="checkbox"  name="baseline"        id="inputBaseline"  title="Use first probe as baseline and normalise other probes against it." onchange="updateGraph()">Baseline Mode</input>
-            <input  type="checkbox"  name="trend"           id="inputTrend"     title="Automatically smooth noisy data to a trendline." onchange="updateGraph()">Auto Trend</input>
-            <input  type="checkbox"  name="bms"             id="inputBms"       title="Show BMS events on graph." onchange="updateGraph()">BMS Events</input>
-            <input  type="hidden"    name="date-start"      id="inputDateStart" value="<?php echo time()-604800; ?>" />
-            <input  type="hidden"    name="date-end"        id="inputDateEnd"   value="<?php echo time(); ?>"        />
-          </p>
-        </form>
-        <script type="text/javascript">
-          Calendar.setup({
-            inputField     :    "inputDateStart",    // id of the input field
-            ifFormat       :    "%s",                // format of the input field
-            showsTime      :    true,                // will display a time selector
-            button         :    "btnCalendarStart",  // trigger for the calendar (button ID)
-            singleClick    :    false,               // double-click mode
-            onUpdate       :    updateGraph,         // update graph dates
-            showOthers     :    true,                // show days belonging to other months
-            cache          :    true,                // use one object for all calendars
-            step           :    1                    // show all years in drop-down boxes (instead of every other year as default)
-          });
-          Calendar.setup({
-            inputField     :    "inputDateEnd",      // id of the input field
-            ifFormat       :    "%s",                // format of the input field
-            showsTime      :    true,                // will display a time selector
-            button         :    "btnCalendarEnd",    // trigger for the calendar (button ID)
-            singleClick    :    false,               // double-click mode
-            onUpdate       :    updateGraph,         // update graph dates
-            showOthers     :    true,                // show days belonging to other months
-            cache          :    true,                // use one object for all calendars
-            step           :    1                    // show all years in drop-down boxes (instead of every other year as default)
-          });
-        </script>
-        <img id="imgGraph" src="" alt="Select probes to view" />
-      </div>
+    <div id="divGraph">
+      <form action="#" method="get">
+        <p>
+          Start: <input type="text" size="8" name="date-start" id="inputDateStart" value="<?php echo Date("Y-m-d", time()-604800); ?>" />
+          End: <input type="text" size="8" name="date-end"   id="inputDateEnd"   value="<?php echo Date("Y-m-d"); ?>" />
+          <!--<button type="button"    title="Shrink view"    onclick="zoom_in();">&rarr; &larr;</button>
+          <button type="button"    title="Expand view"    onclick="zoom_out();">&larr; &rarr;</button>
+          <button type="button"    title="Move Backwards" onclick="zoom_back();">&larr;</button>
+          <button type="button"    title="Move Forwards"  onclick="zoom_forward();">&rarr;</button>
+          <button type="button"    title="Reset view"     onclick="zoom_reset();">Reset</button>-->
+        </p>
+        <p>
+          <input  type="checkbox"  name="baseline"        id="inputBaseline"  title="Use first probe as baseline and normalise other probes against it." onchange="updateGraph()" />Baseline Mode
+          <input  type="checkbox"  name="trend"           id="inputTrend"     title="Automatically smooth noisy data to a trendline." onchange="updateGraph()" />Auto Trend
+          <input  type="checkbox"  name="bms"             id="inputBms"       title="Show BMS events on graph." onchange="updateGraph()" />BMS Events
+        </p>
+      </form>
+      <div id="minfo">&nbsp;</div>
+      <img id="imgGraph" src="drawgraph.php" alt="Select probes to view" />
+      <script type="text/javascript">
+        function update() {
+          $.getJSON("data/data-dump.json", callbackJSON);
+        }
+        setInterval('update()',30000);
+        update();
+
+        $( "#inputDateStart" ).change(updateGraph);
+        $( "#inputDateStart" ).datepicker({
+          dateFormat : "yy-mm-dd",
+        });
+        
+        $( "#inputDateEnd" ).change(updateGraph);
+        $( "#inputDateEnd" ).datepicker({
+          dateFormat : "yy-mm-dd",
+        });
+
+        $("#imgGraph").click(function(stuff) {
+          if (ids.length > 0) {
+            $u = stuff.target.src;
+            $u = $u.replace(/width=[0-9]+/g, "width=" + window.innerWidth);
+            $u = $u.replace(/height=[0-9]+/g, "height=" + window.innerHeight);
+            window.location = $u;
+          }
+        });
+
+        var minfo_vis = false;
+
+        $("#imgGraph").mousemove(function(e) {
+          if (meta != null) {
+            var x = e.pageX - this.offsetLeft - meta["graph_left"];
+            var y = meta["graph_height"] - (e.pageY - this.offsetTop - meta["graph_top"]);
+            if (x >= 0 && y >= 0 && x <= meta["graph_width"] && y <= meta["graph_height"]) {
+
+              x = meta["graph_start"] + ((x / meta["graph_width"]) * (meta["graph_end"] - meta["graph_start"]));
+              x = moment.unix(x).format('YYYY-MM-DD HH:mm') 
+
+              y = meta["value_min"]   + ((y / meta["graph_height"]) * meta["value_max"]);
+              y = y.toFixed(1);
+
+              $("#minfo").html(x + "<br />" + y + "C");
+              if (! minfo_vis) {
+                $("#minfo").show();
+                minfo_vis = true;
+              }
+              $("#imgGraph").css("cursor", "crosshair");
+            }
+            else {
+              if (minfo_vis) {
+                $("#minfo").hide();
+                minfo_vis = false;
+              }
+              $("#imgGraph").css("cursor", "");
+            }
+          }
+        });
+      </script>
     </div>
 <?php
-
-post();
-
+  post();
 ?>
