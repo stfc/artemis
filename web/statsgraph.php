@@ -72,7 +72,7 @@
   //Abort if start is before or the same as end
   if ($t_start >= $t_end) {
     if ($run_mode == "web") {
-      readfile("icons/status/image-loading.png");
+      readfile("images/image-loading.png");
     }
     else {
       echo "Time range inverted";
