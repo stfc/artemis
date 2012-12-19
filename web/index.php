@@ -45,12 +45,16 @@
   </div>
 <?php
   //Get size of room from image
-  $s = getimagesize('rooms/room.png');
-  $w = $s[0];
-  $h = $s[1];
-  $s = " background-image: url('rooms/room.png');";
-  if (isset($_REQUEST['nobg'])) {
-    $s = "";
+  $w = 600;
+  $h = 600;
+  $s = "";
+  if (file_exists('rooms/room.png')) {
+    $s = getimagesize('rooms/room.png');
+    $w = $s[0];
+    $h = $s[1];
+    if (!isset($_REQUEST['nobg'])) {
+      $s = " background-image: url('rooms/room.png');";
+    }
   }
 
   echo "    <div id=\"divRoom\" style=\"width: ${w}px; height: ${h}px; $s\"></div>";
