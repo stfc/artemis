@@ -129,61 +129,31 @@ echo "</a>\n";
 
 echo "</ul>\n";
 
-$db = new PDO($config["store"]["driver"].':../'.$config["store"]["path"]);
-
-if ($db) {
-
-  echo "<h2>Nodes</h2>\n";
-  $nodes = $db->query('SELECT * FROM nodes order by ip');
-  if ($nodes) {
-    echo "<table>\n";
-    echo "<tr><th>IP Address</th><th>Module</th><th>Object Class</th><th>Last Contact</th><th>&nbsp;</th></tr>\n";
-    foreach($nodes as $n) {
-      echo "<tr><td>{$n["ip"]}</td><td>{$n["module"]}</td><td>{$n["object"]}</td><td>{$n["lastcontact"]}</td><td><img src=\"/icons/actions/list-remove.png\" onclick=\"removeNode('{$n["ip"]}')\" /></td></tr>\n";
-    }
-    echo "</table>\n";
-    echo "<p><a href=\"javascript:addNode()\"><img src=\"/icons/actions/list-add.png\" />Add Node</a></p>\n";
+echo "<h2>Nodes</h2>\n";
+$nodes = Array();
+$a = exec("cd ..; ./artemis_cli.py list_nodes", $nodes);
+unset($a);
+if ($nodes) {
+  echo "<table>\n";
+  echo "<tr><th>IP Address</th><th>Module</th><th>Object Class</th><th>Last Contact</th><th>&nbsp;</th></tr>\n";
+  foreach($nodes as $n) {
+    echo $n;
   }
+  echo "</table>\n";
+  echo "<p><a href=\"javascript:addNode()\"><img src=\"/icons/actions/list-add.png\" />Add Node</a></p>\n";
+}
 
-  echo "<h2>Probes</h2>\n";
-  $probes = $db->query('SELECT * FROM probes order by lastcontact desc');
-  if ($probes) {
-    echo "<table>\n";
-    echo "<tr><th>ID</th><th>Name</th><th>x</th><th>y</th><th>z</th><th>w</th><th>h</th><th>d</th><th>Last Contact</th><th>Remote Name</th><th>&nbsp;</th></tr>\n";
-    foreach($probes as $p) {
-      echo "<tr>";
-      echo "<td>{$p["id"]}</td>";
-      echo "<td>{$p["name"]}</td>";
-      echo "<td>".sprintf("%2.2f", $p["x"])."</td>";
-      echo "<td>".sprintf("%2.2f", $p["y"])."</td>";
-      echo "<td>".sprintf("%2.2f", $p["z"])."</td>";
-      echo "<td>".sprintf("%2.2f", $p["w"])."</td>";
-      echo "<td>".sprintf("%2.2f", $p["h"])."</td>";
-      echo "<td>".sprintf("%2.2f", $p["d"])."</td>";
-      $lastcontact = (time() - strtotime($p["lastcontact"]));
-      echo "<td>";
-      if ($p["lastcontact"]) {
-        if ($lastcontact > 60) {
-          echo $lastcontact." seconds ago";
-        } else {
-          echo "Last Run";
-        }
-      } else {
-        echo "Never";
-      }
-      echo "</td>";
-      echo "<td>".($p["remote_name"])."</td>";
-      echo "<td>";
-      echo "<img src=\"/icons/actions/document-properties.png\" onclick=\"editProbe('{$p["id"]}')\"/>";
-      if ($lastcontact > 60) {
-        echo "&nbsp;<img src=\"/icons/actions/list-remove.png\" onclick=\"removeProbe('{$p["id"]}')\" />";
-      }
-      echo "</td>";
-      echo "</tr>\n";
-    }
-    echo "</table>\n";
+echo "<h2>Probes</h2>\n";
+$probes = Array();
+exec("cd ..; ./artemis_cli.py list_probes", $probes);
+if ($probes) {
+  echo "<table>\n";
+  echo "<tr><th>ID</th><th>Name</th><th>x</th><th>y</th><th>z</th><th>w</th><th>h</th><th>d</th><th>Last Contact</th><th>Remote Name</th><th>&nbsp;</th></tr>\n";
+  foreach($probes as $p) {
+    echo $p;
+    echo "\n";
   }
-
+  echo "</table>\n";
 }
 
 printConfig($config);
