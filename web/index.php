@@ -65,16 +65,10 @@
         <p>
           Start: <input type="text" size="8" name="date-start" id="inputDateStart" value="<?php echo Date("Y-m-d", time()-604800); ?>" />
           End: <input type="text" size="8" name="date-end"   id="inputDateEnd"   value="<?php echo Date("Y-m-d"); ?>" />
-          <!--<button type="button"    title="Shrink view"    onclick="zoom_in();">&rarr; &larr;</button>
-          <button type="button"    title="Expand view"    onclick="zoom_out();">&larr; &rarr;</button>
-          <button type="button"    title="Move Backwards" onclick="zoom_back();">&larr;</button>
-          <button type="button"    title="Move Forwards"  onclick="zoom_forward();">&rarr;</button>
-          <button type="button"    title="Reset view"     onclick="zoom_reset();">Reset</button>-->
         </p>
         <p>
           <input  type="checkbox"  name="baseline"        id="inputBaseline"  title="Use first probe as baseline and normalise other probes against it." onchange="updateGraph()" />Baseline Mode
           <input  type="checkbox"  name="trend"           id="inputTrend"     title="Automatically smooth noisy data to a trendline." onchange="updateGraph()" />Auto Trend
-          <input  type="checkbox"  name="bms"             id="inputBms"       title="Show BMS events on graph." onchange="updateGraph()" />BMS Events
         </p>
       </form>
       <div id="minfo">&nbsp;</div>
