@@ -21,6 +21,7 @@ Prerequisites
 * python 2.6+
 * python-rrdtool
 * rrdtool
+* moment.js 1.7.2+
 
 Installation
 ------------
