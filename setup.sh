@@ -19,7 +19,7 @@
 #  along with ARTEMIS. If not, see <http://www.gnu.org/licenses/>.
 #
 
-DATA_DIR=data
+DATA_DIR=web/data
 RRD_DIR=rrds
 CONFIG_FILE=artemis.conf
 CONFIG_FILE_TEMPLATE=artemis.conf.defaults

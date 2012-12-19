@@ -133,7 +133,7 @@ dump_prep = {
 
 # Write out data dump for gui
 try:
-  file_json_dump = open(this_dir + "data/data-dump.json", "w")
+  file_json_dump = open(this_dir + "web/data/data-dump.json", "w")
   json.dump(dump_prep, file_json_dump)
   file_json_dump.close()
   print("Wrote output to %s" % file_json_dump.name)
