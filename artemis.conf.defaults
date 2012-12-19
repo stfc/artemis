@@ -3,8 +3,7 @@ dir = rrds/
 ext = .rrd
 
 [store]
-driver = sqlite
-path = artemis_store.db
+connection_string = sqlite:///artemis_store.db
 
 [room]
 name = Room 101
