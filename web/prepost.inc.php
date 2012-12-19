@@ -30,6 +30,7 @@ function pre() {
     <meta http-equiv="Expires" content="-1" />
     <!-- ARTEMIS Specifics -->
     <link rel="icon" href="images/utilities-system-monitor.png" type="image/png" />
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
     <script type="text/javascript" src="sprintf.js"></script>
