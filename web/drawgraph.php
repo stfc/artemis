@@ -67,7 +67,7 @@
   }
   else {
     if ($run_mode == "web") {
-      readfile("icons/status/dialog-error.png");
+      readfile("images/dialog-error.png");
     }
     else {
       echo "Start time not specified";
@@ -82,7 +82,7 @@
   }
   else {
     if ($run_mode == "web") {
-      readfile("icons/status/dialog-warning.png");
+      readfile("images/dialog-warning.png");
     }
     else {
       echo "Start time not specified";
@@ -93,7 +93,7 @@
   //Abort if start is before or the same as end
   if ($t_start >= $t_end) {
     if ($run_mode == "web") {
-      readfile("icons/status/image-loading.png");
+      readfile("images/image-loading.png");
     }
     else {
       echo "Time range inverted";
