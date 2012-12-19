@@ -22,6 +22,7 @@
 
 import argparse
 import logging
+import json
 
 # Load config module
 from artemis_config import *
@@ -90,9 +91,9 @@ if __name__ == "__main__":
         if opts.format == "json":
             o = []
             for n in nodes:
-                o.append(n.repr_json())
-            o = "[" + ",".join(o) + "]"
-            print(o)
+                o.append(n.list())
+            o = { "aaData" : o }
+            print(json.dumps(o))
         else:
             for n in nodes:
                 print(n)
@@ -145,8 +146,15 @@ if __name__ == "__main__":
     elif opts.action == "list_probes":
         logger.debug("action: list_probes")
         probes = session.query(Probe).all()
-        for p in probes:
-            print(p)
+        if opts.format == "json":
+            o = []
+            for p in probes:
+                o.append(p.list())
+            o = { "aaData" : o }
+            print(json.dumps(o))
+        else:
+            for p in probes:
+                print(p)
 
 
     else:

@@ -60,11 +60,13 @@ class Node(Base):
   def __repr__(self):
       return "<Node (%s, %s, %s)>" % (self.ip, self.module, self.object)
 
-  def repr_json(self):
-      d = self.__dict__
-      del d["_sa_instance_state"]
-      d["lastcontact"] = d["lastcontact"].isoformat(" ")
-      return(json.dumps(d))
+  def list(self):
+      l = []
+      l.append(self.ip)
+      l.append(self.module)
+      l.append(self.object)
+      l.append(self.lastcontact.isoformat(" "))
+      return(l)
 
 
 class Probe(Base):
@@ -109,6 +111,21 @@ class Probe(Base):
 
   def __repr__(self):
       return "<Probe %s : (%s, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %s, %s, %s, %s)>" % (self.id, self.name, self.x, self.y, self.z, self.w, self.d, self.h, self.remote_name, self.node, self.state, self.lastcontact)
+
+  def list(self):
+      l = []
+      l.append(self.id)
+      l.append(self.name)
+      l.append(self.x)
+      l.append(self.y)
+      l.append(self.z)
+      l.append(self.w)
+      l.append(self.h)
+      l.append(self.d)
+      l.append(self.lastcontact.isoformat(" "))
+      l.append(self.remote_name)
+      return(l)
+
 
 
 engine = create_engine(config.get("store","connection_string"), echo=False)

@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <?php
 
 #
@@ -50,68 +51,22 @@ function printConfig($config) {
 
 ?>
 <html>
-<head>
-<link href="main.css" rel="stylesheet" type="text/css" />
+  <head>
+    <title>ARTEMIS Administration</title>
+    <link href="main.css" rel="stylesheet" type="text/css" />
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <link href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
 </head>
 <body>
-<div id="header">
-<img src="images/logo-header.png" alt="ARTEMIS - Almost Real-Time Enviromental Monitoritoring &amp; Information System" />
-</div>
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-<link href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
-<script type="text/javascript">
-
-function addNode() {
-  $("#dialogAddNode").dialog({
-/*    buttons: [
-      {
-        text: "Ok",
-        click: function() { $(this).dialog("close"); }
-      }
-  ],*/
-    minWidth: 400,
-    resizable: false,
-    draggable: false,
-    modal: true,
-  });
-}
-
-function removeNode(ip) {
-  if (confirm("Really remove probe " + ip + "?")) {
-    window.location = "api.php?return=setup.php&action=removenode&ip="+ip;
-  }
-}
-
-function removeProbe(p) {
-  confirm("Really remove probe " + p + "?");
-}
-
-</script>
-<div id="dialogAddNode" title="Add Node" style="display: none">
-  <form id="formAddNode" action="api.php">
-    <input type="hidden" name="action" value="addnode"></input>
-    <input type="hidden" name="return" value="setup.php"></input>
-    <div>
-      <label for="inputIP">IP Address<label>
-      <input id="inputIP" name="ip"></input>
-    </div>
-    <div>
-      <label for="selectClass">Class</label>
-      <select id="selectClass" name="class"><?php classOptions(); ?></select>
-    </div>
-    <div>
-      <button action="submit">Add</button>
-    </div>
-  </form>
-</div>
-
-<div id="floater">
-  <p><a href=".">Main Display</a></p>
-</div>
-
+  <div id="header">
+    <img src="images/logo-header.png" alt="ARTEMIS - Almost Real-Time Enviromental Monitoritoring &amp; Information System" />
+  </div>
+  <div id="floater">
+    <p><a href=".">Main Display</a></p>
+  </div>
 <?php
 
 require_once("artemis_config.inc.php");
@@ -125,38 +80,68 @@ if (isset($_GET["result"])) {
 $room_id = "ARTEMIS-STATS-".str_replace(" ", "_", $config["room"]["name"]);
 
 echo "<h2>Performance</h2>\n";
-echo "<a href=\"statsgraph.php?id=$room_id&width=2400\">\n";
-echo "<img src=\"statsgraph.php?id=$room_id\" />\n";
+echo "<a href=\"statsgraph.php?id=$room_id&amp;width=2400\">\n";
+echo "<img src=\"statsgraph.php?id=$room_id\" alt=\"ARTEMIS System Statistics Graph\" />\n";
 echo "</a>\n";
 
-echo "</ul>\n";
-
-echo "<h2>Nodes</h2>\n";
-$nodes = Array();
-$a = exec("cd ..; ./artemis_cli.py list_nodes --format json", $nodes);
-unset($a);
-if ($nodes) {
-  echo "<table>\n";
-  echo "<tr><th>IP Address</th><th>Module</th><th>Object Class</th><th>Last Contact</th><th>&nbsp;</th></tr>\n";
-  foreach($nodes as $n) {
-    echo $n;
-  }
-  echo "</table>\n";
-  echo "<p><a href=\"javascript:addNode()\"><img src=\"/icons/actions/list-add.png\" />Add Node</a></p>\n";
-}
-
-echo "<h2>Probes</h2>\n";
-$probes = Array();
-exec("cd ..; ./artemis_cli.py list_probes", $probes);
-if ($probes) {
-  echo "<table>\n";
-  echo "<tr><th>ID</th><th>Name</th><th>x</th><th>y</th><th>z</th><th>w</th><th>h</th><th>d</th><th>Last Contact</th><th>Remote Name</th><th>&nbsp;</th></tr>\n";
-  foreach($probes as $p) {
-    echo $p;
-    echo "\n";
-  }
-  echo "</table>\n";
-}
+?>
+<div>
+  <h2>Nodes</h2>
+  <table border="1" id="tablenodes">
+    <thead>
+      <tr>
+        <th>IP Address</th>
+        <th>Module</th>
+        <th>Class</th>
+        <th>Last Contact</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#tablenodes').dataTable({
+        "iDisplayLength" : 20,
+        "aLengthMenu": [10, 20, 50, 100, 200, 500],
+        "sAjaxSource": "api.php?list_nodes",
+        "sPaginationType": "full_numbers",
+      });
+    } );
+  </script>
+</div>
+<div>
+  <h2>Probes</h2>
+  <table border="1" id="tableprobes">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>x</th>
+        <th>y</th>
+        <th>z</th>
+        <th>w</th>
+        <th>h</th>
+        <th>d</th>
+        <th>Last Contact</th>
+        <th>Remote Name</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('#tableprobes').dataTable({
+        "iDisplayLength" : 20,
+        "aLengthMenu": [10, 20, 50, 100, 200, 500],
+        "sAjaxSource": "api.php?list_probes",
+        "sPaginationType": "full_numbers",
+      });
+    } );
+  </script>
+</div>
+<?php
 
 printConfig($config);
 
