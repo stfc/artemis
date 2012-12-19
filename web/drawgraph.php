@@ -1,33 +1,32 @@
 <?php
 #
-#  Copyright Science and Technology Facilities Council, 2009-2012.
-#  
+#  Copyright Science and Technology Facilities Council, 2009-2012
+#
 #  This file is part of ARTEMIS.
-#  
+#
 #  ARTEMIS is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
-#  
+#
 #  ARTEMIS is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
-#  
+#
 #  You should have received a copy of the GNU General Public License
 #  along with ARTEMIS. If not, see <http://www.gnu.org/licenses/>.
 #
-#  $Revision: 9149 $
-#  $Date: 2011-09-28 14:31:59 +0100 (Wed, 28 Sep 2011) $
-#  $LastChangedBy: tkk76468@FED.CCLRC.AC.UK $
-#
 
-  $RRD_DIR = "rrds/";
+  $RRD_DIR = "../rrds/";
   $DATE_FORMAT = "Y-m-d H:i:s";
 
   $run_mode = "web";
   if (isset($_SERVER["TERM"]) or isset($_REQUEST["debug"])) {
     $run_mode = "cli";
+  }
+  elseif (isset($_REQUEST["meta"])) {
+    $run_mode = "meta";
   }
 
   require('functions.php');
@@ -36,10 +35,16 @@
     //We need to masquerade as an image of the png variety
     ob_start();
     header("Content-type: image/png");
-    #header("Content-type: text/plain");
     ob_end_clean();
     session_write_close();
   }
+  else {
+    ob_start();
+    header("Content-type: text/plain");
+    ob_end_clean();
+    session_write_close();
+  }
+
 
   //Get list of probe ids to graph
   if (isset($_REQUEST['ids']) && strlen($_REQUEST['ids']) > 0) {
@@ -59,15 +64,14 @@
   //Time range of graph
   $range = null;
 
-  //Casting the timestamps as integers is my lazy form of input validation
   //Get start timestamp and check validity, abort nicely if bad
   if (isset($_GET['start'])) {
-    $t_start = (int) $_GET['start'];
+    $t_start = preg_replace("/[^a-zA-Z0-9.]/", "", $_GET['start']);
     $range .= "-s $t_start ";
   }
   else {
     if ($run_mode == "web") {
-      readfile("images/dialog-error.png");
+      readfile("icons/status/dialog-error.png");
     }
     else {
       echo "Start time not specified";
@@ -77,12 +81,12 @@
 
   //Get end timestamp and check validity, abort nicely if bad
   if (isset($_GET['end'])) {
-    $t_end = (int) $_GET['end'];
+    $t_end = preg_replace("/[^a-zA-Z0-9.]/", "", $_GET['end']);
     $range .= "-e $t_end ";
   }
   else {
     if ($run_mode == "web") {
-      readfile("images/dialog-warning.png");
+      readfile("icons/status/dialog-warning.png");
     }
     else {
       echo "Start time not specified";
@@ -93,7 +97,7 @@
   //Abort if start is before or the same as end
   if ($t_start >= $t_end) {
     if ($run_mode == "web") {
-      readfile("images/image-loading.png");
+      readfile("icons/status/image-loading.png");
     }
     else {
       echo "Time range inverted";
@@ -107,7 +111,7 @@
   else {
     $mode = null;
   }
-  
+
   $trend = false;
 
   if (isset($_GET['trend'])) {
@@ -126,11 +130,6 @@
     $height = $_GET['height'];
   }
 
-  $show_bms = False;
-
-  if (isset($_GET['bms'])) {
-    $show_bms = True;
-  }
   //other usefuls
   $colours = array(
     'cc0000',
@@ -216,49 +215,25 @@
     $j--;
   }
 
-  $bms_colours = array(
-    'c4a000',
-    '5c3566',
-    'ce5c00',
-    '204a87',
-    '4e9a06',
-    'a40000'
-  );
-
-  //Insert BMS Alerts
-  if ($show_bms) {
-    $dbh = new PDO('sqlite://root/artemis_traps.sqlite');
-    $i = 0;
-    foreach ($dbh->query("select (cast(strftime(\"%s\", timestamp) as INTEGER) / $window * $window) as ts, value, label from bms_events where ts between $t_start and $t_end and label not like '%AHU%' and label not like 'Atrium%' group by ts, label;") as $row) {
-      $defs .= sprintf(' VRULE:%s#%s:"%s\n":dashes', $row["ts"], $bms_colours[$i], $row["label"]);
-      $i++;
-      if ($i >= sizeof($bms_colours)) {
-        $i = 0;
-      }
-    }
-  }
-  
   //draw the graph to stdout, which is this page :P
-  $cmd= ("rrdtool graph - "
+  $cmd= ("rrdtool graphv - "
     ." -a PNG"                 //Output as an PNG Image
     ." --pango-markup"         //Render text with Pango
-#    ." --border 1"            //Disable border
     ." -R light"               //Slight hinting and anti-aliasing
     ." -T 64"                  //Set tabstop width
     ." -n AXIS:8:Helvetica"
     ." -n UNIT:8:Helvetica"
     ." -n LEGEND:7:Helvetica"
-    ." -c BACK#ffffff00"     //Background colour
+    ." -c BACK#ffffff"       //Background colour
     ." -c CANVAS#ffffff"     //Graph Background colour
-    ." -c SHADEA#ffffff00"   //Top and left shade
-    ." -c SHADEB#ffffff00"   //Bottom and right shade
+    ." -c SHADEA#ffffff"     //Top and left shade
+    ." -c SHADEB#ffffff"     //Bottom and right shade
     ." -c FONT#2e3436"       //Font colour
     ." -c AXIS#2e3436"       //Axis colour
     ." -c ARROW#2e3436"      //Axis arrow colour
     ." -c MGRID#babdb6"      //Major grid colour
     ." -c GRID#babdb6"       //Minor grid colour
     ." -c FRAME#2e3436"      //Frame colour
-#    ." -t '"/*.date($DATE_FORMAT, $start)*/."2008-08-08 23:23 to 34538945'"
     ." -w $width"            //Width
     ." -h $height"           //Height
     ." --full-size-mode"     //Specify image size
@@ -268,20 +243,30 @@
     ." -v '<b>Temperature</b> °C        <b>Current</b> A'" //Left Vertical axis label
     ." --right-axis 2:0"     //Right Vertical axis
     ." --right-axis-label '<b>Airflow</b> %        <b>Humidity</b> %'" //Right Vertical axis label
-    ."$defs"); 
+    ."$defs");
 
   if ($mode == null) {
     $cmd .= " -r"; //Rigid limits
   }
-  #if ($trend) {
-    $cmd .= " -E"; //Sloping edges
-  #}
+  $cmd .= " -E"; //Sloping edges
 
   //execute
-  $xc = 0;
-  system($cmd, $xc);
-  if ($xc > 0) {
-    echo "Graph Drawing Failed\n\n";
-    echo $cmd;
+  $imgdata = shell_exec($cmd);
+
+  if ($run_mode == 'meta') {
+    $data = preg_split("/BLOB_SIZE:[0-9]+\n/", $imgdata);
+    $data = explode("\n", $data[0]);
+    $meta = Array();
+    foreach ($data as $i => $d) {
+      $d = explode(" = ", $d);
+      if ($d[0] != "image") {
+        $meta[$d[0]] = (float)$d[1];
+      }
+    }
+    echo json_encode($meta);
+  }
+  else {
+    $d = preg_split("/BLOB_SIZE:[0-9]+\n/", $imgdata);
+    echo $d[1];
   }
 ?>
