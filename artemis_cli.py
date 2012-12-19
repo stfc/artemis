@@ -28,7 +28,7 @@ from artemis_config import *
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("action", choices=["add_node", "remove_node", "list_probes", "update_probe"])
+    parser.add_argument("action", choices=["add_node", "remove_node", "list_nodes", "list_probes", "update_probe"])
     parser.add_argument("--debug", action="store_true")
     opts, args = parser.parse_known_args()
 
@@ -83,6 +83,13 @@ if __name__ == "__main__":
                 logger.error("No node found with the IP %s" % o.ip)
 
 
+    elif opts.action == "list_nodes":
+        logger.debug("action: list_nodes")
+        nodes = session.query(Node).all()
+        for n in nodes:
+            print(n)
+
+
     elif opts.action == "update_probe":
         logger.debug("action: update_probe")
         p = argparse.ArgumentParser(usage="%(prog)s update_probe [options]")
@@ -128,7 +135,7 @@ if __name__ == "__main__":
 
 
     elif opts.action == "list_probes":
-        logger.debug("action: update_probe")
+        logger.debug("action: list_probes")
         probes = session.query(Probe).all()
         for p in probes:
             print(p)

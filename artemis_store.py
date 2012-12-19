@@ -56,7 +56,7 @@ class Node(Base):
       self.lastcontact = datetime.now()
 
   def __repr__(self):
-      return "<Unit (%s, %s, %s)>" % (self.ip, self.module, self.object)
+      return "<Node (%s, %s, %s)>" % (self.ip, self.module, self.object)
 
 
 class Probe(Base):
