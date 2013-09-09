@@ -24,6 +24,7 @@ Prerequisites
 * python-rrdtool
 * rrdtool
 * python-sqlalchemy
+* python-argparse
 
 Installation
 ------------
