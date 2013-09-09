@@ -27,9 +27,6 @@ html {
   font-size: 10pt;
   padding: 0;
   background-color: #F7F7F7;
-  background-image: url('earthlingtwo/images/img02.jpg'), url('earthlingtwo/images/img01.jpg');
-  background-position: left -164px, left top;
-  background-repeat: repeat-x, repeat;
 }
 body {
   color: #222;
@@ -40,15 +37,10 @@ body {
   border: 1px dotted darkorange;
 }*/
 div#header {
-  background-image: url('earthlingtwo/images/img03.jpg');
-  background-position: left bottom;
-  background-repeat: no-repeat;
+  background-color: rgb(186, 189, 182);
   margin: 0;
 }
 div#controls {
-  background-image: url('earthlingtwo/images/img04.jpg');
-  background-position: left top;
-  background-repeat: no-repeat;
   margin: 0;
   border-bottom: 1px solid #000;
   height: 32px;
@@ -119,7 +111,7 @@ h1, h2, h3{
   font-family: lucida sans, sans;
 }
 h1 {
-  color: #fff;
+  color: #000;
   margin: 4px;
   font-weight: normal;
 }
@@ -152,7 +144,7 @@ p.error:before {
   margin-right: 4px;
 }
 a:link, a:visited, a:active {
-  color: #ffffff;
+  color: rgb(32, 74, 135);
 }
 a.external:after {
   content: url("/icons/actions/go-jump.png");
