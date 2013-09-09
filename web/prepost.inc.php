@@ -66,9 +66,6 @@ EOT;
 
 function post() {
   echo <<<EOT
-    <div id="footer">
-      <a href="http://www.w3.org/html/logo/"><img src="images/HTML5_Badge_32.png" width="32" height="32" alt="HTML5 Powered" title="HTML5 Powered"></a>
-    </div>
   </body>
   </html>
 EOT;
