@@ -50,17 +50,15 @@ def process(d, f, mode):
 
   for i in d:
     if "TEMPERATURE" in i[0]:
-      if "Row " in i[2]:
-        r = float(i[3])
-        c = float(i[4])
-        v = float(i[1])
+      r = float(i[3])
+      c = float(i[4])
+      v = float(i[1])
 
-        x.append(r)
-        y.append(c)
-        z.append(v)
+      x.append(r)
+      y.append(c)
+      z.append(v)
 
   plot(x, y, z, "R89 HPD Room", f, mode)
-
 
 def plot(x, y, z, title, filename, mode):
   import numpy as np
