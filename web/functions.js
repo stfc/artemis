@@ -266,6 +266,7 @@ function callbackJSON(a_data)
     var show_current     = document.getElementById('inputCurrent').checked;
 
     var room_width = parseInt(document.getElementById('divRoom').style.width);
+    var room_height = parseInt(document.getElementById('divRoom').style.height);
 
     var h = "";
 
