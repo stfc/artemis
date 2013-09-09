@@ -25,8 +25,7 @@ from base import *
 import re
 
 ##
-# 1-Wire network attached monitoring base
-#  Good example of a complex, multi probe node
+# IPMI Ambient/System Temperature
 #
 class node_ipmiAmb(node):
     def __init__(self, ip, user = "ADMIN", password = "ADMIN"):
