@@ -56,4 +56,6 @@ class node_ipmiAmb(node):
                                 id = "%s-IPMI-%s-%s" % (type.upper(), mac.replace(":", ""), id)
                                 results.append((id, value, "C", name))
 
-        return results
+            return results
+        else:
+            return False
