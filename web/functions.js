@@ -141,7 +141,6 @@ function updateGraph()
 
   var baseline = document.getElementById('inputBaseline').checked;
   var trend    = document.getElementById('inputTrend').checked;
-  var bms      = document.getElementById('inputBms').checked;
 
   var start = '&start=' + graph_start;
   var end   = '&end='   + graph_end;
