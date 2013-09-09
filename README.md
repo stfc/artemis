@@ -18,6 +18,8 @@ If you are starting from scratch either buy some Supported Devices or take a loo
 Prerequisites
 -------------
 
+* httpd
+* php
 * python 2.6+
 * python-rrdtool
 * rrdtool
