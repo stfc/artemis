@@ -23,6 +23,7 @@ Prerequisites
 * python 2.6+
 * python-rrdtool
 * rrdtool
+* python-sqlalchemy
 
 Installation
 ------------
