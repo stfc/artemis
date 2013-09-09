@@ -165,14 +165,8 @@ function updateGraph()
     trend = '';
   }
 
-  if (bms) {
-    bms  = '&bms=true';
-  } else {
-    bms = '';
-  }
-
   //Update image, changing the date lets the browser know its a new image preloading prevents the annoying update flicker
-  var src = 'drawgraph.php?d='+(new Date()).getTime()+'&ids='+ids+start+end+mode+trend+bms+width+height;
+  var src = 'drawgraph.php?d='+(new Date()).getTime()+'&ids='+ids+start+end+mode+trend+width+height;
   var metasrc = src + "&meta";
   $("#imgGraph").attr("src", src);
   $.getJSON(metasrc, function(stuff) {
