@@ -103,8 +103,14 @@ function viewGraph(id)
   for (i in ids) {
     if (ids[i] == id) {
       //Remove Highlight
-      var probe = document.getElementById(ids[i]);
-      probe.style.outline = null;
+      $("#" + id)
+        .css("box-shadow", "")
+        .css("border", "")
+        .css("margin", "")
+        .css("z-index", "")
+        .css("opacity", "")
+        .css("font-weight", "")
+      ;
       //Remove from array and do not add again
       ids.splice(i,1);
       bAdd = false;
@@ -181,12 +187,14 @@ function updateHighlights()
 {
   //Re-apply highlights
   for (i in ids) {
-    //Highlight
-    var probe = document.getElementById(ids[i]);
-    if (probe != null) {
-      probe.style.outline = style_highlight + ' #' + style_colours[i];
-      probe.style.z_index  = 1;
-    }
+    $("#"+ids[i])
+        .css("box-shadow", "0 0 6px 6px #" + style_colours[i])
+        .css("border", "1px solid black")
+        .css("margin", "-1px")
+        .css("z-index", 100 + i)
+        .css("opacity", "1")
+        .css("font-weight", "bold")
+    ;
   }
 }
 
@@ -296,28 +304,27 @@ function callbackJSON(a_data)
           //Convert units from tiles to pixels
           p_w = p_w * tileSize;  //probe width in pixels
           p_h = p_h * tileSize;  //probe height in pixels
-  
+
           p_x = (p_x * tileSize) - (p_w / 2) - (tileSize / 2);  //x-position in pixels
           p_y = (p_y * tileSize) - (p_h / 2) - (tileSize / 2);  //y_position in pixels
-  
+
           //Apply offsets (top-left corner of floor)
           p_x = p_x + offset_x;
           p_y = p_y + offset_y;
         }
-  
+
         //Improve readability of probes
         p_value = String(Math.round(p_value));
-  
+
         //Scale text with probe
         p_f = Math.max(6, Math.min(12, p_w / p_value.length));  //font size
-        p_m = (p_h / 2) - (p_f / 2) - 1;    //margin is (half probe height, minus half font size, minus one)
 
         textColour = '#000';
 
         if (p_value > 35) {
           textColour = '#000';
         }
-  
+
         h += '<div'
                            + ' id="' + p_id + '"'
                            + ' title="' + p_id + " - " + p_alias + '"'
@@ -328,13 +335,13 @@ function callbackJSON(a_data)
                              + ' top: ' + p_y + 'px;'
                              + ' width: ' + p_w + 'px;'
                              + ' height: ' + p_h + 'px;'
+                             + ' line-height: ' + p_h + 'px;'
                              + ' background-color: '+scaleColour(p_value, type)+';'
                              + ' color: '+textColour+';'
                            + ' ">'
-                           + '<p'
+                           + '<p class="probe"'
                            + ' style="'
                              + ' font-size: ' + p_f + 'px;'
-                             + ' margin-top: ' + p_m + 'px;'
                            + '">'+p_value+'</p>'
                            + '</div>';
       }

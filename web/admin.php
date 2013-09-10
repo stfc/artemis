@@ -37,7 +37,7 @@ function printConfig($config) {
   echo "<h2>Configuration</h2>\n";
   foreach ($config as $n => $s) {
     echo "<h3>$n</h3>\n";
-    echo "<dl>\n";
+    echo "<dl class='dl-horizontal'>\n";
     foreach($s as $k => $v) {
       if (is_array($v)) {
         $v = join(",", $v);
@@ -49,24 +49,23 @@ function printConfig($config) {
 }
 
 
+require("prepost.inc.php");
+
+pre();
+
 ?>
-<html>
-  <head>
-    <title>ARTEMIS Administration</title>
-    <link href="main.css" rel="stylesheet" type="text/css" />
-    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-    <link href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css" rel="stylesheet" type="text/css"/>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-    <script type="text/javascript" charset="utf-8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
-</head>
 <body>
-  <div id="header">
-    <img src="images/logo-header.png" alt="ARTEMIS - Almost Real-Time Enviromental Monitoritoring &amp; Information System" />
-  </div>
-  <div id="floater">
-    <p><a href=".">Main Display</a></p>
-  </div>
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="./"><img src="images/logo-header.png" alt="ARTEMIS - Almost Real-Time Enviromental Monitoritoring &amp; Information System"></a>
+    </div>
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="#"><a href=".">Display</a></li>
+        <li class="active"><a href="#"><a href="admin.php">Admin</a></li>
+      </ul>
+    </div>
+  </nav>
 <?php
 
 require_once("artemis_config.inc.php");
@@ -85,9 +84,9 @@ echo "<img src=\"statsgraph.php?id=$room_id\" alt=\"ARTEMIS System Statistics Gr
 echo "</a>\n";
 
 ?>
-<div>
+<div class="container">
   <h2>Nodes</h2>
-  <table border="1" id="tablenodes">
+  <table class="table" border="1" id="tablenodes">
     <thead>
       <tr>
         <th>IP Address</th>
@@ -110,9 +109,9 @@ echo "</a>\n";
     } );
   </script>
 </div>
-<div>
+<div class="container">
   <h2>Probes</h2>
-  <table border="1" id="tableprobes">
+  <table class="table" border="1" id="tableprobes">
     <thead>
       <tr>
         <th>ID</th>
@@ -140,6 +139,8 @@ echo "</a>\n";
       });
     } );
   </script>
+  <script type="text/javascript" charset="utf-8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+  <script type="text/javascript" charset="utf-8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
 </div>
 <?php
 

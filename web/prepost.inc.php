@@ -23,19 +23,20 @@ function pre() {
 <!DOCTYPE html>
 <html>
   <head>
-    <link href="dropdown.css" rel="stylesheet" type="text/css" />
-    <link href="main.css" rel="stylesheet" type="text/css" />
+    <link href="dropdown.css" rel="stylesheet" type="text/css">
     <title>ARTEMIS</title>
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="-1" />
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
     <!-- ARTEMIS Specifics -->
-    <link rel="icon" href="images/utilities-system-monitor.png" type="image/png" />
-    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <link rel="icon" href="images/utilities-system-monitor.png" type="image/png">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css" type="text/css">
+    <link href="css/main.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="sprintf.js"></script>
-    <script type="text/javascript" src="moment.js"></script>
-    <script type="text/javascript" src="functions.js"></script>
+    <script type="text/javascript" src="js/sprintf.js"></script>
+    <script type="text/javascript" src="js/moment.js"></script>
+    <script type="text/javascript" src="js/functions.js"></script>
   </head>
 
 EOT;

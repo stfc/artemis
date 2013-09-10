@@ -29,12 +29,17 @@
   pre();
 
 ?>
-  <div id="header">
-    <img src="images/logo-header.png" alt="ARTEMIS - Almost Real-Time Enviromental Monitoritoring &amp; Information System" />
-  </div>
-  <div id="floater">
-    <p><a href="admin.php">Admin</a></p>
-  </div>
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="./"><img src="images/logo-header.png" alt="ARTEMIS - Almost Real-Time Enviromental Monitoritoring &amp; Information System"></a>
+    </div>
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#"><a href=".">Display</a></li>
+        <li><a href="#"><a href="admin.php">Admin</a></li>
+      </ul>
+    </div>
+  </nav>
   <div id="controls">
     <form action="#" method="get" onchange="updateProbesJSON();">
       <input type="checkbox" name="temperature" id="inputTemperature" checked="checked" />Temperature
@@ -61,15 +66,23 @@
 ?>
 <?php flush(); ?>
     <div id="divGraph">
-      <form action="#" method="get">
-        <p>
-          Start: <input type="text" size="8" name="date-start" id="inputDateStart" value="<?php echo Date("Y-m-d", time()-604800); ?>" />
-          End: <input type="text" size="8" name="date-end"   id="inputDateEnd"   value="<?php echo Date("Y-m-d"); ?>" />
-        </p>
-        <p>
-          <input  type="checkbox"  name="baseline"        id="inputBaseline"  title="Use first probe as baseline and normalise other probes against it." onchange="updateGraph()" />Baseline Mode
-          <input  type="checkbox"  name="trend"           id="inputTrend"     title="Automatically smooth noisy data to a trendline." onchange="updateGraph()" />Auto Trend
-        </p>
+      <form role="form" class="form-inline">
+        <div class="form-group">
+          <label>Start:</label>
+          <input class="form-control" type="text" size="8" name="date-start" id="inputDateStart" value="<?php echo Date("Y-m-d", time()-604800); ?>" />
+        </div>
+        <div class="form-group">
+          <label>End:</label>
+          <input class="form-control" type="text" size="8" name="date-end"   id="inputDateEnd"   value="<?php echo Date("Y-m-d"); ?>" />
+        </div>
+        <div class="form-group">
+          <label>Baseline Mode</label>
+          <input  type="checkbox"  name="baseline"        id="inputBaseline"  title="Use first probe as baseline and normalise other probes against it." onchange="updateGraph()">
+        </div>
+        <div class="form-group">
+          <label>Auto Trend</label>
+          <input  type="checkbox"  name="trend"           id="inputTrend"     title="Automatically smooth noisy data to a trendline." onchange="updateGraph()">
+        </div>
       </form>
       <div id="minfo">&nbsp;</div>
       <img id="imgGraph" src="drawgraph.php" alt="Select probes to view" />

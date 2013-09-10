@@ -1,19 +1,19 @@
 /*
 #
 #  Copyright Science and Technology Facilities Council, 2009.
-#  
+#
 #  This file is part of ARTEMIS.
-#  
+#
 #  ARTEMIS is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
-#  
+#
 #  ARTEMIS is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
-#  
+#
 #  You should have received a copy of the GNU General Public License
 #  along with ARTEMIS. If not, see <http://www.gnu.org/licenses/>.
 #
@@ -25,39 +25,13 @@
 html {
   font-family: verdana, sans;
   font-size: 10pt;
-  padding: 0;
   background-color: #F7F7F7;
 }
 body {
   color: #222;
-  padding: 0;
-  margin: 0;
 }
-/*div {
-  border: 1px dotted darkorange;
-}*/
-div#header {
-  background-color: rgb(186, 189, 182);
-  margin: 0;
-}
-div#controls {
-  margin: 0;
-  border-bottom: 1px solid #000;
-  height: 32px;
-  clear: both;
-  overflow: hidden;
-}
-div#floater {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding-right: 0.5em;
-}
-div#header, div#footer {
-  width: 100%;
-  clear: both;
-  padding-left: 8px;
-  padding-top: 8px;
+div.navbar {
+  background-color: #555;
 }
 div#divRoom {
   border: 4px solid #000;
@@ -103,27 +77,6 @@ div.footer {
 div.footer > img {
   margin-top: -11px;
 }
-span.category {
-  margin-left: 2em;
-}
-h1, h2, h3{
-  color: #000;
-  font-family: lucida sans, sans;
-}
-h1 {
-  color: #000;
-  margin: 4px;
-  font-weight: normal;
-}
-h3 {
-  margin: 0;
-  margin-left: 0.5em;
-  border-bottom: 1px solid rgb(211, 215, 207);
-  width: 40em;
-}
-p {
-  margin: 0;
-}
 p.info {
   color: #666294;
   font-style: italic;
@@ -152,36 +105,8 @@ a.external:after {
 a.mail:before {
   content: url("/icons/actions/mail-message-new.png");
 }
-table {
-  border-collapse: collapse;
-  margin-left: 16pt;
-}
-td, th {
-  border: solid thin rgb(211, 215, 207);
-  padding: 2pt;
-}
 label {
   display: block;
-}
-button {
-  margin-top: 1em;
-}
-dl {
-  overflow: auto;
-}
-dt {
-  width: 8em;
-  text-align: right;
-  margin: 0;
-  float: left;
-  clear: left;
-}
-dd {
-  color: #000000;
-  margin: 0;
-  margin-left: 1em;
-  float: left;
-  clear: right;
 }
 div#controls li {
   float: left;
@@ -189,11 +114,6 @@ div#controls li {
   color: #222;
   padding: 0;
   padding-right: 1em;
-}
-span#rollup, span#rolldown {
-  color: #fff;
-  position: absolute;
-  right: 0;
 }
 #minfo {
   font-family: monospace;
