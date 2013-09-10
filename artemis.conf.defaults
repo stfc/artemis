@@ -7,6 +7,8 @@ connection_string = sqlite:///artemis_store.db
 
 [room]
 name = Room 101
+width = 512
+height = 256
 unit_x = 16
 unit_y = 16
 unit_z = 16

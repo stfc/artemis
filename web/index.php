@@ -35,24 +35,18 @@
     </form>
   </div>
 <?php
-  //Get size of room from image
-  $w = 600;
-  $h = 600;
-  $s = "";
-  if (file_exists('rooms/room.png')) {
-    $s = getimagesize('rooms/room.png');
-    $w = $s[0];
-    $h = $s[1];
-    if (!isset($_REQUEST['nobg'])) {
-      $s = " background-image: url('rooms/room.png');";
-    }
+  $w = $config['room']['width'];
+  $h = $config['room']['height'];
+
+  if (!isset($_REQUEST['nobg'])) {
+    $s = " background-image: url('rooms/room.png');";
   }
 ?>
 <?php flush(); ?>
   <div class="row">
-    <div id="divRoom" class="col-md-8" style="height: <?php echo $h ?>px;">
+    <div id="divRoom" class="col-md-4" style="width: <?php echo $w ?>px; height: <?php echo $h ?>px;">
     </div>
-    <div id="divGraph" class="col-md-4">
+    <div id="divGraph" class="col-md-8">
       <div>
         <form role="form" class="form-inline">
           <div>

@@ -257,6 +257,10 @@ function callbackJSON(a_data)
   var offset_y = 0;
   var offset_z = 0;
 
+  var reverse_x = false;
+  var reverse_y = false;
+  var reverse_z = false;
+
   var time_start = new Date();
 
   var a_probes = a_data["probes"];
@@ -268,6 +272,10 @@ function callbackJSON(a_data)
   var offset_x = a_data["config"]["offset_x"];
   var offset_y = a_data["config"]["offset_y"];
   var offset_z = a_data["config"]["offset_z"];
+
+  var reverse_x = a_data["config"]["reverse_x"];
+  var reverse_y = a_data["config"]["reverse_y"];
+  var reverse_z = a_data["config"]["reverse_z"];
 
   if (a_probes != null) {
     $("#divRoom").html(""); //makes the display flash, less than optimal
@@ -281,6 +289,9 @@ function callbackJSON(a_data)
 
     var room_width = parseInt(document.getElementById('divRoom').style.width);
     var room_height = parseInt(document.getElementById('divRoom').style.height);
+
+    var room_width = a_data["config"]["width"];
+    var room_height = a_data["config"]["height"];
 
     var h = "";
 
@@ -311,12 +322,24 @@ function callbackJSON(a_data)
           p_w = p_w * unit_x;  //probe width in pixels
           p_h = p_h * unit_y;  //probe height in pixels
 
-          p_x = (p_x * unit_x) - (p_w / 2) - (unit_x / 2);  //x-position in pixels
-          p_y = (p_y * unit_y) - (p_h / 2) - (unit_y / 2);  //y_position in pixels
+          p_x = (p_x * unit_x) - (unit_x / 2);  //x-position in pixels
+          p_y = (p_y * unit_y) - (unit_y / 2);  //y_position in pixels
 
           //Apply offsets (top-left corner of floor)
           p_x = p_x + offset_x;
           p_y = p_y + offset_y;
+
+          //Reverse axis if necessary
+          if (reverse_x) {
+            p_x = room_width - p_x - (unit_x / 2);
+          }
+          if (reverse_y) {
+            p_y = room_height - p_y - (unit_y / 2);
+          }
+
+          //Adjust to centre
+          p_x -= (p_w / 2);
+          p_y -= (p_h / 2);
         }
 
         //Improve readability of probes
@@ -332,24 +355,24 @@ function callbackJSON(a_data)
         }
 
         h += '<div'
-                           + ' id="' + p_id + '"'
-                           + ' title="' + p_id + " - " + p_alias + '"'
-                           + ' class="probe-' + type.toLowerCase() + '"'
-                           + ' onclick="viewGraph(\'' + p_id + '\');"'
-                           + ' style="'
-                             + ' left: ' + p_x + 'px;'
-                             + ' top: ' + p_y + 'px;'
-                             + ' width: ' + p_w + 'px;'
-                             + ' height: ' + p_h + 'px;'
-                             + ' line-height: ' + p_h + 'px;'
-                             + ' background-color: '+scaleColour(p_value, type)+';'
-                             + ' color: '+textColour+';'
-                           + ' ">'
-                           + '<p class="probe"'
-                           + ' style="'
-                             + ' font-size: ' + p_f + 'px;'
-                           + '">'+p_value+'</p>'
-                           + '</div>';
+          + ' id="' + p_id + '"'
+          + ' title="' + p_id + " - " + p_alias + '"'
+          + ' class="probe-' + type.toLowerCase() + '"'
+          + ' onclick="viewGraph(\'' + p_id + '\');"'
+          + ' style="'
+            + ' left: ' + p_x + 'px;'
+            + ' top: ' + p_y + 'px;'
+            + ' width: ' + p_w + 'px;'
+            + ' height: ' + p_h + 'px;'
+            + ' line-height: ' + p_h + 'px;'
+            + ' background-color: '+scaleColour(p_value, type)+';'
+            + ' color: '+textColour+';'
+          + ' ">'
+          + '<p class="probe"'
+            + ' style="'
+              + ' font-size: ' + p_f + 'px;'
+            + '">'+ p_value+'</p>'
+          + '</div>';
       }
     }
     $("#divRoom").html(h)

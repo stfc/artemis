@@ -120,7 +120,7 @@ session.commit()
 
 # Prep config
 c = dict(config.items("room"))
-for i in ['offset_x', 'offset_y', 'offset_z', 'unit_x', 'unit_y', 'unit_z']:
+for i in ['offset_x', 'offset_y', 'offset_z', 'unit_x', 'unit_y', 'unit_z', 'height', 'width']:
   c[i] = int(c[i])
 for i in ['reverse_x', 'reverse_y', 'reverse_z']:
   c[i] = config.getboolean("room", i)

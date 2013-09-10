@@ -18,6 +18,8 @@
 #  along with ARTEMIS. If not, see <http://www.gnu.org/licenses/>.
 #
 
+require_once("artemis_config.inc.php");
+
 $PAGES = Array(
   "." => "Display",
   "admin.php" => "Admin",
