@@ -18,7 +18,13 @@
 #  along with ARTEMIS. If not, see <http://www.gnu.org/licenses/>.
 #
 
+$PAGES = Array(
+  "." => "Display",
+  "admin.php" => "Admin",
+);
+
 function pre() {
+  global $PAGES;
   echo <<<EOT
 <!DOCTYPE html>
 <html>
@@ -31,20 +37,49 @@ function pre() {
     <link rel="icon" href="images/utilities-system-monitor.png" type="image/png">
     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css" type="text/css">
+    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
     <link href="css/main.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/sprintf.js"></script>
     <script type="text/javascript" src="js/moment.js"></script>
     <script type="text/javascript" src="js/functions.js"></script>
   </head>
+  <body>
+    <nav class="navbar navbar-default navbar-inverse navbar-static-top" role="navigation">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="./"><img src="images/logo-header.png" alt="ARTEMIS - Almost Real-Time Enviromental Monitoritoring &amp; Information System"></a>
+      </div>
+      <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav">
+
+EOT;
+
+  $page = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
+
+  if (substr($page, -1) == "/") {
+    $page = ".";
+  }
+  echo "<!-- page = " . $page . " -->\n";
+
+  foreach ($PAGES as $url => $name) {
+     echo "<li";
+     if (preg_match("/".preg_quote($url)."\$/", $page) > 0) {
+       echo " class='active'";
+     }
+     echo"><a href='$url'><br>$name</a></li>\n";
+  }
+
+  echo <<<EOT
+        </ul>
+      </div>
+    </nav>
 
 EOT;
 
   flush();
 
   echo <<<EOT
-  <body onresize="updateGraph();">
   <script type="text/javascript">
 
   function rollup(id) {

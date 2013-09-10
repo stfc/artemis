@@ -53,21 +53,6 @@ require("prepost.inc.php");
 
 pre();
 
-?>
-<body>
-  <nav class="navbar navbar-default" role="navigation">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="./"><img src="images/logo-header.png" alt="ARTEMIS - Almost Real-Time Enviromental Monitoritoring &amp; Information System"></a>
-    </div>
-    <div class="collapse navbar-collapse navbar-ex1-collapse">
-      <ul class="nav navbar-nav">
-        <li><a href="#"><a href=".">Display</a></li>
-        <li class="active"><a href="#"><a href="admin.php">Admin</a></li>
-      </ul>
-    </div>
-  </nav>
-<?php
-
 require_once("artemis_config.inc.php");
 
 echo "<h1>{$config["room"]["name"]}</h1>\n";
