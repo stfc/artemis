@@ -255,6 +255,7 @@ function callbackJSON(a_data)
 
   var offset_x = 0;
   var offset_y = 0;
+  var offset_z = 0;
 
   var time_start = new Date();
 
