@@ -141,8 +141,8 @@ function updateGraph()
     document.getElementById('inputDateEnd').value   = graph_end;
   }
   else {
-    graph_start = document.getElementById('inputDateStart').value;
-    graph_end   = document.getElementById('inputDateEnd').value;
+    graph_start = document.getElementById('inputDateStart').value + ":00";
+    graph_end   = document.getElementById('inputDateEnd').value + ":00";
   }
 
   var baseline = document.getElementById('inputBaseline').checked;
@@ -152,6 +152,7 @@ function updateGraph()
   var end   = '&end='   + graph_end;
 
   var width = window.innerWidth - parseInt(document.getElementById('divRoom').style.width);
+  width = 400;
   if (width < 300) width = window.innerWidth; //No point trying to fit it in, so make it big.
   document.getElementById('divGraph').style.width = width - 32 + "px";
   width = '&width=' + (width - 32);
@@ -254,7 +255,6 @@ function callbackJSON(a_data)
 
   var time_start = new Date();
 
-  //var a_data   = eval('(' + responseText + ')'); //get probe data and eval into an array
   var a_probes = a_data["probes"];
 
   var tileSize = a_data["config"]["tile_size"];
@@ -262,8 +262,6 @@ function callbackJSON(a_data)
   var offset_y = a_data["config"]["offset_y"];
 
   if (a_probes != null) {
-    //pUpdate.innerHTML += 'Got probe data<br />';
-    //divRoom.background = 'rooms/room.png?' + Math.Random();
     $("#divRoom").html(""); //makes the display flash, less than optimal
 
     var unknown_count = 0;
