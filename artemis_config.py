@@ -20,12 +20,6 @@
 
 import ConfigParser
 
-#Depends on node classes from artemis_core
-from nodetypes.snmp_env_jacarta import *
-from nodetypes.snmp_env_swift import *
-from nodetypes.snmp_pdu_apc import *
-from nodetypes.xml_env_swift import *
-
 from artemis_store import session, Node, Probe
 
 config = ConfigParser.ConfigParser()

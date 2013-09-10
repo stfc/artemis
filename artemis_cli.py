@@ -24,7 +24,10 @@ import argparse
 import logging
 import json
 
-# Load config module
+from sys import exit
+
+# Load artemis modules
+from artemis_core import load_plugin
 from artemis_config import *
 
 if __name__ == "__main__":
@@ -59,6 +62,10 @@ if __name__ == "__main__":
         logger.debug("action args: %s" % a)
 
         if o.ip and o.plugin:
+            try:
+                load_plugin(o.plugin)
+            except ImportError:
+                exit("ERROR: %s is not a valid plugin" % (o.plugin))
             node = Node(o.ip, o.plugin)
             session.add(node)
             session.commit()

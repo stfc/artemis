@@ -67,7 +67,7 @@ Some devices may be supported but not yet listed, check the git repository.
 Plugin Development
 ==================
 
-Plugins for different sensors are implemented as individual modules in `nodetypes/`.
+Plugins for different sensors are implemented as individual modules in `plugins/`.
 
 Each module is expected to define a class of the same name that subclasses `node` from `base.py` and as such must define at least one method (`fetch()`).
 

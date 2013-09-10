@@ -45,7 +45,7 @@ except:
 
 #ARTEMIS Components
 from artemis_core import *
-from nodetypes import base
+from plugins import base
 
 #Load config module
 from artemis_config import *

@@ -57,6 +57,6 @@ class data_grabber(Thread):
       self.data = [d + (self.node.ip,) for d in data] # Concatenate source node back onto each record
 
 def load_plugin(plugin):
-  m = __import__("nodetypes.%s" % (plugin))
+  m = __import__("plugins.%s" % (plugin))
   c = getattr(getattr(m, plugin), 'node')
   return(c)
