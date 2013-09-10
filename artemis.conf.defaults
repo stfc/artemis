@@ -13,6 +13,9 @@ unit_z = 16
 offset_x = 0
 offset_y = 0
 offset_z = 0
+reverse_x = false
+reverse_y = false
+reverse_z = false
 
 [graph]
 date_format = Y-m-d H:i:s
