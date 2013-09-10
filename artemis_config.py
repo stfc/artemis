@@ -29,4 +29,4 @@ from nodetypes.xml_env_swift import *
 from artemis_store import session, Node, Probe
 
 config = ConfigParser.ConfigParser()
-config.read(['artemis.conf'])
+config.read(['artemis.conf.defaults', 'artemis.conf'])

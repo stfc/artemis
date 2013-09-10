@@ -120,9 +120,9 @@ session.commit()
 
 # Prep config
 c = dict(config.items("room"))
-c["tile_size"] = int(c["tile_size"])
-c["offset_x"] = int(c["offset_x"])
-c["offset_y"] = int(c["offset_y"])
+for i in ['offset_x', 'offset_y', 'offset_z', 'unit_x', 'unit_y', 'unit_z']:
+  c[i] = int(c[i])
+
 
 #Dump data
 dump_prep = {

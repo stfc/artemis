@@ -7,9 +7,12 @@ connection_string = sqlite:///artemis_store.db
 
 [room]
 name = Room 101
-tile_size = 16
+unit_x = 16
+unit_y = 16
+unit_z = 16
 offset_x = 0
 offset_y = 0
+offset_z = 0
 
 [graph]
 date_format = Y-m-d H:i:s

@@ -249,7 +249,10 @@ function zoom_reset()
 function callbackJSON(a_data)
 {
 
-  var tileSize = 16;
+  var unit_x = 16;
+  var unit_y = 16;
+  var unit_z = 16;
+
   var offset_x = 0;
   var offset_y = 0;
 
@@ -257,9 +260,13 @@ function callbackJSON(a_data)
 
   var a_probes = a_data["probes"];
 
-  var tileSize = a_data["config"]["tile_size"];
+  var unit_x = a_data["config"]["unit_x"];
+  var unit_y = a_data["config"]["unit_y"];
+  var unit_z = a_data["config"]["unit_z"];
+
   var offset_x = a_data["config"]["offset_x"];
   var offset_y = a_data["config"]["offset_y"];
+  var offset_z = a_data["config"]["offset_z"];
 
   if (a_probes != null) {
     $("#divRoom").html(""); //makes the display flash, less than optimal
@@ -280,10 +287,10 @@ function callbackJSON(a_data)
       var p_id    = a_probes[i][0]; //id
       var p_value = a_probes[i][1]; //value
       var p_alias = a_probes[i][2]; //friendly name
-      var p_x     = a_probes[i][3]; //x position in tiles
-      var p_y     = a_probes[i][4]; //y position in tiles
-      var p_w     = a_probes[i][5]; //width in tiles
-      var p_h     = a_probes[i][6]; //height in tiles
+      var p_x     = a_probes[i][3]; //x position in units
+      var p_y     = a_probes[i][4]; //y position in units
+      var p_w     = a_probes[i][5]; //width in units
+      var p_h     = a_probes[i][6]; //height in units
       var p_f     = 0;              //font size
       var p_m     = 0;              //internal font margin
 
@@ -299,12 +306,12 @@ function callbackJSON(a_data)
           unknown_count++;
         }
         else {
-          //Convert units from tiles to pixels
-          p_w = p_w * tileSize;  //probe width in pixels
-          p_h = p_h * tileSize;  //probe height in pixels
+          //Convert from units to pixels
+          p_w = p_w * unit_x;  //probe width in pixels
+          p_h = p_h * unit_y;  //probe height in pixels
 
-          p_x = (p_x * tileSize) - (p_w / 2) - (tileSize / 2);  //x-position in pixels
-          p_y = (p_y * tileSize) - (p_h / 2) - (tileSize / 2);  //y_position in pixels
+          p_x = (p_x * unit_x) - (p_w / 2) - (unit_x / 2);  //x-position in pixels
+          p_y = (p_y * unit_y) - (p_h / 2) - (unit_y / 2);  //y_position in pixels
 
           //Apply offsets (top-left corner of floor)
           p_x = p_x + offset_x;
