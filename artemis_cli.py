@@ -137,6 +137,19 @@ if __name__ == "__main__":
         else:
             probe = session.query(Probe).filter(Probe.id == o.id).first()
 
+            # Try name if id doesn't match any probes
+            if not probe:
+                logger.info("No probe found with id '%s', trying to match by name" % o.id)
+                probe = session.query(Probe).filter(Probe.name == o.id).all()
+
+                if len(probe) > 1:
+                    logger.error("%d probes found with the name '%s', use ID to update each in turn" % (len(probe), o.id))
+                    for p in probe:
+                        print p
+                    exit(1)
+
+                probe = probe[0]
+
             if probe:
                 if o.n:
                     probe.name = o.n
@@ -156,7 +169,7 @@ if __name__ == "__main__":
                 session.commit()
                 logger.info("Probe updated")
             else:
-                logger.error("No probe found with id %s" % o.id)
+                logger.error("No probe found with id or name '%s'" % o.id)
 
 
     elif opts.action == "list_probes":
