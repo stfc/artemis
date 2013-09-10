@@ -27,7 +27,7 @@ import re
 ##
 # IPMI Ambient/System Temperature
 #
-class node_ipmiAmb(node):
+class node(node):
     def __init__(self, ip, user = "ADMIN", password = "ADMIN"):
         self.ip = ip
         self.user = user
@@ -55,7 +55,10 @@ class node_ipmiAmb(node):
                                 value = float(value)
                                 id = "%s-IPMI-%s-%s" % (type.upper(), mac.replace(":", ""), id)
                                 results.append((id, value, "C", name))
-
-            return results
+                    return results
+                else:
+                    return False
+            else:
+                return False
         else:
             return False

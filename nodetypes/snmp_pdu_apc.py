@@ -26,7 +26,7 @@ from base import *
 # APC Switched Rack PDU, e.g. AP7953
 #  Good example of a simpler, single probe node
 #
-class node_apc_switched_pdu(node):
+class node(node):
   def __init__(self, ip, community='public'):
     self.ip        = ip
     self.community = community

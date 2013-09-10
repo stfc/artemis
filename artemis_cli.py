@@ -50,17 +50,16 @@ if __name__ == "__main__":
 
     if opts.action == "add_node":
         logger.debug("action: add_node")
-        p = argparse.ArgumentParser(usage="%(prog)s add_node IP MODULE OBJECT")
+        p = argparse.ArgumentParser(usage="%(prog)s add_node IP PLUGIN")
         p.add_argument("ip")
-        p.add_argument("module")
-        p.add_argument("object")
+        p.add_argument("plugin")
         o, a = p.parse_known_args(args)
 
         logger.debug("action opts: %s" % o)
         logger.debug("action args: %s" % a)
 
-        if o.ip and o.module and o.object:
-            node = Node(o.ip, o.module, o.object)
+        if o.ip and o.plugin:
+            node = Node(o.ip, o.plugin)
             session.add(node)
             session.commit()
             logger.info("Node added")

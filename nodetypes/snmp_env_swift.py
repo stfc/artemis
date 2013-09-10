@@ -26,7 +26,7 @@ from base import *
 # 1-Wire network attached monitoring base
 #  Good example of a complex, multi probe node
 #
-class node_swiftCM1(node):
+class node(node):
   def fetch(self):
     #temperature probes
     id = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.4.1.2")

@@ -47,24 +47,21 @@ class Node(Base):
 
   __tablename__ = 'nodes'
   ip = Column(String(16), primary_key=True)
-  module = Column(String(16))
-  object = Column(String(16))
+  plugin = Column(String(16))
   lastcontact = Column(DateTime())
 
-  def __init__(self, ip, module, object):
+  def __init__(self, ip, plugin):
       self.ip = ip
-      self.module = module
-      self.object = object
+      self.plugin = plugin
       self.lastcontact = datetime.now()
 
   def __repr__(self):
-      return "<Node (%s, %s, %s)>" % (self.ip, self.module, self.object)
+      return "<Node (%s, %s)>" % (self.ip, self.plugin)
 
   def list(self):
       l = []
       l.append(self.ip)
-      l.append(self.module)
-      l.append(self.object)
+      l.append(self.plugin)
       l.append(self.lastcontact.isoformat(" "))
       return(l)
 
@@ -123,6 +120,7 @@ class Probe(Base):
       l.append(self.h)
       l.append(self.d)
       l.append(self.lastcontact.isoformat(" "))
+      l.append(self.node)
       l.append(self.remote_name)
       return(l)
 

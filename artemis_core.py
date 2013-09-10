@@ -35,7 +35,8 @@ def grabData(nodeset):
 
   for grabber in grabbers:
     grabber.join()
-    dataset += grabber.data
+    if grabber.data:
+      dataset += grabber.data
 
   return dataset
 
@@ -55,10 +56,7 @@ class data_grabber(Thread):
     if data:
       self.data = [d + (self.node.ip,) for d in data] # Concatenate source node back onto each record
 
-#Import all defined datasource nodes
-#from nodetypes import *
-
-def load_class(module, object):
-  m = __import__("nodetypes.%s" % (module))
-  c = getattr(getattr(m, module), object)
+def load_plugin(plugin):
+  m = __import__("nodetypes.%s" % (plugin))
+  c = getattr(getattr(m, plugin), 'node')
   return(c)

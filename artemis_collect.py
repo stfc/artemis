@@ -54,7 +54,7 @@ from artemis_config import *
 base_nodes = []
 
 for n in session.query(Node).all():
-  base_nodes.append(load_class(n.module, n.object)(n.ip))
+  base_nodes.append(load_plugin(n.plugin)(n.ip))
 
 # Setup sensors from store
 sensors = {}

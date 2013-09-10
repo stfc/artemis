@@ -1,19 +1,19 @@
 <?php
 #
 #  Copyright Science and Technology Facilities Council, 2009.
-#  
+#
 #  This file is part of ARTEMIS.
-#  
+#
 #  ARTEMIS is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
-#  
+#
 #  ARTEMIS is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
-#  
+#
 #  You should have received a copy of the GNU General Public License
 #  along with ARTEMIS. If not, see <http://www.gnu.org/licenses/>.
 #
@@ -22,7 +22,7 @@
 #  $LastChangedBy: tkk76468@FED.CCLRC.AC.UK $
 #
 
-  $RRD_DIR = "rrds/";
+  $RRD_DIR = "../rrds/";
   $DATE_FORMAT = "Y-m-d H:i:s";
   $DEFAULT_PERIOD = 720;
   $HORIZONTAL_MULTIPLIER = 60; //Seconds per pixel of horizontal resolution
@@ -86,7 +86,7 @@
   else {
     $mode = null;
   }
-  
+
   $trend = false;
 
   if (isset($_GET['trend'])) {
@@ -191,7 +191,7 @@
 /*    ." --right-axis 10:0"     //Right Vertical axis
     ." --right-axis-label '<b>Nodes\tProbes</b>'" //Right Vertical axis label
     ." --right-axis-format '%.0lf'"*/
-    ."$defs"); 
+    ."$defs");
 
   $cmd .= " -E"; //Sloping edges
 

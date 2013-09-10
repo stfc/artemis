@@ -48,9 +48,7 @@ function printConfig($config) {
   }
 }
 
-
 require("prepost.inc.php");
-
 pre();
 
 echo "<h1>{$config["room"]["name"]}</h1>\n";
@@ -61,20 +59,22 @@ if (isset($_GET["result"])) {
 
 $room_id = "ARTEMIS-STATS-".str_replace(" ", "_", $config["room"]["name"]);
 
-echo "<h2>Performance</h2>\n";
-echo "<a href=\"statsgraph.php?id=$room_id&amp;width=2400\">\n";
-echo "<img src=\"statsgraph.php?id=$room_id\" alt=\"ARTEMIS System Statistics Graph\" />\n";
-echo "</a>\n";
-
 ?>
 <div class="container">
+<?php
+  echo "<h2>Performance</h2>\n";
+  echo "<a href=\"statsgraph.php?id=$room_id&amp;width=2400\">\n";
+  echo "<img src=\"statsgraph.php?id=$room_id\" alt=\"ARTEMIS System Statistics Graph\" />\n";
+  echo "</a>\n";
+?>
+</div>
+<div class="container">
   <h2>Nodes</h2>
-  <table class="table" border="1" id="tablenodes">
+  <table class="table table-bordered datatable" id="tablenodes">
     <thead>
       <tr>
         <th>IP Address</th>
-        <th>Module</th>
-        <th>Class</th>
+        <th>Plugin</th>
         <th>Last Contact</th>
       </tr>
     </thead>
@@ -87,14 +87,19 @@ echo "</a>\n";
         "iDisplayLength" : 20,
         "aLengthMenu": [10, 20, 50, 100, 200, 500],
         "sAjaxSource": "api.php?list_nodes",
-        "sPaginationType": "full_numbers",
+        "sDom": "<'row'<'pull-right'f><'pull-left'l>r<'clearfix'>>t<'row'<'pull-left'i><'pull-right'p><'clearfix'>>",
+        "sPaginationType": "bootstrap",
+        "oLanguage": {
+        " sLengthMenu": "Show _MENU_ Rows",
+          "sSearch": "",
+        },
       });
-    } );
+    });
   </script>
 </div>
 <div class="container">
   <h2>Probes</h2>
-  <table class="table" border="1" id="tableprobes">
+  <table class="table table-bordered datatable" id="tableprobes">
     <thead>
       <tr>
         <th>ID</th>
@@ -106,6 +111,7 @@ echo "</a>\n";
         <th>h</th>
         <th>d</th>
         <th>Last Contact</th>
+        <th>Node</th>
         <th>Remote Name</th>
       </tr>
     </thead>
@@ -118,17 +124,25 @@ echo "</a>\n";
         "iDisplayLength" : 20,
         "aLengthMenu": [10, 20, 50, 100, 200, 500],
         "sAjaxSource": "api.php?list_probes",
-        "sPaginationType": "full_numbers",
+        "sDom": "<'row'<'pull-right'f><'pull-left'l>r<'clearfix'>>t<'row'<'pull-left'i><'pull-right'p><'clearfix'>>",
+        "sPaginationType": "bootstrap",
+        "oLanguage": {
+          "sLengthMenu": "Show _MENU_ Rows",
+          "sSearch": "",
+        },
       });
-    } );
+    });
   </script>
   <script type="text/javascript" charset="utf-8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
   <script type="text/javascript" charset="utf-8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" charset="utf-8" src="js/datatables_bootstrap.js"></script>
 </div>
+<div class="container">
 <?php
 
 printConfig($config);
 
 ?>
+</div>
 </body>
 </html>
