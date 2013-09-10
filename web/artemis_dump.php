@@ -1,3 +1,3 @@
 <?php
-  echo exec("./artemis_dump.py");
+  echo exec("../artemis_dump.py");
 ?>
