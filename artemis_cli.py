@@ -53,9 +53,11 @@ if __name__ == "__main__":
 
     if opts.action == "add_node":
         logger.debug("action: add_node")
-        p = argparse.ArgumentParser(usage="%(prog)s add_node IP PLUGIN")
+        p = argparse.ArgumentParser(usage="%(prog)s add_node IP PLUGIN [-u USERNAME] [-p PASSWORD]")
         p.add_argument("ip")
         p.add_argument("plugin")
+        p.add_argument("-u", "--username")
+        p.add_argument("-p", "--password")
         o, a = p.parse_known_args(args)
 
         logger.debug("action opts: %s" % o)
@@ -65,11 +67,19 @@ if __name__ == "__main__":
             try:
                 load_plugin(o.plugin)
             except ImportError:
-                exit("ERROR: %s is not a valid plugin" % (o.plugin))
+                logger.error("%s is not a valid plugin" % (o.plugin))
+                exit(1)
+
             node = Node(o.ip, o.plugin)
-            session.add(node)
-            session.commit()
-            logger.info("Node added")
+            try:
+                session.add(node)
+                node.username = o.username
+                node.password = o.password
+                session.commit()
+                logger.info("Node added")
+            except IntegrityError:
+                logger.error("Node already exists")
+                exit(1)
 
 
     elif opts.action == "remove_node":

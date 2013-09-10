@@ -39,6 +39,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Float, Integer, String, DateTime
 from datetime import datetime
+from sqlalchemy.exc import IntegrityError
 
 Base = declarative_base()
 
@@ -47,11 +48,15 @@ class Node(Base):
 
   __tablename__ = 'nodes'
   ip = Column(String(16), primary_key=True)
+  username = Column(String(16))
+  password = Column(String(16))
   plugin = Column(String(16))
   lastcontact = Column(DateTime())
 
   def __init__(self, ip, plugin):
       self.ip = ip
+      self.username = ""
+      self.password = ""
       self.plugin = plugin
       self.lastcontact = datetime.now()
 

@@ -20,7 +20,7 @@
 
 import ConfigParser
 
-from artemis_store import session, Node, Probe
+from artemis_store import session, Node, Probe, IntegrityError
 
 config = ConfigParser.ConfigParser()
 config.read(['artemis.conf.defaults', 'artemis.conf'])

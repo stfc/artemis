@@ -28,9 +28,9 @@ import re
 # IPMI Ambient/System Temperature
 #
 class node(node):
-    def __init__(self, ip, user = "ADMIN", password = "ADMIN"):
+    def __init__(self, ip, username = "ADMIN", password = "ADMIN"):
         self.ip = ip
-        self.user = user
+        self.user = username
         self.password = password
         self.reMac = re.compile("([0-9A-F][0-9A-F]:[0-9A-F][0-9A-F]:[0-9A-F][0-9A-F]:[0-9A-F][0-9A-F]:[0-9A-F][0-9A-F]:[0-9A-F][0-9A-F])")
         self.reSens = re.compile("([0-9]+): ([A-Za-z0-9 ]+) \(([A-Za-z]+)\): ([0-9]+.[0-9]+) C \((NA|[0-9]+.[0-9]+)/(NA|[0-9]+.[0-9]+)\): \[([A-Z]+)\]")
