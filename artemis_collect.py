@@ -21,8 +21,8 @@
 #
 
 #Required modules from Python Standard Library
-from time import clock
-time_start = clock()
+from time import time
+time_start = time()
 from datetime import datetime
 import commands, os, sys
 
@@ -76,7 +76,7 @@ snapshot_list = [];
 print("---- Data grab complete ----")
 
 for serial, value, units, name, source_node in g:
-  print(r"%2.3f : Found sensor %s with value %s %s and name %s" % (clock(), serial, value, units, name))
+  print(r"%2.3f : Found sensor %s with value %s %s and name %s" % (time(), serial, value, units, name))
   rrd = str(rrd_dir + serial + config.get("rrd","ext"))
 
   if not os.path.isfile(rrd):
@@ -161,7 +161,7 @@ if not os.path.isfile(rrd):
     "RRA:MIN:0.5:60:8760", # A year of hours
   )
 
-time_run = clock() - time_start
+time_run = time() - time_start
 
 rrdtool.update(rrd, "N:%f:%d:%d" % (time_run, len(base_nodes), len(g)))
 print("Collect finished in %0.3f seconds" % (time_run))
