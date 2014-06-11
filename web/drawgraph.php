@@ -66,7 +66,7 @@
 
   //Get start timestamp and check validity, abort nicely if bad
   if (isset($_GET['start'])) {
-    $t_start = preg_replace("/[^a-zA-Z0-9.]/", "", $_GET['start']);
+    $t_start = preg_replace("/[^0-9.:]/", "_", urldecode($_GET['start']));
     $range .= "-s $t_start ";
   }
   else {
@@ -81,7 +81,7 @@
 
   //Get end timestamp and check validity, abort nicely if bad
   if (isset($_GET['end'])) {
-    $t_end = preg_replace("/[^a-zA-Z0-9.]/", "", $_GET['end']);
+    $t_end = preg_replace("/[^0-9.:]/", "_", $_GET['end']);
     $range .= "-e $t_end ";
   }
   else {
