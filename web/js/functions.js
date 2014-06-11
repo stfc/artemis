@@ -141,8 +141,8 @@ function updateGraph()
     document.getElementById('inputDateEnd').value   = graph_end;
   }
   else {
-    graph_start = document.getElementById('inputDateStart').value + ":00";
-    graph_end   = document.getElementById('inputDateEnd').value + ":00";
+    graph_start = document.getElementById('inputDateStart').value;
+    graph_end   = document.getElementById('inputDateEnd').value;
   }
 
   var baseline = document.getElementById('inputBaseline').checked;
@@ -151,13 +151,21 @@ function updateGraph()
   var start = '&start=' + graph_start;
   var end   = '&end='   + graph_end;
 
-  var width = window.innerWidth - parseInt(document.getElementById('divRoom').style.width);
-  width = 400;
-  if (width < 300) width = window.innerWidth; //No point trying to fit it in, so make it big.
-  document.getElementById('divGraph').style.width = width - 32 + "px";
-  width = '&width=' + (width - 32);
+  var width = window.innerWidth - parseInt(document.getElementById('divRoom').style.width) - 32;
+  var height = window.innerHeight - 240;
 
-  var height = window.innerHeight - 128;
+  if (graph_embiggened) {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    $('#imgGraph').css("position", "fixed");
+  }
+  else {
+    if (width < 400) width = window.innerWidth; //No point trying to fit it in, so make it big.
+    $('#divGraph').width(width);
+    $('#imgGraph').css("position", "");
+  }
+
+  width = '&width=' + width;
   height = '&height=' + height;
 
   var mode = '';
@@ -348,7 +356,7 @@ function callbackJSON(a_data)
         //Scale text with probe
         p_f = Math.max(6, Math.min(12, p_w / p_value.length));  //font size
 
-        textColour = '#000';
+        textColour = '#fff';
 
         if (p_value > 35) {
           textColour = '#000';

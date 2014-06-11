@@ -66,12 +66,12 @@
 
   //Get start timestamp and check validity, abort nicely if bad
   if (isset($_GET['start'])) {
-    $t_start = preg_replace("/[^a-zA-Z0-9.]/", "", $_GET['start']);
+    $t_start = preg_replace("/[^0-9.:]/", "_", urldecode($_GET['start']));
     $range .= "-s $t_start ";
   }
   else {
     if ($run_mode == "web") {
-      readfile("icons/status/dialog-error.png");
+      readfile("images/dialog-error.png");
     }
     else {
       echo "Start time not specified";
@@ -81,26 +81,15 @@
 
   //Get end timestamp and check validity, abort nicely if bad
   if (isset($_GET['end'])) {
-    $t_end = preg_replace("/[^a-zA-Z0-9.]/", "", $_GET['end']);
+    $t_end = preg_replace("/[^0-9.:]/", "_", $_GET['end']);
     $range .= "-e $t_end ";
   }
   else {
     if ($run_mode == "web") {
-      readfile("icons/status/dialog-warning.png");
+      readfile("images/dialog-warning.png");
     }
     else {
       echo "Start time not specified";
-    }
-    exit();
-  }
-
-  //Abort if start is before or the same as end
-  if ($t_start >= $t_end) {
-    if ($run_mode == "web") {
-      readfile("icons/status/image-loading.png");
-    }
-    else {
-      echo "Time range inverted";
     }
     exit();
   }
@@ -252,21 +241,30 @@
 
   //execute
   $imgdata = shell_exec($cmd);
-
-  if ($run_mode == 'meta') {
-    $data = preg_split("/BLOB_SIZE:[0-9]+\n/", $imgdata);
-    $data = explode("\n", $data[0]);
-    $meta = Array();
-    foreach ($data as $i => $d) {
-      $d = explode(" = ", $d);
-      if ($d[0] != "image") {
-        $meta[$d[0]] = (float)$d[1];
-      }
+  if ($imgdata == '') {
+    if ($run_mode == "web") {
+      readfile("images/dialog-error.png");
     }
-    echo json_encode($meta);
+    else {
+      echo "$imgdata";
+    }
   }
   else {
-    $d = preg_split("/BLOB_SIZE:[0-9]+\n/", $imgdata);
-    echo $d[1];
+    if ($run_mode == 'meta') {
+      $data = preg_split("/BLOB_SIZE:[0-9]+\n/", $imgdata);
+      $data = explode("\n", $data[0]);
+      $meta = Array();
+      foreach ($data as $i => $d) {
+        $d = explode(" = ", $d);
+        if ($d[0] != "image") {
+          $meta[$d[0]] = (float)$d[1];
+        }
+      }
+      echo json_encode($meta);
+    }
+    else {
+     $d = preg_split("/BLOB_SIZE:[0-9]+\n/", $imgdata);
+       echo $d[1];
+    }
   }
 ?>

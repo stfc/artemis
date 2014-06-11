@@ -43,6 +43,16 @@ from sqlalchemy.exc import IntegrityError
 
 Base = declarative_base()
 
+def timedeltaago(lastcontact):
+    if lastcontact.days > 365:
+        return '%.1d years ago' % (lastcontact.days / 365.0)
+    elif lastcontact.days > 0:
+        return '%s days ago' % (lastcontact.days)
+    elif lastcontact.seconds > 90:
+        return '%.1d minutes ago' % (lastcontact.seconds / 60.0)
+    else:
+        return 'During last run'
+
 class Node(Base):
   """Properties of a interrogatable sensor unit"""
 
@@ -67,7 +77,7 @@ class Node(Base):
       l = []
       l.append(self.ip)
       l.append(self.plugin)
-      l.append(self.lastcontact.isoformat(" "))
+      l.append(timedeltaago(datetime.now() - self.lastcontact))
       return(l)
 
 
@@ -124,7 +134,7 @@ class Probe(Base):
       l.append(self.w)
       l.append(self.h)
       l.append(self.d)
-      l.append(self.lastcontact.isoformat(" "))
+      l.append(timedeltaago(datetime.now() - self.lastcontact))
       l.append(self.node)
       l.append(self.remote_name)
       return(l)

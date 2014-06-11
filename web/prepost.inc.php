@@ -39,22 +39,23 @@ function pre() {
     <link rel="icon" href="images/utilities-system-monitor.png" type="image/png">
     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css" type="text/css">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
     <link href="css/datatables-bootstrap.css" rel="stylesheet" type="text/css">
     <link href="css/main.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
     <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/sprintf.js"></script>
-    <script type="text/javascript" src="js/moment.js"></script>
+    <script type="text/javascript" src="js/moment.min.js"></script>
     <script type="text/javascript" src="js/functions.js"></script>
   </head>
   <body>
     <nav class="navbar navbar-default navbar-inverse navbar-static-top" role="navigation">
       <div class="navbar-header">
-        <a class="navbar-brand" href="./"><img src="images/logo-header.png" alt="ARTEMIS - Almost Real-Time Enviromental Monitoritoring &amp; Information System"></a>
+        <span class="navbar-brand" style="padding: 10px;"><img src="images/logo-header.png" alt="ARTEMIS - Almost Real-Time Enviromental Monitoritoring &amp; Information System"></span>
       </div>
       <div class="collapse navbar-collapse navbar-ex1-collapse">
-        <ul class="nav navbar-nav">
+        <ul class="nav navbar-nav pull-right">
 
 EOT;
 

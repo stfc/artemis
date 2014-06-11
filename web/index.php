@@ -39,12 +39,12 @@
   $h = $config['room']['height'];
 
   if (!isset($_REQUEST['nobg'])) {
-    $s = " background-image: url('rooms/room.png');";
+    $s = " background-image: url('images/room.png');";
   }
 ?>
 <?php flush(); ?>
   <div class="row">
-    <div id="divRoom" class="col-md-4" style="width: <?php echo $w ?>px; height: <?php echo $h ?>px;">
+    <div id="divRoom" class="col-md-4" style="width: <?php echo $w ?>px; height: <?php echo $h ?>px;<?php echo $s ?>">
     </div>
     <div id="divGraph" class="col-md-8">
       <div>
@@ -52,16 +52,16 @@
           <div>
             <div class="form-group">
               <label>Start:</label>
-              <div class='input-group date' id='datetimepickerStart'>
-                <input class="form-control" data-format="yyyy-MM-dd hh:mm" type="text" id="inputDateStart" value="<?php echo Date("Y-m-d H:i", time()-604800); ?>">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+              <div class='input-group date' id='datetimepickerStart' data-date-format="hh:mm DD.MM.YYYY">
+                <input class="form-control" type="text" id="inputDateStart" value="<?php echo Date("H:i d.m.Y", time()-604800); ?>" onchange="updateGraph()">
+                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
               </div>
             </div>
             <div class="form-group">
               <label>End:</label>
-              <div class='input-group date' id='datetimepickerEnd'>
-                <input class="form-control" data-format="yyyy-MM-dd hh:mm" type="text" id="inputDateEnd" value="<?php echo Date("Y-m-d H:i"); ?>">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+              <div class='input-group date' id='datetimepickerEnd' data-date-format="hh:mm DD.MM.YYYY">
+                <input class="form-control" type="text" id="inputDateEnd" value="<?php echo Date("H:i d.m.Y"); ?>" onchange="updateGraph()">
+                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
               </div>
             </div>
           </div>
@@ -79,6 +79,7 @@
           </div>
         </form>
       </div>
+      <div id="minfo">&nbsp;</div>
       <div>
         <img id="imgGraph" src="drawgraph.php" alt="Select probes to view">
       </div>
@@ -94,27 +95,54 @@
       setInterval('update()',30000);
       update();
 
-      $('#datetimepickerStart').datetimepicker({'pickSeconds':false});
-      $('#datetimepickerEnd').datetimepicker({'pickSeconds':false});
+      $('#datetimepickerStart').datetimepicker({
+        pickSeconds: false,
+        icons: {
+          time: "fa fa-clock-o",
+          date: "fa fa-calendar",
+          up: "fa fa-arrow-up",
+          down: "fa fa-arrow-down"
+        }
+      });
+      $('#datetimepickerStart').on('changeDate', function(e) {
+        updateGraph();
+      });
+
+      $('#datetimepickerEnd').datetimepicker({
+        pickSeconds: false,
+        icons: {
+          time: "fa fa-clock-o",
+          date: "fa fa-calendar",
+          up: "fa fa-arrow-up",
+          down: "fa fa-arrow-down"
+        }
+      });
+      $('#datetimepickerEnd').on('changeDate', function(e) {
+        updateGraph();
+      });
     });
 
     $(window).resize(updateGraph);
 
-    $("#imgGraph").click(function(stuff) {
-      if (ids.length > 0) {
-        $u = stuff.target.src;
-        $u = $u.replace(/width=[0-9]+/g, "width=" + window.innerWidth);
-        $u = $u.replace(/height=[0-9]+/g, "height=" + window.innerHeight);
-        window.location = $u;
-      }
+    var graph_embiggened = false;
+
+    $("#imgGraph").click(function() {
+      graph_embiggened = ! graph_embiggened;
+      updateGraph();
     });
 
     var minfo_vis = false;
 
     $("#imgGraph").mousemove(function(e) {
       if (meta != null) {
-        var x = e.pageX - this.offsetLeft - meta["graph_left"];
-        var y = meta["graph_height"] - (e.pageY - this.offsetTop - meta["graph_top"]);
+        var parentOffset = $(this).offset();
+        $("#minfo").offset({
+          left: e.pageX + 8,
+          top: e.pageY + 8
+        });
+        var x = e.pageX - parentOffset.left - meta["graph_left"];
+        var y = meta["graph_height"] - (e.pageY - parentOffset.top - meta["graph_top"]);
+
         if (x >= 0 && y >= 0 && x <= meta["graph_width"] && y <= meta["graph_height"]) {
 
           x = meta["graph_start"] + ((x / meta["graph_width"]) * (meta["graph_end"] - meta["graph_start"]));
