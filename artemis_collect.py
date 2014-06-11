@@ -21,8 +21,8 @@
 #
 
 #Required modules from Python Standard Library
-from time import clock
-time_start = clock()
+from time import time
+time_start = time()
 from datetime import datetime
 import commands, os, sys
 
@@ -45,7 +45,7 @@ except:
 
 #ARTEMIS Components
 from artemis_core import *
-from nodetypes import base
+from plugins import base
 
 #Load config module
 from artemis_config import *
@@ -54,7 +54,7 @@ from artemis_config import *
 base_nodes = []
 
 for n in session.query(Node).all():
-  base_nodes.append(load_class(n.module, n.object)(n.ip))
+  base_nodes.append(load_plugin(n.plugin)(n.ip, n.username, n.password))
 
 # Setup sensors from store
 sensors = {}
@@ -76,7 +76,7 @@ snapshot_list = [];
 print("---- Data grab complete ----")
 
 for serial, value, units, name, source_node in g:
-  print(r"%2.3f : Found sensor %s with value %s %s and name %s" % (clock(), serial, value, units, name))
+  print(r"%2.3f : Found sensor %s with value %s %s and name %s" % (time(), serial, value, units, name))
   rrd = str(rrd_dir + serial + config.get("rrd","ext"))
 
   if not os.path.isfile(rrd):
@@ -120,9 +120,11 @@ session.commit()
 
 # Prep config
 c = dict(config.items("room"))
-c["tile_size"] = int(c["tile_size"])
-c["offset_x"] = int(c["offset_x"])
-c["offset_y"] = int(c["offset_y"])
+for i in ['offset_x', 'offset_y', 'offset_z', 'unit_x', 'unit_y', 'unit_z', 'height', 'width']:
+  c[i] = int(c[i])
+for i in ['reverse_x', 'reverse_y', 'reverse_z']:
+  c[i] = config.getboolean("room", i)
+
 
 #Dump data
 dump_prep = {
@@ -159,7 +161,7 @@ if not os.path.isfile(rrd):
     "RRA:MIN:0.5:60:8760", # A year of hours
   )
 
-time_run = clock() - time_start
+time_run = time() - time_start
 
 rrdtool.update(rrd, "N:%f:%d:%d" % (time_run, len(base_nodes), len(g)))
 print("Collect finished in %0.3f seconds" % (time_run))

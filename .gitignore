@@ -39,4 +39,5 @@ nosetests.xml
 *.db
 *.rrd
 artemis.conf
-data/*
+web/data/*
+rrd/*

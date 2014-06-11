@@ -28,7 +28,7 @@ from base import *
 ##
 # 1-Wire Network attached monitoring base, using XML interface instead of SNMP
 #
-class node_swiftCM1_xml(node):
+class node(node):
   def fetch(self):
     import xml.dom.minidom
     import socket

@@ -18,10 +18,14 @@ If you are starting from scratch either buy some Supported Devices or take a loo
 Prerequisites
 -------------
 
+* httpd
+* php
 * python 2.6+
 * python-rrdtool
 * rrdtool
 * moment.js 1.7.2+
+* python-sqlalchemy
+* python-argparse
 
 Installation
 ------------
@@ -54,17 +58,17 @@ Some devices may be supported but not yet listed, check the git repository.
 
 <table>
     <tr><th>Manufacturer</th><th>Model</th><th>Works</th><th>Protocol</th><th>Module</th></tr>
-    <tr><td>SwiftTech</td><td>CM-2</td><td>Yes</td><td>XML</td><td>xml_env_swift</td></tr>
-    <tr><td>SwiftTech</td><td>CM-2</td><td>Yes</td><td>SNMP</td><td>snmp_env_swift</td></tr>
-    <tr><td>APC</td><td>AP7953</td><td>Yes</td><td>SNMP</td><td>snmp_pdu_apc</td></tr>
-    <tr><td>Jacarta</td><td>Unknown</td><td>Unknown</td><td>SNMP</td><td>snmp_env_jacarta</td></tr>
+    <tr><td>SwiftTech</td><td>CM-2</td><td>✓</td><td>XML</td><td>xml_env_swift</td></tr>
+    <tr><td>SwiftTech</td><td>CM-2</td><td>✓</td><td>SNMP</td><td>snmp_env_swift</td></tr>
+    <tr><td>APC</td><td>AP7953</td><td>✓</td><td>SNMP</td><td>snmp_pdu_apc</td></tr>
+    <tr><td>Jacarta</td><td>Unknown</td><td>?</td><td>SNMP</td><td>snmp_env_jacarta</td></tr>
 </table>
 
 
 Plugin Development
 ==================
 
-Plugins for different sensors are implemented as individual modules in `nodetypes/`.
+Plugins for different sensors are implemented as individual modules in `plugins/`.
 
 Each module is expected to define a class of the same name that subclasses `node` from `base.py` and as such must define at least one method (`fetch()`).
 

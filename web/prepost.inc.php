@@ -18,32 +18,72 @@
 #  along with ARTEMIS. If not, see <http://www.gnu.org/licenses/>.
 #
 
+require_once("artemis_config.inc.php");
+
+$PAGES = Array(
+  "." => "Display",
+  "admin.php" => "Admin",
+);
+
 function pre() {
+  global $PAGES;
   echo <<<EOT
 <!DOCTYPE html>
 <html>
   <head>
-    <link href="dropdown.css" rel="stylesheet" type="text/css" />
-    <link href="main.css" rel="stylesheet" type="text/css" />
+    <link href="dropdown.css" rel="stylesheet" type="text/css">
     <title>ARTEMIS</title>
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="-1" />
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
     <!-- ARTEMIS Specifics -->
-    <link rel="icon" href="images/utilities-system-monitor.png" type="image/png" />
-    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="sprintf.js"></script>
-    <script type="text/javascript" src="moment.js"></script>
-    <script type="text/javascript" src="functions.js"></script>
+    <link rel="icon" href="images/utilities-system-monitor.png" type="image/png">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css" type="text/css">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
+    <link href="css/datatables-bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/sprintf.js"></script>
+    <script type="text/javascript" src="js/moment.min.js"></script>
+    <script type="text/javascript" src="js/functions.js"></script>
   </head>
+  <body>
+    <nav class="navbar navbar-default navbar-inverse navbar-static-top" role="navigation">
+      <div class="navbar-header">
+        <span class="navbar-brand" style="padding: 10px;"><img src="images/logo-header.png" alt="ARTEMIS - Almost Real-Time Enviromental Monitoritoring &amp; Information System"></span>
+      </div>
+      <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav pull-right">
+
+EOT;
+
+  $page = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
+
+  if (substr($page, -1) == "/") {
+    $page = ".";
+  }
+  echo "<!-- page = " . $page . " -->\n";
+
+  foreach ($PAGES as $url => $name) {
+     echo "<li";
+     if (preg_match("/".preg_quote($url)."\$/", $page) > 0) {
+       echo " class='active'";
+     }
+     echo"><a href='$url'><br>$name</a></li>\n";
+  }
+
+  echo <<<EOT
+        </ul>
+      </div>
+    </nav>
 
 EOT;
 
   flush();
 
   echo <<<EOT
-  <body onresize="updateGraph();">
   <script type="text/javascript">
 
   function rollup(id) {
@@ -66,9 +106,6 @@ EOT;
 
 function post() {
   echo <<<EOT
-    <div id="footer">
-      <a href="http://www.w3.org/html/logo/"><img src="images/HTML5_Badge_32.png" width="32" height="32" alt="HTML5 Powered" title="HTML5 Powered"></a>
-    </div>
   </body>
   </html>
 EOT;

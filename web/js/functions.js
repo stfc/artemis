@@ -103,8 +103,14 @@ function viewGraph(id)
   for (i in ids) {
     if (ids[i] == id) {
       //Remove Highlight
-      var probe = document.getElementById(ids[i]);
-      probe.style.outline = null;
+      $("#" + id)
+        .css("box-shadow", "")
+        .css("border", "")
+        .css("margin", "")
+        .css("z-index", "")
+        .css("opacity", "")
+        .css("font-weight", "")
+      ;
       //Remove from array and do not add again
       ids.splice(i,1);
       bAdd = false;
@@ -141,17 +147,25 @@ function updateGraph()
 
   var baseline = document.getElementById('inputBaseline').checked;
   var trend    = document.getElementById('inputTrend').checked;
-  var bms      = document.getElementById('inputBms').checked;
 
   var start = '&start=' + graph_start;
   var end   = '&end='   + graph_end;
 
-  var width = window.innerWidth - parseInt(document.getElementById('divRoom').style.width);
-  if (width < 300) width = window.innerWidth; //No point trying to fit it in, so make it big.
-  document.getElementById('divGraph').style.width = width - 32 + "px";
-  width = '&width=' + (width - 32);
+  var width = window.innerWidth - parseInt(document.getElementById('divRoom').style.width) - 32;
+  var height = window.innerHeight - 240;
 
-  var height = window.innerHeight - 128;
+  if (graph_embiggened) {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    $('#imgGraph').css("position", "fixed");
+  }
+  else {
+    if (width < 400) width = window.innerWidth; //No point trying to fit it in, so make it big.
+    $('#divGraph').width(width);
+    $('#imgGraph').css("position", "");
+  }
+
+  width = '&width=' + width;
   height = '&height=' + height;
 
   var mode = '';
@@ -166,14 +180,8 @@ function updateGraph()
     trend = '';
   }
 
-  if (bms) {
-    bms  = '&bms=true';
-  } else {
-    bms = '';
-  }
-
   //Update image, changing the date lets the browser know its a new image preloading prevents the annoying update flicker
-  var src = 'drawgraph.php?d='+(new Date()).getTime()+'&ids='+ids+start+end+mode+trend+bms+width+height;
+  var src = 'drawgraph.php?d='+(new Date()).getTime()+'&ids='+ids+start+end+mode+trend+width+height;
   var metasrc = src + "&meta";
   $("#imgGraph").attr("src", src);
   $.getJSON(metasrc, function(stuff) {
@@ -188,12 +196,14 @@ function updateHighlights()
 {
   //Re-apply highlights
   for (i in ids) {
-    //Highlight
-    var probe = document.getElementById(ids[i]);
-    if (probe != null) {
-      probe.style.outline = style_highlight + ' #' + style_colours[i];
-      probe.style.z_index  = 1;
-    }
+    $("#"+ids[i])
+        .css("box-shadow", "0 0 6px 6px #" + style_colours[i])
+        .css("border", "1px solid black")
+        .css("margin", "-1px")
+        .css("z-index", 100 + i)
+        .css("opacity", "1")
+        .css("font-weight", "bold")
+    ;
   }
 }
 
@@ -247,22 +257,35 @@ function zoom_reset()
 function callbackJSON(a_data)
 {
 
-  var tileSize = 16;
+  var unit_x = 16;
+  var unit_y = 16;
+  var unit_z = 16;
+
   var offset_x = 0;
   var offset_y = 0;
+  var offset_z = 0;
+
+  var reverse_x = false;
+  var reverse_y = false;
+  var reverse_z = false;
 
   var time_start = new Date();
 
-  //var a_data   = eval('(' + responseText + ')'); //get probe data and eval into an array
   var a_probes = a_data["probes"];
 
-  var tileSize = a_data["config"]["tile_size"];
+  var unit_x = a_data["config"]["unit_x"];
+  var unit_y = a_data["config"]["unit_y"];
+  var unit_z = a_data["config"]["unit_z"];
+
   var offset_x = a_data["config"]["offset_x"];
   var offset_y = a_data["config"]["offset_y"];
+  var offset_z = a_data["config"]["offset_z"];
+
+  var reverse_x = a_data["config"]["reverse_x"];
+  var reverse_y = a_data["config"]["reverse_y"];
+  var reverse_z = a_data["config"]["reverse_z"];
 
   if (a_probes != null) {
-    //pUpdate.innerHTML += 'Got probe data<br />';
-    //divRoom.background = 'rooms/room.png?' + Math.Random();
     $("#divRoom").html(""); //makes the display flash, less than optimal
 
     var unknown_count = 0;
@@ -273,6 +296,10 @@ function callbackJSON(a_data)
     var show_current     = document.getElementById('inputCurrent').checked;
 
     var room_width = parseInt(document.getElementById('divRoom').style.width);
+    var room_height = parseInt(document.getElementById('divRoom').style.height);
+
+    var room_width = a_data["config"]["width"];
+    var room_height = a_data["config"]["height"];
 
     var h = "";
 
@@ -280,10 +307,10 @@ function callbackJSON(a_data)
       var p_id    = a_probes[i][0]; //id
       var p_value = a_probes[i][1]; //value
       var p_alias = a_probes[i][2]; //friendly name
-      var p_x     = a_probes[i][3]; //x position in tiles
-      var p_y     = a_probes[i][4]; //y position in tiles
-      var p_w     = a_probes[i][5]; //width in tiles
-      var p_h     = a_probes[i][6]; //height in tiles
+      var p_x     = a_probes[i][3]; //x position in units
+      var p_y     = a_probes[i][4]; //y position in units
+      var p_w     = a_probes[i][5]; //width in units
+      var p_h     = a_probes[i][6]; //height in units
       var p_f     = 0;              //font size
       var p_m     = 0;              //internal font margin
 
@@ -299,50 +326,61 @@ function callbackJSON(a_data)
           unknown_count++;
         }
         else {
-          //Convert units from tiles to pixels
-          p_w = p_w * tileSize;  //probe width in pixels
-          p_h = p_h * tileSize;  //probe height in pixels
-  
-          p_x = (p_x * tileSize) - (p_w / 2) - (tileSize / 2);  //x-position in pixels
-          p_y = (p_y * tileSize) - (p_h / 2) - (tileSize / 2);  //y_position in pixels
-  
+          //Convert from units to pixels
+          p_w = p_w * unit_x;  //probe width in pixels
+          p_h = p_h * unit_y;  //probe height in pixels
+
+          p_x = (p_x * unit_x) - (unit_x / 2);  //x-position in pixels
+          p_y = (p_y * unit_y) - (unit_y / 2);  //y_position in pixels
+
           //Apply offsets (top-left corner of floor)
           p_x = p_x + offset_x;
           p_y = p_y + offset_y;
+
+          //Reverse axis if necessary
+          if (reverse_x) {
+            p_x = room_width - p_x - (unit_x / 2);
+          }
+          if (reverse_y) {
+            p_y = room_height - p_y - (unit_y / 2);
+          }
+
+          //Adjust to centre
+          p_x -= (p_w / 2);
+          p_y -= (p_h / 2);
         }
-  
+
         //Improve readability of probes
         p_value = String(Math.round(p_value));
-  
+
         //Scale text with probe
         p_f = Math.max(6, Math.min(12, p_w / p_value.length));  //font size
-        p_m = (p_h / 2) - (p_f / 2) - 1;    //margin is (half probe height, minus half font size, minus one)
 
-        textColour = '#000';
+        textColour = '#fff';
 
         if (p_value > 35) {
           textColour = '#000';
         }
-  
+
         h += '<div'
-                           + ' id="' + p_id + '"'
-                           + ' title="' + p_id + " - " + p_alias + '"'
-                           + ' class="probe-' + type.toLowerCase() + '"'
-                           + ' onclick="viewGraph(\'' + p_id + '\');"'
-                           + ' style="'
-                             + ' left: ' + p_x + 'px;'
-                             + ' top: ' + p_y + 'px;'
-                             + ' width: ' + p_w + 'px;'
-                             + ' height: ' + p_h + 'px;'
-                             + ' background-color: '+scaleColour(p_value, type)+';'
-                             + ' color: '+textColour+';'
-                           + ' ">'
-                           + '<p'
-                           + ' style="'
-                             + ' font-size: ' + p_f + 'px;'
-                             + ' margin-top: ' + p_m + 'px;'
-                           + '">'+p_value+'</p>'
-                           + '</div>';
+          + ' id="' + p_id + '"'
+          + ' title="' + p_id + " - " + p_alias + '"'
+          + ' class="probe-' + type.toLowerCase() + '"'
+          + ' onclick="viewGraph(\'' + p_id + '\');"'
+          + ' style="'
+            + ' left: ' + p_x + 'px;'
+            + ' top: ' + p_y + 'px;'
+            + ' width: ' + p_w + 'px;'
+            + ' height: ' + p_h + 'px;'
+            + ' line-height: ' + p_h + 'px;'
+            + ' background-color: '+scaleColour(p_value, type)+';'
+            + ' color: '+textColour+';'
+          + ' ">'
+          + '<p class="probe"'
+            + ' style="'
+              + ' font-size: ' + p_f + 'px;'
+            + '">'+ p_value+'</p>'
+          + '</div>';
       }
     }
     $("#divRoom").html(h)

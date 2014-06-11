@@ -39,33 +39,45 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Float, Integer, String, DateTime
 from datetime import datetime
+from sqlalchemy.exc import IntegrityError
 
 Base = declarative_base()
+
+def timedeltaago(lastcontact):
+    if lastcontact.days > 365:
+        return '%.1d years ago' % (lastcontact.days / 365.0)
+    elif lastcontact.days > 0:
+        return '%s days ago' % (lastcontact.days)
+    elif lastcontact.seconds > 90:
+        return '%.1d minutes ago' % (lastcontact.seconds / 60.0)
+    else:
+        return 'During last run'
 
 class Node(Base):
   """Properties of a interrogatable sensor unit"""
 
   __tablename__ = 'nodes'
   ip = Column(String(16), primary_key=True)
-  module = Column(String(16))
-  object = Column(String(16))
+  username = Column(String(16))
+  password = Column(String(16))
+  plugin = Column(String(16))
   lastcontact = Column(DateTime())
 
-  def __init__(self, ip, module, object):
+  def __init__(self, ip, plugin):
       self.ip = ip
-      self.module = module
-      self.object = object
+      self.username = ""
+      self.password = ""
+      self.plugin = plugin
       self.lastcontact = datetime.now()
 
   def __repr__(self):
-      return "<Node (%s, %s, %s)>" % (self.ip, self.module, self.object)
+      return "<Node (%s, %s)>" % (self.ip, self.plugin)
 
   def list(self):
       l = []
       l.append(self.ip)
-      l.append(self.module)
-      l.append(self.object)
-      l.append(self.lastcontact.isoformat(" "))
+      l.append(self.plugin)
+      l.append(timedeltaago(datetime.now() - self.lastcontact))
       return(l)
 
 
@@ -122,7 +134,8 @@ class Probe(Base):
       l.append(self.w)
       l.append(self.h)
       l.append(self.d)
-      l.append(self.lastcontact.isoformat(" "))
+      l.append(timedeltaago(datetime.now() - self.lastcontact))
+      l.append(self.node)
       l.append(self.remote_name)
       return(l)
 

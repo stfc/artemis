@@ -24,7 +24,10 @@ import argparse
 import logging
 import json
 
-# Load config module
+from sys import exit
+
+# Load artemis modules
+from artemis_core import load_plugin
 from artemis_config import *
 
 if __name__ == "__main__":
@@ -50,20 +53,33 @@ if __name__ == "__main__":
 
     if opts.action == "add_node":
         logger.debug("action: add_node")
-        p = argparse.ArgumentParser(usage="%(prog)s add_node IP MODULE OBJECT")
+        p = argparse.ArgumentParser(usage="%(prog)s add_node IP PLUGIN [-u USERNAME] [-p PASSWORD]")
         p.add_argument("ip")
-        p.add_argument("module")
-        p.add_argument("object")
+        p.add_argument("plugin")
+        p.add_argument("-u", "--username")
+        p.add_argument("-p", "--password")
         o, a = p.parse_known_args(args)
 
         logger.debug("action opts: %s" % o)
         logger.debug("action args: %s" % a)
 
-        if o.ip and o.module and o.object:
-            node = Node(o.ip, o.module, o.object)
-            session.add(node)
-            session.commit()
-            logger.info("Node added")
+        if o.ip and o.plugin:
+            try:
+                load_plugin(o.plugin)
+            except ImportError:
+                logger.error("%s is not a valid plugin" % (o.plugin))
+                exit(1)
+
+            node = Node(o.ip, o.plugin)
+            try:
+                session.add(node)
+                node.username = o.username
+                node.password = o.password
+                session.commit()
+                logger.info("Node added")
+            except IntegrityError:
+                logger.error("Node already exists")
+                exit(1)
 
 
     elif opts.action == "remove_node":
@@ -121,6 +137,19 @@ if __name__ == "__main__":
         else:
             probe = session.query(Probe).filter(Probe.id == o.id).first()
 
+            # Try name if id doesn't match any probes
+            if not probe:
+                logger.info("No probe found with id '%s', trying to match by name" % o.id)
+                probe = session.query(Probe).filter(Probe.name == o.id).all()
+
+                if len(probe) > 1:
+                    logger.error("%d probes found with the name '%s', use ID to update each in turn" % (len(probe), o.id))
+                    for p in probe:
+                        print p
+                    exit(1)
+
+                probe = probe[0]
+
             if probe:
                 if o.n:
                     probe.name = o.n
@@ -140,7 +169,7 @@ if __name__ == "__main__":
                 session.commit()
                 logger.info("Probe updated")
             else:
-                logger.error("No probe found with id %s" % o.id)
+                logger.error("No probe found with id or name '%s'" % o.id)
 
 
     elif opts.action == "list_probes":

@@ -50,7 +50,9 @@ def getMIB(ip, mib, community = "public"):
     return None
 
 class node(object):
-  def __init__(self, ip):
-    self.ip        = ip
+  def __init__(self, ip, username="", password=""):
+    self.ip = ip
+    self.username = username
+    self.password = password
   def fetch(self):
     pass

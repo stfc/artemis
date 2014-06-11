@@ -25,7 +25,7 @@ from base import *
 ##
 # Jacarta network attached monitoring unit
 #
-class node_jacarta(node):
+class node(node):
   def fetch(self):
     #temperature probes
     i = getMIB(self.ip, ".1.3.6.1.4.1.3854.1.2.2.1.16.1.1")
