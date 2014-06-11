@@ -39,7 +39,7 @@
   $h = $config['room']['height'];
 
   if (!isset($_REQUEST['nobg'])) {
-    $s = " background-image: url('rooms/room.png');";
+    $s = " background-image: url('images/room.png');";
   }
 ?>
 <?php flush(); ?>
