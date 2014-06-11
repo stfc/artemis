@@ -137,8 +137,14 @@
 
     $("#imgGraph").mousemove(function(e) {
       if (meta != null) {
-        var x = e.pageX - this.offsetLeft - meta["graph_left"];
-        var y = meta["graph_height"] - (e.pageY - this.offsetTop - meta["graph_top"]);
+        var parentOffset = $(this).offset();
+        $("#minfo").offset({
+          left: e.pageX + 8,
+          top: e.pageY + 8
+        });
+        var x = e.pageX - parentOffset.left - meta["graph_left"];
+        var y = meta["graph_height"] - (e.pageY - parentOffset.top - meta["graph_top"]);
+
         if (x >= 0 && y >= 0 && x <= meta["graph_width"] && y <= meta["graph_height"]) {
 
           x = meta["graph_start"] + ((x / meta["graph_width"]) * (meta["graph_end"] - meta["graph_start"]));
