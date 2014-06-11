@@ -124,13 +124,11 @@
 
     $(window).resize(updateGraph);
 
-    $("#imgGraph").click(function(stuff) {
-      if (ids.length > 0) {
-        $u = stuff.target.src;
-        $u = $u.replace(/width=[0-9]+/g, "width=" + window.innerWidth);
-        $u = $u.replace(/height=[0-9]+/g, "height=" + window.innerHeight);
-        window.location = $u;
-      }
+    var graph_embiggened = false;
+
+    $("#imgGraph").click(function() {
+      graph_embiggened = ! graph_embiggened;
+      updateGraph();
     });
 
     var minfo_vis = false;
