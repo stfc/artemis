@@ -52,16 +52,16 @@
           <div>
             <div class="form-group">
               <label>Start:</label>
-              <div class='input-group date' id='datetimepickerStart'>
-                <input class="form-control" data-format="yyyy-MM-dd hh:mm" type="text" id="inputDateStart" value="<?php echo Date("Y-m-d H:i", time()-604800); ?>">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+              <div class='input-group date' id='datetimepickerStart' data-date-format="hh:mm DD.MM.YYYY">
+                <input class="form-control" type="text" id="inputDateStart" value="<?php echo Date("H:i d.m.Y", time()-604800); ?>" onchange="updateGraph()">
+                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
               </div>
             </div>
             <div class="form-group">
               <label>End:</label>
-              <div class='input-group date' id='datetimepickerEnd'>
-                <input class="form-control" data-format="yyyy-MM-dd hh:mm" type="text" id="inputDateEnd" value="<?php echo Date("Y-m-d H:i"); ?>">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+              <div class='input-group date' id='datetimepickerEnd' data-date-format="hh:mm DD.MM.YYYY">
+                <input class="form-control" type="text" id="inputDateEnd" value="<?php echo Date("H:i d.m.Y"); ?>" onchange="updateGraph()">
+                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
               </div>
             </div>
           </div>
@@ -94,8 +94,31 @@
       setInterval('update()',30000);
       update();
 
-      $('#datetimepickerStart').datetimepicker({'pickSeconds':false});
-      $('#datetimepickerEnd').datetimepicker({'pickSeconds':false});
+      $('#datetimepickerStart').datetimepicker({
+        pickSeconds: false,
+        icons: {
+          time: "fa fa-clock-o",
+          date: "fa fa-calendar",
+          up: "fa fa-arrow-up",
+          down: "fa fa-arrow-down"
+        }
+      });
+      $('#datetimepickerStart').on('changeDate', function(e) {
+        updateGraph();
+      });
+
+      $('#datetimepickerEnd').datetimepicker({
+        pickSeconds: false,
+        icons: {
+          time: "fa fa-clock-o",
+          date: "fa fa-calendar",
+          up: "fa fa-arrow-up",
+          down: "fa fa-arrow-down"
+        }
+      });
+      $('#datetimepickerEnd').on('changeDate', function(e) {
+        updateGraph();
+      });
     });
 
     $(window).resize(updateGraph);

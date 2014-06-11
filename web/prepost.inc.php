@@ -39,6 +39,7 @@ function pre() {
     <link rel="icon" href="images/utilities-system-monitor.png" type="image/png">
     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css" type="text/css">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css">
     <link href="css/datatables-bootstrap.css" rel="stylesheet" type="text/css">
     <link href="css/main.css" rel="stylesheet" type="text/css">
