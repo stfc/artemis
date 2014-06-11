@@ -141,8 +141,8 @@ function updateGraph()
     document.getElementById('inputDateEnd').value   = graph_end;
   }
   else {
-    graph_start = document.getElementById('inputDateStart').value + ":00";
-    graph_end   = document.getElementById('inputDateEnd').value + ":00";
+    graph_start = document.getElementById('inputDateStart').value;
+    graph_end   = document.getElementById('inputDateEnd').value;
   }
 
   var baseline = document.getElementById('inputBaseline').checked;
