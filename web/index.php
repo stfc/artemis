@@ -44,7 +44,7 @@
 ?>
 <?php flush(); ?>
   <div class="row">
-    <div id="divRoom" class="col-md-4" style="width: <?php echo $w ?>px; height: <?php echo $h ?>px;">
+    <div id="divRoom" class="col-md-4" style="width: <?php echo $w ?>px; height: <?php echo $h ?>px;<?php echo $s ?>">
     </div>
     <div id="divGraph" class="col-md-8">
       <div>
