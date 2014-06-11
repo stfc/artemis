@@ -348,7 +348,7 @@ function callbackJSON(a_data)
         //Scale text with probe
         p_f = Math.max(6, Math.min(12, p_w / p_value.length));  //font size
 
-        textColour = '#000';
+        textColour = '#fff';
 
         if (p_value > 35) {
           textColour = '#000';
