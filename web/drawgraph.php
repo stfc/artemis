@@ -94,17 +94,6 @@
     exit();
   }
 
-  //Abort if start is before or the same as end
-  if ($t_start >= $t_end) {
-    if ($run_mode == "web") {
-      readfile("images/image-loading.png");
-    }
-    else {
-      echo "Time range inverted";
-    }
-    exit();
-  }
-
   if (isset($_GET['mode'])) {
     $mode = $_GET['mode'];
   }
@@ -252,21 +241,30 @@
 
   //execute
   $imgdata = shell_exec($cmd);
-
-  if ($run_mode == 'meta') {
-    $data = preg_split("/BLOB_SIZE:[0-9]+\n/", $imgdata);
-    $data = explode("\n", $data[0]);
-    $meta = Array();
-    foreach ($data as $i => $d) {
-      $d = explode(" = ", $d);
-      if ($d[0] != "image") {
-        $meta[$d[0]] = (float)$d[1];
-      }
+  if ($imgdata == '') {
+    if ($run_mode == "web") {
+      readfile("images/dialog-error.png");
     }
-    echo json_encode($meta);
+    else {
+      echo "$imgdata";
+    }
   }
   else {
-    $d = preg_split("/BLOB_SIZE:[0-9]+\n/", $imgdata);
-    echo $d[1];
+    if ($run_mode == 'meta') {
+      $data = preg_split("/BLOB_SIZE:[0-9]+\n/", $imgdata);
+      $data = explode("\n", $data[0]);
+      $meta = Array();
+      foreach ($data as $i => $d) {
+        $d = explode(" = ", $d);
+        if ($d[0] != "image") {
+          $meta[$d[0]] = (float)$d[1];
+        }
+      }
+      echo json_encode($meta);
+    }
+    else {
+     $d = preg_split("/BLOB_SIZE:[0-9]+\n/", $imgdata);
+       echo $d[1];
+    }
   }
 ?>
