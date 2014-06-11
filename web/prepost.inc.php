@@ -51,10 +51,10 @@ function pre() {
   <body>
     <nav class="navbar navbar-default navbar-inverse navbar-static-top" role="navigation">
       <div class="navbar-header">
-        <a class="navbar-brand" href="./"><img src="images/logo-header.png" alt="ARTEMIS - Almost Real-Time Enviromental Monitoritoring &amp; Information System"></a>
+        <span class="navbar-brand" style="padding: 10px;"><img src="images/logo-header.png" alt="ARTEMIS - Almost Real-Time Enviromental Monitoritoring &amp; Information System"></span>
       </div>
       <div class="collapse navbar-collapse navbar-ex1-collapse">
-        <ul class="nav navbar-nav">
+        <ul class="nav navbar-nav pull-right">
 
 EOT;
 
