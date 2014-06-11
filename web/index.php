@@ -79,6 +79,7 @@
           </div>
         </form>
       </div>
+      <div id="minfo">&nbsp;</div>
       <div>
         <img id="imgGraph" src="drawgraph.php" alt="Select probes to view">
       </div>
