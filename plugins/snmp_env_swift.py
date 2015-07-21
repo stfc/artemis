@@ -30,7 +30,7 @@ class node(node):
     def fetch(self):
         #temperature probes
         id = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.4.1.2")
-        if (id != None):
+        if (id is not None):
             ids   = [FAMILY_1WIRE[i[-2:]][0] + "-1WIRE-" + i[2:-2] + i[:2] for i in id]
             units = [FAMILY_1WIRE[i[-2:]][1] for i in id]
         else:
@@ -38,14 +38,14 @@ class node(node):
             units = []
 
         v = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.4.1.5")
-        if (v != None):
+        if (v is not None):
             values = v
         else:
             values = []
 
         #airflow sensors
         id = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.2")
-        if (id != None):
+        if (id is not None):
             n = [FAMILY_1WIRE[i[-2:]][0] + "-1WIRE-" + i[2:-2] + i[:2] for i in id]
             ids += n
             ids += ['HUMIDITY' + s[7:] for s in n]
@@ -55,7 +55,7 @@ class node(node):
 
         va = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.5")
         vh = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.7")
-        if (va != None) and (vh != None):
+        if (va is not None) and (vh is not None):
             values += va + vh
 
         values = [int(v) for v in values]

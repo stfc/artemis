@@ -131,7 +131,7 @@ if __name__ == "__main__":
         logger.debug("action opts: %s" % o)
         logger.debug("action args: %s" % a)
 
-        if o.n == o.x == o.y == o.z == o.w == o.d == o.t == None:
+        if o.n is o.x is o.y is o.z is o.w is o.d is o.t is None:
             p.print_help()
 
         else:

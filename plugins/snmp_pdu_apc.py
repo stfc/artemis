@@ -33,14 +33,14 @@ class node(node):
     def fetch(self):
         #unit id
         model  = getMIB(self.ip, ".1.3.6.1.4.1.318.1.1.12.1.5.0", self.community)
-        if model == None:
+        if model is None:
             #Can't find a valid sensor, so abort
             return []
         else:
             model = model[0]
 
         serial = getMIB(self.ip, ".1.3.6.1.4.1.318.1.1.12.1.6.0", self.community)
-        if serial == None:
+        if serial is None:
             #Can't find a valid sensor, so abort
             return []
         else:
@@ -52,7 +52,7 @@ class node(node):
         if model == "AP7921":
             #Just get the single current value
             value = getMIB(self.ip, ".1.3.6.1.4.1.318.1.1.12.2.3.1.1.2", self.community)
-            if value == None:
+            if value is None:
                 return []
             else:
                 value = value[0]
@@ -60,7 +60,7 @@ class node(node):
         elif model == "AP7953":
             #This model has three current monitors, Bank 1, Bank 2 and Total, we only want the total current
             value = getMIB(self.ip, ".1.3.6.1.4.1.318.1.1.12.2.3.1.1.2.3", self.community)
-            if value == None:
+            if value is None:
                 return []
             else:
                 value = value[0]
