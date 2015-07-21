@@ -22,6 +22,7 @@ import urllib2, datetime
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.mlab import griddata
+from sys import exit as sys_exit
 
 #Fall back to simplejson for versions of python < 2.5 (simplejson requires seperate install)
 try:
@@ -30,7 +31,7 @@ except:
     try:
         import simplejson as json
     except:
-        sys.exit("ERROR: Unable to find a usable json module, is simplejson installed?")
+        sys_exit("ERROR: Unable to find a usable json module, is simplejson installed?")
 
 
 TEMP_MIN = 15

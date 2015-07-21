@@ -20,6 +20,7 @@
 #
 
 import artemis_config
+import sys, time, rrdtool
 
 RRD_DIR = "/home/apache/html/r89-hpd/rrds/"
 
@@ -32,8 +33,6 @@ except:
     except:
         print("ERROR: Unable to find a usable json module, is simplejson installed?")
         sys.exit(1)
-
-import sys, time, rrdtool
 
 # Provide list of valid sensors if none specified
 if len(sys.argv) == 1:
