@@ -19,6 +19,9 @@
 #
 
 import urllib2, datetime
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.mlab import griddata
 
 #Fall back to simplejson for versions of python < 2.5 (simplejson requires seperate install)
 try:
@@ -61,9 +64,6 @@ def process(d, f, mode):
     plot(x, y, z, "R89 HPD Room", f, mode)
 
 def plot(x, y, z, title, filename, mode):
-    import numpy as np
-    from matplotlib.mlab import griddata
-
     w = max(x) - min(x)
     h = max(y) - min(y)
 
@@ -75,9 +75,6 @@ def plot(x, y, z, title, filename, mode):
     x = np.array(x)
     y = np.array(y)
     z = np.array(z)
-
-
-    import matplotlib.pyplot as plt
 
     plt.scatter(x,y,marker='o',c='b',s=5,zorder=10)
     #CS = plt.contour(xi,yi,zi,15,linewidths=0.5,colors='k')
