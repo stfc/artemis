@@ -22,6 +22,7 @@ import urllib2, datetime
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.mlab import griddata
+from matplotlib import colors
 from sys import exit as sys_exit
 
 #Fall back to simplejson for versions of python < 2.5 (simplejson requires seperate install)
@@ -44,7 +45,7 @@ cdict = {
     'green' : ((0.0, 0.1, 0.1), (0.25, 0.0, 0.0), (0.5, 0.0, 0.0), (0.75, 1.0, 1.0), (1.0, 1.0, 1.0)),
     'blue'  : ((0.0, 0.1, 0.1), (0.25, 0.5, 0.5), (0.5, 0.0, 0.0), (0.75, 0.0, 0.0), (1.0, 1.0, 1.0)),
 }
-my_cmap = matplotlib.colors.LinearSegmentedColormap('my_colormap',cdict,256)
+my_cmap = colors.LinearSegmentedColormap('my_colormap',cdict,256)
 #pcolor(rand(10,10),cmap=plt.cm.jet)
 
 def process(d, f, mode):
