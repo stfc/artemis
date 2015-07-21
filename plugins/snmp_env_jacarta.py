@@ -26,47 +26,47 @@ from base import *
 # Jacarta network attached monitoring unit
 #
 class node(node):
-  def fetch(self):
-    #temperature probes
-    i = getMIB(self.ip, ".1.3.6.1.4.1.3854.1.2.2.1.16.1.1")
-    if (i != None):
-      ids_temp = i
-    else:
-      ids_temp = []
+    def fetch(self):
+        #temperature probes
+        i = getMIB(self.ip, ".1.3.6.1.4.1.3854.1.2.2.1.16.1.1")
+        if (i != None):
+            ids_temp = i
+        else:
+            ids_temp = []
 
-    v = getMIB(self.ip, ".1.3.6.1.4.1.3854.1.2.2.1.16.1.3")
-    if (v != None):
-      values_temp = v
-    else:
-      values_temp = []
+        v = getMIB(self.ip, ".1.3.6.1.4.1.3854.1.2.2.1.16.1.3")
+        if (v != None):
+            values_temp = v
+        else:
+            values_temp = []
 
-    #build list of units
-    units_temp = []
-    for i in ids_temp:
-      units_temp += [UNIT_TEMPERATURE]
+        #build list of units
+        units_temp = []
+        for i in ids_temp:
+            units_temp += [UNIT_TEMPERATURE]
 
-    #humidity sensors
-    i = getMIB(self.ip, ".1.3.6.1.4.1.3854.1.2.2.1.17.1.1")
-    if (i != None):
-      ids_humid = i
+        #humidity sensors
+        i = getMIB(self.ip, ".1.3.6.1.4.1.3854.1.2.2.1.17.1.1")
+        if (i != None):
+            ids_humid = i
 
-    v = getMIB(self.ip, ".1.3.6.1.4.1.3854.1.2.2.1.17.1.3")
-    if (v != None):
-      values_humid = v
+        v = getMIB(self.ip, ".1.3.6.1.4.1.3854.1.2.2.1.17.1.3")
+        if (v != None):
+            values_humid = v
 
-    #cast all values as integers
-    values_humid = [int(v) for v in values_humid]
+        #cast all values as integers
+        values_humid = [int(v) for v in values_humid]
 
-    #build list of units
-    units_humid = []
-    for i in ids_humid:
-      units_humid += [UNIT_HUMIDITY]
+        #build list of units
+        units_humid = []
+        for i in ids_humid:
+            units_humid += [UNIT_HUMIDITY]
 
-    #Concatenate data sets
-    ids    = ids_temp    + ids_humid
-    values = values_temp + values_humid
-    units  = units_temp  + units_humid
+        #Concatenate data sets
+        ids    = ids_temp    + ids_humid
+        values = values_temp + values_humid
+        units  = units_temp  + units_humid
 
-    names = ["" for v in values]
+        names = ["" for v in values]
 
-    return zip(ids, values, units)
+        return zip(ids, values, units)

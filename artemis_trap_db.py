@@ -28,68 +28,68 @@ Base = declarative_base()
 
 
 class BMSEvent(Base):
-  __tablename__ = "bms_events"
+    __tablename__ = "bms_events"
 
-  id          = Column(Integer, primary_key=True)
-  host        = Column(String)
-  type        = Column(String)
-  trap_oid    = Column(String)
-  uptime      = Column(String)
-  path        = Column(String)
-  timestamp   = Column(String)
-  input       = Column(String)
-  description = Column(String)
-  value       = Column(String)
-  state       = Column(String)
-  name        = Column(String)
-  ip          = Column(String)
+    id          = Column(Integer, primary_key=True)
+    host        = Column(String)
+    type        = Column(String)
+    trap_oid    = Column(String)
+    uptime      = Column(String)
+    path        = Column(String)
+    timestamp   = Column(String)
+    input       = Column(String)
+    description = Column(String)
+    value       = Column(String)
+    state       = Column(String)
+    name        = Column(String)
+    ip          = Column(String)
 
-  def __init__(self, host, type, values):
-    self.host        = host
-    self.type        = type
-    self.id          = values["id"]
-    self.trap_oid    = values["trap_oid"]
-    self.uptime      = values["uptime"]
-    self.path        = values["path"]
-    self.timestamp   = values["timestamp"]
-    self.input       = values["input"]
-    self.description = values["description"]
-    self.value       = values["value"]
-    self.state       = values["state"]
-    self.name        = values["name"]
-    self.ip          = values["ip"]
+    def __init__(self, host, type, values):
+        self.host        = host
+        self.type        = type
+        self.id          = values["id"]
+        self.trap_oid    = values["trap_oid"]
+        self.uptime      = values["uptime"]
+        self.path        = values["path"]
+        self.timestamp   = values["timestamp"]
+        self.input       = values["input"]
+        self.description = values["description"]
+        self.value       = values["value"]
+        self.state       = values["state"]
+        self.name        = values["name"]
+        self.ip          = values["ip"]
 
-  def __repr__(self):
-    return "<BMSEvent(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)>" % (self.id, self.host, self.type, self.trap_oid, self.uptime, self.path, self.timestamp, self.input, self.description, self.value, self.state, self.name, self.ip)
+    def __repr__(self):
+        return "<BMSEvent(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)>" % (self.id, self.host, self.type, self.trap_oid, self.uptime, self.path, self.timestamp, self.input, self.description, self.value, self.state, self.name, self.ip)
 
 
 def setup():
-  from sqlalchemy import create_engine
-  engine = create_engine('sqlite:///artemis_traps.sqlite', echo=True)
+    from sqlalchemy import create_engine
+    engine = create_engine('sqlite:///artemis_traps.sqlite', echo=True)
 
-  BMSEvent.metadata.create_all(engine)
+    BMSEvent.metadata.create_all(engine)
 
-  from sqlalchemy.orm import sessionmaker
-  Session = sessionmaker(bind=engine)
+    from sqlalchemy.orm import sessionmaker
+    Session = sessionmaker(bind=engine)
 
-  session = Session()
+    session = Session()
 
-  return session
+    return session
 
 def test(session):
-  v = {
-    "id"          : "12345",
-    "uptime"      : "8:22:31:15.52",
-    "trap_oid"    : "SNMPv2-SMI::enterprises.12270.0.32",
-    "path"        : "/L00/O99",
-    "timestamp"   : "2010-01-07T00:00:00",
-    "input"       : "A01",
-    "description" : "Clear Digital Input",
-    "value"       : "0.00",
-    "state"       : "TST1",
-    "name"        : "Test Event",
-    "ip"          : "127.0.0.1",
-  }
-  test_event = BMSEvent("UDP: [127.0.0.1]:161", "<TEST>", v)
-  session.add(test_event)
-  session.commit()
+    v = {
+        "id"          : "12345",
+        "uptime"      : "8:22:31:15.52",
+        "trap_oid"    : "SNMPv2-SMI::enterprises.12270.0.32",
+        "path"        : "/L00/O99",
+        "timestamp"   : "2010-01-07T00:00:00",
+        "input"       : "A01",
+        "description" : "Clear Digital Input",
+        "value"       : "0.00",
+        "state"       : "TST1",
+        "name"        : "Test Event",
+        "ip"          : "127.0.0.1",
+    }
+    test_event = BMSEvent("UDP: [127.0.0.1]:161", "<TEST>", v)
+    session.add(test_event)
+    session.commit()

@@ -36,13 +36,13 @@ from artemis_store import session, Node, Probe
 #session.add(Probe("TEMPERATURE-1WIRE-000000FE0BEBDB", "25DD", 25, 31, 4, 2))
 
 def convert():
-  from artemis_config import base_nodes, sensors
+    from artemis_config import base_nodes, sensors
 
-  for b in base_nodes:
-    c = str(b.__class__).split("'")[1].split(".")
-    session.add(Node(b.ip, c[1], c[2]))
+    for b in base_nodes:
+        c = str(b.__class__).split("'")[1].split(".")
+        session.add(Node(b.ip, c[1], c[2]))
 
-  for id, (n, x, y, w, h) in sensors.iteritems():
-    session.add(Probe(id, n, x, y, w, h))
+    for id, (n, x, y, w, h) in sensors.iteritems():
+        session.add(Probe(id, n, x, y, w, h))
 
-  session.commit()
+    session.commit()

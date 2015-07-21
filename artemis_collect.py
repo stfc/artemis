@@ -28,20 +28,20 @@ import commands, os, sys
 
 #Try to import rrdtool module
 try:
-  import rrdtool
+    import rrdtool
 except:
-  print("ERROR: Unable to import the rrdtool module, is python-rrdtool installed?")
-  sys.exit(1)
+    print("ERROR: Unable to import the rrdtool module, is python-rrdtool installed?")
+    sys.exit(1)
 
 #Fall back to simplejson for versions of python < 2.5 (simplejson requires seperate install)
 try:
-  import json
+    import json
 except:
-  try:
-    import simplejson as json
-  except:
-    print("ERROR: Unable to find a usable json module, is simplejson installed?")
-    sys.exit(1)
+    try:
+        import simplejson as json
+    except:
+        print("ERROR: Unable to find a usable json module, is simplejson installed?")
+        sys.exit(1)
 
 #ARTEMIS Components
 from artemis_core import *
@@ -54,13 +54,13 @@ from artemis_config import *
 base_nodes = []
 
 for n in session.query(Node).all():
-  base_nodes.append(load_plugin(n.plugin)(n.ip, n.username, n.password))
+    base_nodes.append(load_plugin(n.plugin)(n.ip, n.username, n.password))
 
 # Setup sensors from store
 sensors = {}
 
 for p in session.query(Probe).all():
-  sensors[p.id] = [p.name, float(p.x), float(p.y), float(p.z), float(p.w), float(p.h), float(p.d)]
+    sensors[p.id] = [p.name, float(p.x), float(p.y), float(p.z), float(p.w), float(p.h), float(p.d)]
 
 #Configuration
 this_dir = os.path.dirname(os.path.realpath( __file__ )) + "/"
@@ -76,44 +76,44 @@ snapshot_list = [];
 print("---- Data grab complete ----")
 
 for serial, value, units, name, source_node in g:
-  print(r"%2.3f : Found sensor %s with value %s %s and name %s" % (time(), serial, value, units, name))
-  rrd = str(rrd_dir + serial + config.get("rrd","ext"))
+    print(r"%2.3f : Found sensor %s with value %s %s and name %s" % (time(), serial, value, units, name))
+    rrd = str(rrd_dir + serial + config.get("rrd","ext"))
 
-  if not os.path.isfile(rrd):
-    #create rrd if none exists
-    print("Creating new RRD " + rrd)
-    rrdtool.create(
-      rrd,
-      "--step", "60",
-      "DS:val:GAUGE:120:-100:100", # Accept data between -100 and +100 as valid
-      "RRA:AVERAGE:0.5:1:525600", # A year of minutes
-      "RRA:AVERAGE:0.5:60:8760", # A year of hours
-      "RRA:MAX:0.5:60:8760", # A year of hours
-      "RRA:MIN:0.5:60:8760", # A year of hours
-    )
+    if not os.path.isfile(rrd):
+        #create rrd if none exists
+        print("Creating new RRD " + rrd)
+        rrdtool.create(
+            rrd,
+            "--step", "60",
+            "DS:val:GAUGE:120:-100:100", # Accept data between -100 and +100 as valid
+            "RRA:AVERAGE:0.5:1:525600", # A year of minutes
+            "RRA:AVERAGE:0.5:60:8760", # A year of hours
+            "RRA:MAX:0.5:60:8760", # A year of hours
+            "RRA:MIN:0.5:60:8760", # A year of hours
+        )
 
-  #update data
-  rrdtool.update(rrd, "N:" + str(value))
+    #update data
+    rrdtool.update(rrd, "N:" + str(value))
 
-  #store latest values
-  try:
-    (n, x, y, z, h, w, d) = sensors[serial]
-  except:
-    (n, x, y, z, h, w, d) = ("Auto-detected " + name, 0, 0, 0, 0, 0, 0)
-    session.add(Probe(serial, n, x, y, z, h, w, d))
+    #store latest values
+    try:
+        (n, x, y, z, h, w, d) = sensors[serial]
+    except:
+        (n, x, y, z, h, w, d) = ("Auto-detected " + name, 0, 0, 0, 0, 0, 0)
+        session.add(Probe(serial, n, x, y, z, h, w, d))
 
-  # Update timestamp
-  probe = session.query(Probe).filter(Probe.id == serial).first()
-  if (probe.name <> n):
-    print("Mismatch of name against node %s vs %s" % (probe.name, n))
+    # Update timestamp
+    probe = session.query(Probe).filter(Probe.id == serial).first()
+    if (probe.name <> n):
+        print("Mismatch of name against node %s vs %s" % (probe.name, n))
 
-  probe.lastcontact = datetime.now()
-  probe.remote_name = name
-  probe.node = source_node
+    probe.lastcontact = datetime.now()
+    probe.remote_name = name
+    probe.node = source_node
 
-  row = [serial, value, n, x, y, h, w]
+    row = [serial, value, n, x, y, h, w]
 
-  snapshot_list.append(row)
+    snapshot_list.append(row)
 
 # Commit outside loop
 session.commit()
@@ -121,45 +121,45 @@ session.commit()
 # Prep config
 c = dict(config.items("room"))
 for i in ['offset_x', 'offset_y', 'offset_z', 'unit_x', 'unit_y', 'unit_z', 'height', 'width']:
-  c[i] = int(c[i])
+    c[i] = int(c[i])
 for i in ['reverse_x', 'reverse_y', 'reverse_z']:
-  c[i] = config.getboolean("room", i)
+    c[i] = config.getboolean("room", i)
 
 
 #Dump data
 dump_prep = {
-  "config" : c,
-  "probes" : snapshot_list,
+    "config" : c,
+    "probes" : snapshot_list,
 }
 
 
 # Write out data dump for gui
 try:
-  file_json_dump = open(this_dir + "web/data/data-dump.json", "w")
-  json.dump(dump_prep, file_json_dump)
-  file_json_dump.close()
-  print("Wrote output to %s" % file_json_dump.name)
+    file_json_dump = open(this_dir + "web/data/data-dump.json", "w")
+    json.dump(dump_prep, file_json_dump)
+    file_json_dump.close()
+    print("Wrote output to %s" % file_json_dump.name)
 except:
-  print("Error while writing data dump file - %s %s %s" % sys.exc_info())
+    print("Error while writing data dump file - %s %s %s" % sys.exc_info())
 
 
 # Update performance rrd
 rrd = str(rrd_dir + "ARTEMIS-STATS-" + c["name"].replace(" ","_") + config.get("rrd","ext"))
 
 if not os.path.isfile(rrd):
-  #create rrd if none exists
-  print("Creating new RRD " + rrd)
-  rrdtool.create(
-    rrd,
-    "--step", "60",
-    "DS:collect:GAUGE:120:0:3600", # Accept data between 0 and 3600 as valid
-    "DS:nodes:GAUGE:120:0:U", # Number of known nodes
-    "DS:probes:GAUGE:120:0:U", # Number of known probes
-    "RRA:AVERAGE:0.5:1:525600", # A year of minutes
-    "RRA:AVERAGE:0.5:60:8760", # A year of hours
-    "RRA:MAX:0.5:60:8760", # A year of hours
-    "RRA:MIN:0.5:60:8760", # A year of hours
-  )
+    #create rrd if none exists
+    print("Creating new RRD " + rrd)
+    rrdtool.create(
+        rrd,
+        "--step", "60",
+        "DS:collect:GAUGE:120:0:3600", # Accept data between 0 and 3600 as valid
+        "DS:nodes:GAUGE:120:0:U", # Number of known nodes
+        "DS:probes:GAUGE:120:0:U", # Number of known probes
+        "RRA:AVERAGE:0.5:1:525600", # A year of minutes
+        "RRA:AVERAGE:0.5:60:8760", # A year of hours
+        "RRA:MAX:0.5:60:8760", # A year of hours
+        "RRA:MIN:0.5:60:8760", # A year of hours
+    )
 
 time_run = time() - time_start
 
