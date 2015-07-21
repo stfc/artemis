@@ -24,7 +24,7 @@ import argparse
 import logging
 import json
 
-from sys import exit
+from sys import exit as sys_exit
 
 # Load artemis modules
 from artemis_core import load_plugin
@@ -68,7 +68,7 @@ if __name__ == "__main__":
                 load_plugin(o.plugin)
             except ImportError:
                 logger.error("%s is not a valid plugin" % (o.plugin))
-                exit(1)
+                sys_exit(1)
 
             node = Node(o.ip, o.plugin)
             try:
@@ -79,7 +79,7 @@ if __name__ == "__main__":
                 logger.info("Node added")
             except IntegrityError:
                 logger.error("Node already exists")
-                exit(1)
+                sys_exit(1)
 
 
     elif opts.action == "remove_node":
@@ -146,7 +146,7 @@ if __name__ == "__main__":
                     logger.error("%d probes found with the name '%s', use ID to update each in turn" % (len(probe), o.id))
                     for p in probe:
                         print p
-                    exit(1)
+                    sys_exit(1)
 
                 probe = probe[0]
 

@@ -43,8 +43,8 @@ if len(sys.argv) == 2:                                  #Make sure an id has bee
     data = {}                                             #Initialise new dictionary
 
     for r in data_source:                                 #Fill the dictionary with the sensor values with the id as the key
-        (id, value, alias, row, column, width, height) = r
-        data[id] = value
+        (sensor_id, value, alias, row, column, width, height) = r
+        data[sensor_id] = value
 
     try:                                                  #Return requested id, or fail gracefully
         print(data[sys.argv[1]])

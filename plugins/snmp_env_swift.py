@@ -29,12 +29,12 @@ from base import *
 class node(node):
     def fetch(self):
         #temperature probes
-        id = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.4.1.2")
-        if (id is not None):
-            ids   = [FAMILY_1WIRE[i[-2:]][0] + "-1WIRE-" + i[2:-2] + i[:2] for i in id]
-            units = [FAMILY_1WIRE[i[-2:]][1] for i in id]
+        raw_id = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.4.1.2")
+        if (raw_id is not None):
+            probe_ids = [FAMILY_1WIRE[i[-2:]][0] + "-1WIRE-" + i[2:-2] + i[:2] for i in raw_id]
+            units = [FAMILY_1WIRE[i[-2:]][1] for i in raw_id]
         else:
-            ids = []
+            probe_ids = []
             units = []
 
         v = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.4.1.5")
@@ -44,13 +44,13 @@ class node(node):
             values = []
 
         #airflow sensors
-        id = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.2")
-        if (id is not None):
-            n = [FAMILY_1WIRE[i[-2:]][0] + "-1WIRE-" + i[2:-2] + i[:2] for i in id]
-            ids += n
-            ids += ['HUMIDITY' + s[7:] for s in n]
+        raw_id = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.2")
+        if (raw_id is not None):
+            n = [FAMILY_1WIRE[i[-2:]][0] + "-1WIRE-" + i[2:-2] + i[:2] for i in raw_id]
+            probe_ids += n
+            probe_ids += ['HUMIDITY' + s[7:] for s in n]
 
-            u = [FAMILY_1WIRE[i[-2:]][1] for i in id]
+            u = [FAMILY_1WIRE[i[-2:]][1] for i in raw_id]
             units += u + u
 
         va = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.5")
@@ -62,4 +62,4 @@ class node(node):
 
         names  = ["" for v in values]
 
-        return zip(ids, values, units)
+        return zip(probe_ids, values, units)

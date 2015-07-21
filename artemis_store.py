@@ -104,8 +104,8 @@ class Probe(Base):
     state = Column(Integer()) # Discovery state
     lastcontact = Column(DateTime()) # Timestamp of last reading
 
-    def __init__(self, id, name, x, y, z, w, h, d):
-        self.id = id
+    def __init__(self, probe_id, name, x, y, z, w, h, d):
+        self.id = probe_id
         self.name = name
 
         self.x = x

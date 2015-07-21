@@ -50,11 +50,11 @@ class node(node):
                     for l in d:
                         sensor = self.reSens.match(l)
                         if sensor:
-                            (id, name, type, value, lower, upper, status)  = sensor.groups()
-                            if type == "Temperature" and ("Amb" in name or "Sys" in name) and value != "0.00":
+                            (sensor_id, name, sensor_type, value, lower, upper, status)  = sensor.groups()
+                            if sensor_type == "Temperature" and ("Amb" in name or "Sys" in name) and value != "0.00":
                                 value = float(value)
-                                id = "%s-IPMI-%s-%s" % (type.upper(), mac.replace(":", ""), id)
-                                results.append((id, value, "C", name))
+                                sensor_id = "%s-IPMI-%s-%s" % (sensor_type.upper(), mac.replace(":", ""), sensor_id)
+                                results.append((sensor_id, value, "C", name))
                     return results
                 else:
                     return False

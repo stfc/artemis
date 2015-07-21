@@ -46,7 +46,7 @@ class node(node):
         else:
             serial = serial[0]
 
-        id = "CURRENT-" + model + "-" + serial
+        sensor_id = "CURRENT-" + model + "-" + serial
 
         #Get value or on-board current monitor
         if model == "AP7921":
@@ -74,4 +74,4 @@ class node(node):
         #Units of measurement
         unit = UNIT_CURRENT
 
-        return [(id, value, unit, "")]
+        return [(sensor_id, value, unit, "")]

@@ -44,9 +44,9 @@ class BMSEvent(Base):
     name        = Column(String)
     ip          = Column(String)
 
-    def __init__(self, host, type, values):
+    def __init__(self, host, event_type, values):
         self.host        = host
-        self.type        = type
+        self.type        = event_type
         self.id          = values["id"]
         self.trap_oid    = values["trap_oid"]
         self.uptime      = values["uptime"]

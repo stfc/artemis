@@ -50,13 +50,13 @@ re_description_value = re.compile(r'^\s*(.+?)\s*\[last value was\s*([0-9\.]+)\s*
 
 #Read trap header
 host = re_clean.sub("", sys.stdin.readline())
-type = re_clean.sub("", sys.stdin.readline())
+event_type = re_clean.sub("", sys.stdin.readline())
 
 from datetime import datetime
 
 #Write event to debug log
 f = open("artemis-debug-log.txt", "a")
-f.write("%s: Caught trap %s %s\n" % (datetime.now(), host, type))
+f.write("%s: Caught trap %s %s\n" % (datetime.now(), host, event_type))
 f.close()
 
 #Create empty dictionary for values
@@ -87,7 +87,7 @@ for l in sys.stdin:
 
 #Create event object
 from artemis_trap_db import BMSEvent, setup
-bms_event = BMSEvent(host, type, event)
+bms_event = BMSEvent(host, event_type, event)
 
 #Write event to log
 f = open("artemis-trap-log.txt", "a")
