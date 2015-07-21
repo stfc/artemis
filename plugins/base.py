@@ -40,7 +40,15 @@ SNMP_RETRIES = 2 #Number of snmp request retries
 
 def getMIB(ip, mib, community = "public"):
     """ Fetch contents of a mib by walking the tree from a defined point"""
-    (x, d) = commands.getstatusoutput("/usr/bin/snmpwalk -r " + str(SNMP_RETRIES) + " -t " + str(SNMP_TIMEOUT) + " -v 1 -c " + community + " -O v " + ip + " " + mib + " | grep -v 'End of MIB'")
+    (x, d) = commands.getstatusoutput(
+        "/usr/bin/snmpwalk -r %s -t %s -v 1 -c %s -O v %s %s | grep -v 'End of MIB'" % (
+            SNMP_RETRIES,
+            SNMP_TIMEOUT,
+            community,
+            ip,
+            mib
+        )
+    )
     if (x == 0):
         d = d.splitlines()
         d = [r.split(': ')[-1].replace('"', '').replace(' ', '_') for r in d]

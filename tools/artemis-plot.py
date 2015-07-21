@@ -161,7 +161,14 @@ if __name__ == "__main__":
                         z.append(float(v))
 
                 if (len(x) == len(y)) and (len(x) == len(z)) and (len(x) > 0):
-                    plot(x, y, z, "R89 HPD Room at %s" % datetime.datetime.fromtimestamp(time_start + period * int(t)).strftime("%Y-%m-%d %H:%M:%S"), "%05d" % int(t), o.mode)
+                    plot(
+                        x,
+			y,
+			z,
+			"R89 HPD Room at %s" % datetime.datetime.fromtimestamp(time_start + period * int(t)).strftime("%Y-%m-%d %H:%M:%S"),
+                        "%05d" % int(t),
+                        o.mode
+                    )
 
         else:
             import sys

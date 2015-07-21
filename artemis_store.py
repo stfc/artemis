@@ -122,7 +122,20 @@ class Probe(Base):
         self.lastcontact = datetime.now()
 
     def __repr__(self):
-        return "<Probe %s : (%s, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %s, %s, %s, %s)>" % (self.id, self.name, self.x, self.y, self.z, self.w, self.d, self.h, self.remote_name, self.node, self.state, self.lastcontact)
+        return "<Probe %s : (%s, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %s, %s, %s, %s)>" % (
+            self.id,
+            self.name,
+            self.x,
+            self.y,
+            self.z,
+            self.w,
+            self.d,
+            self.h,
+            self.remote_name,
+            self.node,
+            self.state,
+            self.lastcontact
+        )
 
     def list(self):
         l = []

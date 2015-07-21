@@ -60,8 +60,21 @@ class BMSEvent(Base):
         self.ip          = values["ip"]
 
     def __repr__(self):
-        return "<BMSEvent(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)>" % (self.id, self.host, self.type, self.trap_oid, self.uptime, self.path, self.timestamp, self.input, self.description, self.value, self.state, self.name, self.ip)
-
+        return "<BMSEvent(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)>" % (
+            self.id,
+            self.host,
+            self.type,
+            self.trap_oid,
+            self.uptime,
+            self.path,
+            self.timestamp,
+            self.input,
+            self.description,
+            self.value,
+            self.state,
+            self.name,
+            self.ip
+        )
 
 def setup():
     from sqlalchemy import create_engine
