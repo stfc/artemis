@@ -20,7 +20,7 @@
 #  along with ARTEMIS. If not, see <http://www.gnu.org/licenses/>.
 #
 
-from sqlalchemy import Table, Column, Integer, String, DateTime, MetaData, ForeignKey
+from sqlalchemy import Column, Integer, String, MetaData, ForeignKey
 
 from sqlalchemy.ext.declarative import declarative_base
 

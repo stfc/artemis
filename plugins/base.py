@@ -20,7 +20,7 @@
 #  along with ARTEMIS. If not, see <http://www.gnu.org/licenses/>.
 #
 
-import commands, subprocess, urllib
+import commands
 
 #Units
 UNIT_TEMPERATURE = "C"

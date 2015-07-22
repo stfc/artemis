@@ -27,8 +27,6 @@
 #import cdecimal
 #sys.modules["decimal"] = cdecimal
 
-import json
-
 import ConfigParser
 config = ConfigParser.ConfigParser()
 config.read(['artemis.conf'])
@@ -39,7 +37,6 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Float, Integer, String, DateTime
 from datetime import datetime
-from sqlalchemy.exc import IntegrityError
 
 Base = declarative_base()
 
