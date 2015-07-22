@@ -44,11 +44,10 @@ except ImportError:
         sys.exit(1)
 
 #ARTEMIS Components
-from artemis_core import *
-from plugins import base
+from artemis_core import grabData, load_plugin
 
 #Load config module
-from artemis_config import *
+from artemis_config import config, session, Node, Probe
 
 # Setup base nodes from store
 base_nodes = []
@@ -165,4 +164,3 @@ time_run = time() - time_start
 
 rrdtool.update(rrd, "N:%f:%d:%d" % (time_run, len(base_nodes), len(g)))
 print("Collect finished in %0.3f seconds" % (time_run))
-
