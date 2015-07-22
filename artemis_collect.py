@@ -29,17 +29,17 @@ import os, sys
 #Try to import rrdtool module
 try:
     import rrdtool
-except:
+except ImportError:
     print("ERROR: Unable to import the rrdtool module, is python-rrdtool installed?")
     sys.exit(1)
 
 #Fall back to simplejson for versions of python < 2.5 (simplejson requires seperate install)
 try:
     import json
-except:
+except ImportError:
     try:
         import simplejson as json
-    except:
+    except ImportError:
         print("ERROR: Unable to find a usable json module, is simplejson installed?")
         sys.exit(1)
 
@@ -98,7 +98,7 @@ for serial, value, units, name, source_node in g:
     #store latest values
     try:
         (n, x, y, z, h, w, d) = sensors[serial]
-    except:
+    except IndexError:
         (n, x, y, z, h, w, d) = ("Auto-detected " + name, 0, 0, 0, 0, 0, 0)
         session.add(Probe(serial, n, x, y, z, h, w, d))
 

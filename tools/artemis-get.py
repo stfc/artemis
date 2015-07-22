@@ -28,10 +28,10 @@ import sys, urllib
 #Fall back to simplejson for versions of python < 2.5 (simplejson requires seperate install)
 try:
     import json
-except:
+except ImportError:
     try:
         import simplejson as json
-    except:
+    except ImportError:
         sys.exit("ERROR: Unable to find a usable json module, is simplejson installed?")
 
 
@@ -48,7 +48,7 @@ if len(sys.argv) == 2:                                  #Make sure an id has bee
 
     try:                                                  #Return requested id, or fail gracefully
         print(data[sys.argv[1]])
-    except:
+    except IndexError:
         sys.exit("Probe ID not found")
 else:
     sys.exit("USAGE: artemis-get.py PROBE_ID")

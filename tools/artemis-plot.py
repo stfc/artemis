@@ -28,10 +28,10 @@ from sys import exit as sys_exit
 #Fall back to simplejson for versions of python < 2.5 (simplejson requires seperate install)
 try:
     import json
-except:
+except ImportError:
     try:
         import simplejson as json
-    except:
+    except ImportError:
         sys_exit("ERROR: Unable to find a usable json module, is simplejson installed?")
 
 

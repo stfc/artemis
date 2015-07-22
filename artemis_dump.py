@@ -27,10 +27,10 @@ RRD_DIR = "/home/apache/html/r89-hpd/rrds/"
 #Fall back to simplejson for versions of python < 2.5 (simplejson requires seperate install)
 try:
     import json
-except:
+except ImportError:
     try:
         import simplejson as json
-    except:
+    except ImportError:
         print("ERROR: Unable to find a usable json module, is simplejson installed?")
         sys.exit(1)
 
