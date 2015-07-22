@@ -28,7 +28,7 @@ from sys import exit as sys_exit
 
 # Load artemis modules
 from artemis_core import load_plugin
-from artemis_config import *
+from artemis_config import session, Node, Probe, IntegrityError
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
