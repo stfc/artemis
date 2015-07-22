@@ -81,7 +81,7 @@ def plot(x, y, z, title, filename, mode):
     plt.scatter(x,y,marker='o',c='b',s=5,zorder=10)
     #CS = plt.contour(xi,yi,zi,15,linewidths=0.5,colors='k')
     #CS = plt.contourf(xi,yi,zi,15,cmap=plt.cm.jet)
-    CS = plt.contourf(xi,yi,zi,15,cmap=plt.cm.jet)
+    #CS = plt.contourf(xi,yi,zi,15,cmap=plt.cm.jet)
     plt.pcolor(xi,yi,zi,cmap=plt.cm.jet)
     plt.colorbar()
     plt.clim(TEMP_MIN, TEMP_MAX)
