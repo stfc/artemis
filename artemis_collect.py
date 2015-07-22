@@ -24,7 +24,7 @@
 from time import time
 time_start = time()
 from datetime import datetime
-import commands, os, sys
+import os, sys
 
 #Try to import rrdtool module
 try:
