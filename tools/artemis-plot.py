@@ -117,28 +117,28 @@ if __name__ == "__main__":
 
     VERSION = "1.0"
 
-    p = OptionParser(version=VERSION)
+    parser = OptionParser(version=VERSION)
 
-    p.usage = "    %prog URL [options]"
+    parser.usage = "    %prog URL [options]"
 
-    p.description = "A utility to plot heatmaps from artemis probe data."
+    parser.description = "A utility to plot heatmaps from artemis probe data."
 
-    p.add_option("--mode", metavar="STR", dest="mode", default="single", help="Run mode (single, gui or range)")
-    p.add_option("--filename", metavar="STR", dest="filename", default="heatmap.png", help="Output filename (ignored in gui and range modes)")
+    parser.add_option("--mode", metavar="STR", dest="mode", default="single", help="Run mode (single, gui or range)")
+    parser.add_option("--filename", metavar="STR", dest="filename", default="heatmap.png", help="Output filename (ignored in gui and range modes)")
 
-    (o, a) = p.parse_args()
+    (options, args) = parser.parse_args()
 
-    if len(a) == 1:
-        url = a[0]
+    if len(args) == 1:
+        url = args[0]
 
         p = urllib2.urlopen(url)
         p = json.load(p)
 
-        if o.mode == "gui" or o.mode == "single":
+        if options.mode == "gui" or options.mode == "single":
             p = p["probes"]
-            process(p, o.filename, o.mode)
+            process(p, options.filename, options.mode)
 
-        elif o.mode == "range":
+        elif options.mode == "range":
             (time_start, period, time_end, p) = p
             time_start = int(time_start)
             period     = int(period)
@@ -166,7 +166,7 @@ if __name__ == "__main__":
 			z,
 			"R89 HPD Room at %s" % datetime.datetime.fromtimestamp(time_start + period * int(t)).strftime("%Y-%m-%d %H:%M:%S"),
                         "%05d" % int(t),
-                        o.mode
+                        options.mode
                     )
 
         else:
