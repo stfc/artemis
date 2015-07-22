@@ -30,7 +30,7 @@ from sys import exit as sys_exit
 from artemis_core import load_plugin
 from artemis_config import session, Node, Probe, IntegrityError
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("action", choices=["add_node", "remove_node", "list_nodes", "list_probes", "update_probe"])
     parser.add_argument("--debug", action="store_true")
@@ -52,6 +52,19 @@ if __name__ == "__main__":
 
 
     if opts.action == "add_node":
+        add_node(logger, args)
+    elif opts.action == "remove_node":
+        remove_node(logger, args)
+    elif opts.action == "list_nodes":
+        list_nodes(logger, opts)
+    elif opts.action == "update_probe":
+        update_probe(logger, args)
+    elif opts.action == "list_probes":
+        list_probes(logger, opts)
+    else:
+        logger.error("Unimplemented action")
+
+def add_node(logger, args):
         logger.debug("action: add_node")
         p = argparse.ArgumentParser(usage="%(prog)s add_node IP PLUGIN [-u USERNAME] [-p PASSWORD]")
         p.add_argument("ip")
@@ -81,8 +94,7 @@ if __name__ == "__main__":
                 logger.error("Node already exists")
                 sys_exit(1)
 
-
-    elif opts.action == "remove_node":
+def remove_node(logger, args):
         logger.debug("action: remove_node")
         p = argparse.ArgumentParser(usage="%(prog)s remove_node IP")
         p.add_argument("ip")
@@ -100,8 +112,7 @@ if __name__ == "__main__":
             else:
                 logger.error("No node found with the IP %s", o.ip)
 
-
-    elif opts.action == "list_nodes":
+def list_nodes(logger, opts):
         logger.debug("action: list_nodes")
         nodes = session.query(Node).all()
         if opts.format == "json":
@@ -115,7 +126,7 @@ if __name__ == "__main__":
                 print(n)
 
 
-    elif opts.action == "update_probe":
+def update_probe(logger, args):
         logger.debug("action: update_probe")
         p = argparse.ArgumentParser(usage="%(prog)s update_probe [options]")
         p.add_argument("id", help="probe id")
@@ -172,7 +183,7 @@ if __name__ == "__main__":
                 logger.error("No probe found with id or name '%s'", o.id)
 
 
-    elif opts.action == "list_probes":
+def list_probes(logger, opts):
         logger.debug("action: list_probes")
         probes = session.query(Probe).all()
         if opts.format == "json":
@@ -185,6 +196,5 @@ if __name__ == "__main__":
             for p in probes:
                 print(p)
 
-
-    else:
-        print("Unimplemented action")
+if __name__ == "__main__":
+    main()
