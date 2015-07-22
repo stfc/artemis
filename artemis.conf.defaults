@@ -59,7 +59,7 @@ t_max = 16
 rgb_min = Chocolate_3
 rgb_max = Butter_1
 
-[DEFAULT]
+[FALLBACK]
 t_min = 0
 t_max = 50
 rgb_min = Aluminium_6
