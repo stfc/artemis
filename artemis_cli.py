@@ -47,8 +47,8 @@ if __name__ == "__main__":
         logger.setLevel(logging.DEBUG)
 
 
-    logger.debug("global opts: %s" % opts)
-    logger.debug("global args: %s" % args)
+    logger.debug("global opts: %s", opts)
+    logger.debug("global args: %s", args)
 
 
     if opts.action == "add_node":
@@ -60,14 +60,14 @@ if __name__ == "__main__":
         p.add_argument("-p", "--password")
         o, a = p.parse_known_args(args)
 
-        logger.debug("action opts: %s" % o)
-        logger.debug("action args: %s" % a)
+        logger.debug("action opts: %s", o)
+        logger.debug("action args: %s", a)
 
         if o.ip and o.plugin:
             try:
                 load_plugin(o.plugin)
             except ImportError:
-                logger.error("%s is not a valid plugin" % (o.plugin))
+                logger.error("%s is not a valid plugin", o.plugin)
                 sys_exit(1)
 
             node = Node(o.ip, o.plugin)
@@ -88,8 +88,8 @@ if __name__ == "__main__":
         p.add_argument("ip")
         o, a = p.parse_known_args(args)
 
-        logger.debug("action opts: %s" % o)
-        logger.debug("action args: %s" % a)
+        logger.debug("action opts: %s", o)
+        logger.debug("action args: %s", a)
 
         if o.ip:
             node = session.query(Node).filter(Node.ip == o.ip).first()
@@ -98,7 +98,7 @@ if __name__ == "__main__":
                 session.commit()
                 logger.info("Node removed")
             else:
-                logger.error("No node found with the IP %s" % o.ip)
+                logger.error("No node found with the IP %s", o.ip)
 
 
     elif opts.action == "list_nodes":
@@ -128,8 +128,8 @@ if __name__ == "__main__":
         p.add_argument("-t", help="height")
         o, a = p.parse_known_args(args)
 
-        logger.debug("action opts: %s" % o)
-        logger.debug("action args: %s" % a)
+        logger.debug("action opts: %s", o)
+        logger.debug("action args: %s", a)
 
         if o.n is o.x is o.y is o.z is o.w is o.d is o.t is None:
             p.print_help()
@@ -139,11 +139,11 @@ if __name__ == "__main__":
 
             # Try name if id doesn't match any probes
             if not probe:
-                logger.info("No probe found with id '%s', trying to match by name" % o.id)
+                logger.info("No probe found with id '%s', trying to match by name", o.id)
                 probe = session.query(Probe).filter(Probe.name == o.id).all()
 
                 if len(probe) > 1:
-                    logger.error("%d probes found with the name '%s', use ID to update each in turn" % (len(probe), o.id))
+                    logger.error("%d probes found with the name '%s', use ID to update each in turn", len(probe), o.id)
                     for p in probe:
                         print p
                     sys_exit(1)
@@ -169,7 +169,7 @@ if __name__ == "__main__":
                 session.commit()
                 logger.info("Probe updated")
             else:
-                logger.error("No probe found with id or name '%s'" % o.id)
+                logger.error("No probe found with id or name '%s'", o.id)
 
 
     elif opts.action == "list_probes":
