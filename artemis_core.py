@@ -25,38 +25,38 @@ from time import time
 
 #Data fetch loop
 def grabData(nodeset):
-  dataset = []
-  grabbers = []
+    dataset = []
+    grabbers = []
 
-  for node in nodeset:
-    current = data_grabber(node)
-    grabbers.append(current)
-    current.start()
+    for node in nodeset:
+        current = data_grabber(node)
+        grabbers.append(current)
+        current.start()
 
-  for grabber in grabbers:
-    grabber.join()
-    if grabber.data:
-      dataset += grabber.data
+    for grabber in grabbers:
+        grabber.join()
+        if grabber.data:
+            dataset += grabber.data
 
-  return dataset
+    return dataset
 
 #Thread object for grabbing data from nodes
 class data_grabber(Thread):
-  #Sets up thread, ready to go
-  def __init__(self, node):
-    Thread.__init__(self)
-    self.node = node
-    self.data = None
-  #Called by start(), does the actual data collection
-  def run(self):
-    start_time = time()
-    data = self.node.fetch()
-    end_time = time()
-    print("Fetch on %s %s (%s) ran for %f seconds" % (self.node.ip, self.node.__class__, self._Thread__name, end_time-start_time))
-    if data:
-      self.data = [d + (self.node.ip,) for d in data] # Concatenate source node back onto each record
+    #Sets up thread, ready to go
+    def __init__(self, node):
+        Thread.__init__(self)
+        self.node = node
+        self.data = None
+    #Called by start(), does the actual data collection
+    def run(self):
+        start_time = time()
+        data = self.node.fetch()
+        end_time = time()
+        print("Fetch on %s %s (%s) ran for %f seconds" % (self.node.ip, self.node.__class__, self._Thread__name, end_time-start_time))
+        if data:
+            self.data = [d + (self.node.ip,) for d in data] # Concatenate source node back onto each record
 
 def load_plugin(plugin):
-  m = __import__("plugins.%s" % (plugin))
-  c = getattr(getattr(m, plugin), 'node')
-  return(c)
+    m = __import__("plugins.%s" % (plugin))
+    c = getattr(getattr(m, plugin), 'node')
+    return(c)

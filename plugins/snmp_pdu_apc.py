@@ -27,51 +27,51 @@ from base import *
 #  Good example of a simpler, single probe node
 #
 class node(node):
-  def __init__(self, ip, community='public'):
-    self.ip        = ip
-    self.community = community
-  def fetch(self):
-    #unit id
-    model  = getMIB(self.ip, ".1.3.6.1.4.1.318.1.1.12.1.5.0", self.community)
-    if model == None:
-      #Can't find a valid sensor, so abort
-      return []
-    else:
-      model = model[0]
+    def __init__(self, ip, community='public'):
+        self.ip        = ip
+        self.community = community
+    def fetch(self):
+        #unit id
+        model  = getMIB(self.ip, ".1.3.6.1.4.1.318.1.1.12.1.5.0", self.community)
+        if model is None:
+            #Can't find a valid sensor, so abort
+            return []
+        else:
+            model = model[0]
 
-    serial = getMIB(self.ip, ".1.3.6.1.4.1.318.1.1.12.1.6.0", self.community)
-    if serial == None:
-      #Can't find a valid sensor, so abort
-      return []
-    else:
-      serial = serial[0]
+        serial = getMIB(self.ip, ".1.3.6.1.4.1.318.1.1.12.1.6.0", self.community)
+        if serial is None:
+            #Can't find a valid sensor, so abort
+            return []
+        else:
+            serial = serial[0]
 
-    id = "CURRENT-" + model + "-" + serial
+        sensor_id = "CURRENT-" + model + "-" + serial
 
-    #Get value or on-board current monitor
-    if model == "AP7921":
-      #Just get the single current value
-      value = getMIB(self.ip, ".1.3.6.1.4.1.318.1.1.12.2.3.1.1.2", self.community)
-      if value == None:
-        return []
-      else:
-        value = value[0]
+        #Get value or on-board current monitor
+        if model == "AP7921":
+            #Just get the single current value
+            value = getMIB(self.ip, ".1.3.6.1.4.1.318.1.1.12.2.3.1.1.2", self.community)
+            if value is None:
+                return []
+            else:
+                value = value[0]
 
-    elif model == "AP7953":
-      #This model has three current monitors, Bank 1, Bank 2 and Total, we only want the total current
-      value = getMIB(self.ip, ".1.3.6.1.4.1.318.1.1.12.2.3.1.1.2.3", self.community)
-      if value == None:
-        return []
-      else:
-        value = value[0]
+        elif model == "AP7953":
+            #This model has three current monitors, Bank 1, Bank 2 and Total, we only want the total current
+            value = getMIB(self.ip, ".1.3.6.1.4.1.318.1.1.12.2.3.1.1.2.3", self.community)
+            if value is None:
+                return []
+            else:
+                value = value[0]
 
-    else:
-      return []
+        else:
+            return []
 
-    #Scale value, PDU returns Amps*10
-    value = float(value) / 10
+        #Scale value, PDU returns Amps*10
+        value = float(value) / 10
 
-    #Units of measurement
-    unit = UNIT_CURRENT
+        #Units of measurement
+        unit = UNIT_CURRENT
 
-    return [(id, value, unit, "")]
+        return [(sensor_id, value, unit, "")]

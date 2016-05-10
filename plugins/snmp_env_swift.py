@@ -27,39 +27,39 @@ from base import *
 #  Good example of a complex, multi probe node
 #
 class node(node):
-  def fetch(self):
-    #temperature probes
-    id = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.4.1.2")
-    if (id != None):
-      ids   = [FAMILY_1WIRE[i[-2:]][0] + "-1WIRE-" + i[2:-2] + i[:2] for i in id]
-      units = [FAMILY_1WIRE[i[-2:]][1] for i in id]
-    else:
-      ids = []
-      units = []
+    def fetch(self):
+        #temperature probes
+        raw_id = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.4.1.2")
+        if (raw_id is not None):
+            probe_ids = [FAMILY_1WIRE[i[-2:]][0] + "-1WIRE-" + i[2:-2] + i[:2] for i in raw_id]
+            units = [FAMILY_1WIRE[i[-2:]][1] for i in raw_id]
+        else:
+            probe_ids = []
+            units = []
 
-    v = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.4.1.5")
-    if (v != None):
-      values = v
-    else:
-      values = []
+        v = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.4.1.5")
+        if (v is not None):
+            values = v
+        else:
+            values = []
 
-    #airflow sensors
-    id = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.2")
-    if (id != None):
-      n = [FAMILY_1WIRE[i[-2:]][0] + "-1WIRE-" + i[2:-2] + i[:2] for i in id]
-      ids += n
-      ids += ['HUMIDITY' + s[7:] for s in n]
+        #airflow sensors
+        raw_id = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.2")
+        if (raw_id is not None):
+            n = [FAMILY_1WIRE[i[-2:]][0] + "-1WIRE-" + i[2:-2] + i[:2] for i in raw_id]
+            probe_ids += n
+            probe_ids += ['HUMIDITY' + s[7:] for s in n]
 
-      u = [FAMILY_1WIRE[i[-2:]][1] for i in id]
-      units += u + u
+            u = [FAMILY_1WIRE[i[-2:]][1] for i in raw_id]
+            units += u + u
 
-    va = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.5")
-    vh = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.7")
-    if (va != None) and (vh != None):
-      values += va + vh
+        va = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.5")
+        vh = getMIB(self.ip, ".1.3.6.1.4.1.17373.2.5.1.7")
+        if (va is not None) and (vh is not None):
+            values += va + vh
 
-    values = [int(v) for v in values]
+        values = [int(v) for v in values]
 
-    names  = ["" for v in values]
+        names  = ["" for v in values]
 
-    return zip(ids, values, units)
+        return zip(probe_ids, values, units)

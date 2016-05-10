@@ -20,7 +20,7 @@
 #  along with ARTEMIS. If not, see <http://www.gnu.org/licenses/>.
 #
 
-import commands, subprocess, urllib
+import commands
 
 #Units
 UNIT_TEMPERATURE = "C"
@@ -30,8 +30,8 @@ UNIT_HUMIDITY    = "%"
 
 #Translation tables for ID codes and units
 FAMILY_1WIRE = {
-  "28": ("TEMPERATURE", UNIT_TEMPERATURE),
-  "14": ("AIRFLOW",     UNIT_AIRFLOW)
+    "28": ("TEMPERATURE", UNIT_TEMPERATURE),
+    "14": ("AIRFLOW",     UNIT_AIRFLOW)
 }
 
 #SNMP Settings
@@ -39,20 +39,28 @@ SNMP_TIMEOUT = 8 #Timeout of snmp requests in seconds
 SNMP_RETRIES = 2 #Number of snmp request retries
 
 def getMIB(ip, mib, community = "public"):
-  """ Fetch contents of a mib by walking the tree from a defined point"""
-  (x, d) = commands.getstatusoutput("/usr/bin/snmpwalk -r " + str(SNMP_RETRIES) + " -t " + str(SNMP_TIMEOUT) + " -v 1 -c " + community + " -O v " + ip + " " + mib + " | grep -v 'End of MIB'")
-  if (x == 0):
-    d = d.splitlines()
-    d = [r.split(': ')[-1].replace('"', '').replace(' ', '_') for r in d]
-    return d
-  else:
-    print("  ERROR: getMIB on " + ip + " non-zero exit code")
-    return None
+    """ Fetch contents of a mib by walking the tree from a defined point"""
+    (x, d) = commands.getstatusoutput(
+        "/usr/bin/snmpwalk -r %s -t %s -v 1 -c %s -O v %s %s | grep -v 'End of MIB'" % (
+            SNMP_RETRIES,
+            SNMP_TIMEOUT,
+            community,
+            ip,
+            mib
+        )
+    )
+    if (x == 0):
+        d = d.splitlines()
+        d = [r.split(': ')[-1].replace('"', '').replace(' ', '_') for r in d]
+        return d
+    else:
+        print("  ERROR: getMIB on " + ip + " non-zero exit code")
+        return None
 
 class node(object):
-  def __init__(self, ip, username="", password=""):
-    self.ip = ip
-    self.username = username
-    self.password = password
-  def fetch(self):
-    pass
+    def __init__(self, ip, username="", password=""):
+        self.ip = ip
+        self.username = username
+        self.password = password
+    def fetch(self):
+        pass

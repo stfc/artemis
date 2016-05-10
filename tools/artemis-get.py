@@ -27,28 +27,28 @@ import sys, urllib
 
 #Fall back to simplejson for versions of python < 2.5 (simplejson requires seperate install)
 try:
-  import json
-except:
-  try:
-    import simplejson as json
-  except:
-    sys.exit("ERROR: Unable to find a usable json module, is simplejson installed?")
+    import json
+except ImportError:
+    try:
+        import simplejson as json
+    except ImportError:
+        sys.exit("ERROR: Unable to find a usable json module, is simplejson installed?")
 
 
 
 if len(sys.argv) == 2:                                  #Make sure an id has been provided
-  data_source = urllib.urlopen(DATA_SOURCE_URL)         #Open the data source
-  data_source = json.load(data_source)                  #Decode the JSON into a list of list
+    data_source = urllib.urlopen(DATA_SOURCE_URL)         #Open the data source
+    data_source = json.load(data_source)                  #Decode the JSON into a list of list
 
-  data = {}                                             #Initialise new dictionary
+    data = {}                                             #Initialise new dictionary
 
-  for r in data_source:                                 #Fill the dictionary with the sensor values with the id as the key
-    (id, value, alias, row, column, width, height) = r
-    data[id] = value
+    for r in data_source:                                 #Fill the dictionary with the sensor values with the id as the key
+        (sensor_id, value, alias, row, column, width, height) = r
+        data[sensor_id] = value
 
-  try:                                                  #Return requested id, or fail gracefully
-    print(data[sys.argv[1]])
-  except:
-    sys.exit("Probe ID not found")
+    try:                                                  #Return requested id, or fail gracefully
+        print(data[sys.argv[1]])
+    except IndexError:
+        sys.exit("Probe ID not found")
 else:
-  sys.exit("USAGE: artemis-get.py PROBE_ID")
+    sys.exit("USAGE: artemis-get.py PROBE_ID")
